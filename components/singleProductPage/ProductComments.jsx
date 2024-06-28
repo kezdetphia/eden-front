@@ -24,10 +24,10 @@ const ProductComments = () => {
           className="text-gray-500 text-center "
           style={{ fontSize: ms(sm), fontFamily: "poppins" }}
         >
-          No comments yet..
+          No comments yet...
         </Text>
         <Text
-          className="text-gray-500 text-center "
+          className="text-gray-500 text-center"
           style={{
             fontSize: ms(xsm),
             paddingHorizontal: xs(xsm),
