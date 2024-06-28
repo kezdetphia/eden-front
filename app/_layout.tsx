@@ -9,15 +9,12 @@ import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import "react-native-reanimated";
 import { Slot } from "expo-router";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { Drawer } from "expo-router/drawer";
 
 // Import your global CSS file
 import "../global.css";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import Toast from "react-native-toast-message";
 import { AuthContextProvider } from "@/context/authContext";
-import HomeScreen from "./welcome";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -30,6 +27,10 @@ function MainLayout() {
     poppinsBold: require("../assets/fonts/Poppins-Bold.ttf"),
   });
 
+  if (fontError) {
+    console.log("Font loading error:", fontError);
+  }
+
   useEffect(() => {
     if (fontsLoaded) {
       SplashScreen.hideAsync();
@@ -40,23 +41,19 @@ function MainLayout() {
     return null;
   }
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <Drawer>
-        <Slot />
-      </Drawer>
+    <>
+      <Slot />
       <Toast />
-    </GestureHandlerRootView>
+    </>
   );
 }
 
 export default function RootLayout() {
   return (
     <>
-      {/* <GluestackUIProvider> */}
       <AuthContextProvider>
         <MainLayout />
       </AuthContextProvider>
-      {/* </GluestackUIProvider> */}
     </>
   );
 }

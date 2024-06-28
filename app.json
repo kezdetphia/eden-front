@@ -19,7 +19,8 @@
       },
       "infoPlist": {
         "NSCameraUsageDescription": "This app uses the camera to upload images to their listings."
-      }
+      },
+      "googleServicesFile": "./GoogleService-Info.plist"
     },
     "android": {
       "adaptiveIcon": {

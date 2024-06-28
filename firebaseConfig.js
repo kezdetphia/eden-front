@@ -1,19 +1,16 @@
-import firebase from "firebase/compat/app";
-import "firebase/storage";
-import "firebase/firestore"; // Import Firestore
+import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAfAcEw6tZjoxN3B2pxipBcAMpXAYNR1XU",
-  authDomain: "corpswap-imageupload.firebaseapp.com",
-  projectId: "corpswap-imageupload",
-  storageBucket: "corpswap-imageupload.appspot.com",
-  messagingSenderId: "684535271927",
-  appId: "1:684535271927:web:f37ead9401810cb1e11ef2",
-  measurementId: "G-SQ6NWJNT91",
+  apiKey: "AIzaSyBPUwQcuEZrEM6XX4EhXCQ7vKryNr3pxGI",
+  authDomain: "greenz-f77f2.firebaseapp.com",
+  projectId: "greenz-f77f2",
+  storageBucket: "greenz-f77f2.appspot.com",
+  messagingSenderId: "23358689670",
+  appId: "1:23358689670:ios:56532ffd76daa80fb55c07",
 };
 
-if (!firebase.apps.length) {
-  firebase.initializeApp(firebaseConfig);
-}
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 
-export { firebase };
+export { app, auth };

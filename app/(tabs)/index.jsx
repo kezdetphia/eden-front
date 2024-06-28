@@ -67,6 +67,7 @@ const HomeScreen = () => {
           onCategorySelect={setSelectedCategory}
         />
       </View>
+
       <FlatList
         showsVerticalScrollIndicator={false}
         style={{ marginTop: ys(marginxxs) }}
