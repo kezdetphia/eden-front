@@ -12,7 +12,7 @@ import {
 import * as ImagePicker from "expo-image-picker";
 import * as MediaLibrary from "expo-media-library";
 import { EvilIcons } from "@expo/vector-icons";
-import { firebase } from "../../firebaseConfig";
+// import { firebase } from "../../firebaseConfig";
 import * as FileSystem from "expo-file-system";
 import {
   scale as xs,
@@ -28,100 +28,100 @@ const ImageUpload = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [uploading, setUploading] = useState(false);
 
-  const getPermissionAsync = async () => {
-    const { status } = await MediaLibrary.requestPermissionsAsync();
-    if (status !== "granted") {
-      Alert.alert("Sorry, we need camera roll permissions to make this work!");
-      return false;
-    }
-    return true;
-  };
+  // const getPermissionAsync = async () => {
+  //   const { status } = await MediaLibrary.requestPermissionsAsync();
+  //   if (status !== "granted") {
+  //     Alert.alert("Sorry, we need camera roll permissions to make this work!");
+  //     return false;
+  //   }
+  //   return true;
+  // };
 
-  const pickImage = async () => {
-    const permissionGranted = await getPermissionAsync();
-    if (!permissionGranted) return;
+  // const pickImage = async () => {
+  //   const permissionGranted = await getPermissionAsync();
+  //   if (!permissionGranted) return;
 
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
+  //   let result = await ImagePicker.launchImageLibraryAsync({
+  //     mediaTypes: ImagePicker.MediaTypeOptions.Images,
+  //     allowsEditing: true,
+  //     aspect: [4, 3],
+  //     quality: 1,
+  //   });
 
-    if (!result.canceled) {
-      setSelectedImage(result.assets[0].uri);
-      console.log("Image picked:", result.assets[0].uri);
-    }
-  };
+  //   if (!result.canceled) {
+  //     setSelectedImage(result.assets[0].uri);
+  //     console.log("Image picked:", result.assets[0].uri);
+  //   }
+  // };
 
-  const uploadImage = async () => {
-    if (!selectedImage) {
-      Alert.alert("No image selected", "Please select an image first.");
-      return;
-    }
+  // const uploadImage = async () => {
+  //   if (!selectedImage) {
+  //     Alert.alert("No image selected", "Please select an image first.");
+  //     return;
+  //   }
 
-    setUploading(true);
-    try {
-      console.log("Getting file info for:", selectedImage);
-      const fileInfo = await FileSystem.getInfoAsync(selectedImage);
+  //   setUploading(true);
+  //   try {
+  //     console.log("Getting file info for:", selectedImage);
+  //     const fileInfo = await FileSystem.getInfoAsync(selectedImage);
 
-      if (!fileInfo.exists) {
-        console.error("File does not exist at:", selectedImage);
-        throw new Error("File does not exist");
-      }
+  //     if (!fileInfo.exists) {
+  //       console.error("File does not exist at:", selectedImage);
+  //       throw new Error("File does not exist");
+  //     }
 
-      console.log("Converting file to blob:", selectedImage);
-      const blob = await new Promise((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        xhr.onload = () => {
-          resolve(xhr.response);
-        };
-        xhr.onerror = (e) => {
-          console.error("XHR error:", e);
-          reject(new TypeError("Network request failed"));
-        };
-        xhr.responseType = "blob";
-        xhr.open("GET", selectedImage, true);
-        xhr.send(null);
-      });
+  //     console.log("Converting file to blob:", selectedImage);
+  //     const blob = await new Promise((resolve, reject) => {
+  //       const xhr = new XMLHttpRequest();
+  //       xhr.onload = () => {
+  //         resolve(xhr.response);
+  //       };
+  //       xhr.onerror = (e) => {
+  //         console.error("XHR error:", e);
+  //         reject(new TypeError("Network request failed"));
+  //       };
+  //       xhr.responseType = "blob";
+  //       xhr.open("GET", selectedImage, true);
+  //       xhr.send(null);
+  //     });
 
-      console.log("Blob created successfully:", blob);
+  //     console.log("Blob created successfully:", blob);
 
-      const filename = selectedImage.substring(
-        selectedImage.lastIndexOf("/") + 1
-      );
-      const ref = firebase.storage().ref().child(filename);
+  //     const filename = selectedImage.substring(
+  //       selectedImage.lastIndexOf("/") + 1
+  //     );
+  //     const ref = firebase.storage().ref().child(filename);
 
-      console.log("Uploading to Firebase Storage:", filename);
-      const snapshot = await ref.put(blob);
-      blob.close();
+  //     console.log("Uploading to Firebase Storage:", filename);
+  //     const snapshot = await ref.put(blob);
+  //     blob.close();
 
-      const downloadURL = await snapshot.ref.getDownloadURL();
-      console.log("Download URL:", downloadURL);
+  //     const downloadURL = await snapshot.ref.getDownloadURL();
+  //     console.log("Download URL:", downloadURL);
 
-      await addDataToFirestore("corpswap-imageupload", {
-        imageUrl: downloadURL,
-      });
+  //     await addDataToFirestore("corpswap-imageupload", {
+  //       imageUrl: downloadURL,
+  //     });
 
-      Alert.alert("Image uploaded successfully");
-      setSelectedImage(null);
-    } catch (err) {
-      console.error("Upload error:", err);
-      Alert.alert("Failed to upload image", err.message);
-    } finally {
-      setUploading(false);
-    }
-  };
+  //     Alert.alert("Image uploaded successfully");
+  //     setSelectedImage(null);
+  //   } catch (err) {
+  //     console.error("Upload error:", err);
+  //     Alert.alert("Failed to upload image", err.message);
+  //   } finally {
+  //     setUploading(false);
+  //   }
+  // };
 
-  const addDataToFirestore = async (collectionName, docData) => {
-    try {
-      const db = firebase.firestore();
-      const docRef = await db.collection(collectionName).add(docData);
-      console.log("Document written with ID:", docRef.id);
-    } catch (error) {
-      console.error("Error adding document to Firestore:", error);
-    }
-  };
+  // const addDataToFirestore = async (collectionName, docData) => {
+  //   try {
+  //     const db = firebase.firestore();
+  //     const docRef = await db.collection(collectionName).add(docData);
+  //     console.log("Document written with ID:", docRef.id);
+  //   } catch (error) {
+  //     console.error("Error adding document to Firestore:", error);
+  //   }
+  // };
 
   return (
     <View className="flex-1 w-full " style={{ paddingHorizontal: xs(8) }}>

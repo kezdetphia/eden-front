@@ -2,7 +2,6 @@ import { View, Text, TextInput } from "react-native";
 import React from "react";
 import { AntDesign } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
-import { Input, InputField } from "@gluestack-ui/themed";
 import {
   scale as xs,
   verticalScale as ys,
