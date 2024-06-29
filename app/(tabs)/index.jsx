@@ -48,13 +48,18 @@ const HomeScreen = () => {
     }
   };
 
-  const filteredData = selectedCategory
-    ? data.filter(
-        (item) => item.category.toLowerCase() === selectedCategory.toLowerCase()
-      )
-    : data;
+  const filteredData = data.filter((item) => {
+    const categoryMatch = selectedCategory
+      ? item.category.toLowerCase() === selectedCategory.toLowerCase()
+      : true;
+    const filterMatch = selectedFilter
+      ? selectedFilter === "All"
+        ? true
+        : item.tier && item.tier === selectedFilter
+      : true;
+    return categoryMatch && filterMatch;
+  });
 
-  console.log("selectediklget", selectedFilter);
   return (
     <View className="flex-1 ">
       <FlatList
