@@ -48,6 +48,7 @@ export default function CustomHeader() {
               >
                 Hi
               </Text>
+
               <Text
                 className="text-b300"
                 style={{ fontFamily: "jakartaBold", fontSize: "20px" }}
@@ -82,17 +83,22 @@ export default function CustomHeader() {
         </View>
         <View>
           <View
-            className="flex-row items-center bg-white rounded-xl border border-g75   "
+            className="flex-row items-center bg-white rounded-xl border border-g200    "
             style={{
               marginHorizontal: xs(paddingSides),
               height: ys(35),
-              marginTop: ys(paddingSides),
+              marginTop: ys(paddingSides + 2),
             }}
           >
-            <EvilIcons name="search" size={ms(24)} color="#83DF6C" />
+            <EvilIcons
+              name="search"
+              size={ms(24)}
+              color="#83DF6C"
+              style={{ paddingLeft: xs(paddingSides) }}
+            />
             <TextInput
               className=" flex-1 "
-              placeholder="Search apple"
+              placeholder="Search Apple"
               style={{ marginLeft: 10, fontFamily: "jakarta" }}
             />
           </View>

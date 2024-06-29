@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { useAuth } from "../../context/authContext";
 import { useRouter } from "expo-router";
 import ProductCard from "../../components/productCard";
-import CategoryScroll from "../../components/homescreen/CategoryScroll";
 import {
   scale as xs,
   verticalScale as ys,
@@ -11,13 +10,17 @@ import {
 } from "react-native-size-matters";
 import sizes from "../../constants/sizes";
 import CategoryCard from "../../components/CategoryCard";
+import { LinearGradient } from "expo-linear-gradient";
+import FilterScroll from "../../components/FilterScroll";
 
 const HomeScreen = () => {
   const { paddingSides, marginxxs, xxs, xsm, sm, md, lg, xl, xxl } = sizes;
   const categories = ["Fruit", "Vegetable"];
+  const filterOptions = ["All", "Exchange", "Free", "Buy"];
 
   const [data, setData] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedFilter, setSelectedFilter] = useState(null);
   const { isAuthenticated, authLoading, user } = useAuth();
   const router = useRouter();
 
@@ -51,17 +54,9 @@ const HomeScreen = () => {
       )
     : data;
 
+  console.log("selectediklget", selectedFilter);
   return (
     <View className="flex-1 ">
-      {/* <View style={{ marginTop: ys(marginxxs) }}>
-        <CategoryScroll
-          categoryImage={categoryImage}
-          categories={categories}
-          wantUnderLine={true}
-          onCategorySelect={setSelectedCategory}
-        />
-      </View> */}
-
       <FlatList
         showsVerticalScrollIndicator={false}
         style={{ marginTop: ys(marginxxs) }}
@@ -75,11 +70,39 @@ const HomeScreen = () => {
               paddingTop: ys(paddingSides),
             }}
           >
-            <CategoryCard
-              selectedCategory={selectedCategory}
-              setSelectedCategory={setSelectedCategory}
-              categories={categories}
-            />
+            <View style={{ paddingTop: ys(10) }}>
+              <Text
+                className="text-b200 text-xl"
+                style={{ fontFamily: "jakartaSemibold" }}
+              >
+                Discover Fresh, Seasonal Fruits and Vegetables
+              </Text>
+              {/* <LinearGradient
+                colors={["#83DF6C", "#FFFFFF"]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+                style={{
+                  height: 1, // Thin line
+                  marginTop: ys(5), // Space between text and line
+                  width: 500,
+                }}
+              /> */}
+            </View>
+
+            <View style={{ paddingTop: ys(paddingSides + 4) }}>
+              <CategoryCard
+                selectedCategory={selectedCategory}
+                setSelectedCategory={setSelectedCategory}
+                categories={categories}
+              />
+            </View>
+            <View style={{ paddingTop: ys(paddingSides + 4) }}>
+              <FilterScroll
+                selectedFilter={selectedFilter}
+                setSelectedFilter={setSelectedFilter}
+                filterOptions={filterOptions}
+              />
+            </View>
           </View>
         }
         renderItem={({ item }) => (
