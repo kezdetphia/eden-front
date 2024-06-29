@@ -15,6 +15,7 @@ import "../global.css";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import Toast from "react-native-toast-message";
 import { AuthContextProvider } from "@/context/authContext";
+import GlobalStylesWrapper from "../components/GlobalStylesWrapper";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -25,6 +26,9 @@ function MainLayout() {
   const [fontsLoaded, fontError] = useFonts({
     poppins: require("../assets/fonts/Poppins-Regular.ttf"),
     poppinsBold: require("../assets/fonts/Poppins-Bold.ttf"),
+    jakarta: require("../assets/fonts/Jakarta.ttf"),
+    jakartaSemibold: require("../assets/fonts/JakartaSemibold.ttf"),
+    jakartaBold: require("../assets/fonts/JakartaBold.ttf"),
   });
 
   if (fontError) {
@@ -42,8 +46,10 @@ function MainLayout() {
   }
   return (
     <>
+      {/* <GlobalStylesWrapper> */}
       <Slot />
       <Toast />
+      {/* </GlobalStylesWrapper> */}
     </>
   );
 }

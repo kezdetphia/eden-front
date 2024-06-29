@@ -1,10 +1,4 @@
-import {
-  View,
-  SafeAreaView,
-  FlatList,
-  Dimensions,
-  Pressable,
-} from "react-native";
+import { View, FlatList, Dimensions, Pressable, Text } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../../context/authContext";
 import { useRouter } from "expo-router";
@@ -16,14 +10,12 @@ import {
   moderateScale as ms,
 } from "react-native-size-matters";
 import sizes from "../../constants/sizes";
+import CategoryCard from "../../components/CategoryCard";
 
 const HomeScreen = () => {
-  const { marginxxs, xxs, xsm, sm, md, lg, xl, xxl } = sizes;
-  const categories = ["fruit", "vegetable"];
-  const categoryImage = {
-    fruit: require("../../assets/images/orange.png"),
-    vegetable: require("../../assets/images/carrot.png"),
-  };
+  const { paddingSides, marginxxs, xxs, xsm, sm, md, lg, xl, xxl } = sizes;
+  const categories = ["Fruit", "Vegetable"];
+
   const [data, setData] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const { isAuthenticated, authLoading, user } = useAuth();
@@ -54,19 +46,21 @@ const HomeScreen = () => {
   };
 
   const filteredData = selectedCategory
-    ? data.filter((item) => item.category === selectedCategory)
+    ? data.filter(
+        (item) => item.category.toLowerCase() === selectedCategory.toLowerCase()
+      )
     : data;
 
   return (
-    <SafeAreaView className="flex-1 bg-lightwhite">
-      <View style={{ marginTop: ys(marginxxs) }}>
+    <View className="flex-1 ">
+      {/* <View style={{ marginTop: ys(marginxxs) }}>
         <CategoryScroll
           categoryImage={categoryImage}
           categories={categories}
           wantUnderLine={true}
           onCategorySelect={setSelectedCategory}
         />
-      </View>
+      </View> */}
 
       <FlatList
         showsVerticalScrollIndicator={false}
@@ -74,6 +68,20 @@ const HomeScreen = () => {
         key={numColumns} // Change the key prop to force re-render
         data={filteredData}
         keyExtractor={(item, index) => index.toString()}
+        ListHeaderComponent={
+          <View
+            style={{
+              paddingHorizontal: xs(paddingSides),
+              paddingTop: ys(paddingSides),
+            }}
+          >
+            <CategoryCard
+              selectedCategory={selectedCategory}
+              setSelectedCategory={setSelectedCategory}
+              categories={categories}
+            />
+          </View>
+        }
         renderItem={({ item }) => (
           <Pressable
             onPress={() =>
@@ -91,7 +99,7 @@ const HomeScreen = () => {
           justifyContent: "center",
         }}
       />
-    </SafeAreaView>
+    </View>
   );
 };
 

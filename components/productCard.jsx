@@ -7,7 +7,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 const ProductCard = ({ product, cardWidth }) => {
   return (
     <View
-      className="bg-darkwhite shadow-md shadow-white"
+      className=" bg-white shadow-md shadow-white"
       style={[styles.card, { width: cardWidth }]}
     >
       <Image

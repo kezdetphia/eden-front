@@ -1,66 +1,103 @@
-import { View, Text, SafeAreaView, TextInput } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { View, Text, SafeAreaView, TextInput, Image } from "react-native"; // Import Image from react-native
+import { StatusBar } from "expo-status-bar";
+
 import {
   scale as xs,
   verticalScale as ys,
   moderateScale as ms,
 } from "react-native-size-matters";
-import { ImageBackground } from "expo-image";
-import { StatusBar } from "expo-status-bar";
+import sizes from "../../constants/sizes";
+import { Entypo } from "@expo/vector-icons";
+import { EvilIcons } from "@expo/vector-icons";
 
 export default function CustomHeader() {
+  const {
+    marginxxs,
+    marginxs,
+    marginsm,
+    marginmd,
+    marginlg,
+    marginxl,
+    marginxxl,
+    marginxxxl,
+    xxs,
+    xsm,
+    sm,
+    md,
+    lg,
+    xl,
+    xxl,
+    paddingSides,
+  } = sizes;
   return (
-    <ImageBackground
-      source={require("../../assets/images/bg.png")} // Use require to get the image from the images folder
-      style={{
-        height: ys(110),
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 5 },
-        shadowOpacity: 0.8,
-        shadowRadius: 3.84,
-        elevation: 5, // For Android shadow
-      }}
-    >
-      <StatusBar hidden={true} />
-      <SafeAreaView>
+    <>
+      <StatusBar hidden={false} />
+      <SafeAreaView className="bg-grayb">
         <View
-          className="flex-row items-center"
+          className="flex flex-row justify-between "
           style={{
-            paddingHorizontal: xs(8),
-            position: "relative",
-            marginTop: ys(10),
+            paddingHorizontal: xs(paddingSides),
+            paddingTop: ys(sm),
           }}
         >
-          <Ionicons
-            name="menu"
-            size={ms(26)}
-            color="black"
-            style={{ marginLeft: xs(10) }}
-          />
+          <View>
+            <View className="flex flex-row ">
+              <Text
+                className="text-b300"
+                style={{ fontFamily: "jakarta", fontSize: "20px" }}
+              >
+                Hi
+              </Text>
+              <Text
+                className="text-b300"
+                style={{ fontFamily: "jakartaBold", fontSize: "20px" }}
+              >
+                , Mark Feher
+              </Text>
+            </View>
+            <View
+              className="flex-row items-center   "
+              style={{ paddingTop: ys(4) }}
+            >
+              <Entypo
+                className="pr-1 "
+                name="location-pin"
+                size={ms(18)}
+                color="#69D94E"
+              />
+              <Text style={{ fontFamily: "jakarta" }} className="text-b100">
+                Los Angels
+              </Text>
+            </View>
+          </View>
+
+          <View>
+            <Image
+              className="rounded-xl"
+              source={require("../../assets/images/avatar.png")}
+              style={{ width: 50, height: 50 }}
+            />
+            {/* Added style for image size */}
+          </View>
+        </View>
+        <View>
           <View
-            className="bg-gray-200 rounded-lg flex-row items-center shadow-sm shadow-gray-100 border border-green-200"
+            className="flex-row items-center bg-white rounded-xl border border-g75   "
             style={{
-              width: xs(180),
-              padding: ms(4),
-              position: "absolute",
-              left: "50%",
-              transform: [{ translateX: -xs(90) }], // Center the search bar
+              marginHorizontal: xs(paddingSides),
+              height: ys(35),
+              marginTop: ys(paddingSides),
             }}
           >
+            <EvilIcons name="search" size={ms(24)} color="#83DF6C" />
             <TextInput
-              placeholder="Search"
-              className="rounded-md flex-1 "
-              style={{ height: ys(20) }}
-            />
-            <Ionicons
-              name="filter"
-              size={ms(18)}
-              color="black"
-              style={{ marginLeft: xs(8) }}
+              className=" flex-1 "
+              placeholder="Search apple"
+              style={{ marginLeft: 10, fontFamily: "jakarta" }}
             />
           </View>
         </View>
       </SafeAreaView>
-    </ImageBackground>
+    </>
   );
 }
