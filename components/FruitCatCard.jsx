@@ -19,7 +19,7 @@ const FruitCatCard = ({ onPress, colors, text, imageSource, isSelected }) => {
         <View style={styles.content}>
           <Text
             className="text-b-300"
-            style={{ fontFamily: "jakartaSemibold" }}
+            style={{ fontFamily: "jakartaSemibold", letterSpacing: 0.3 }}
           >
             {text}
           </Text>

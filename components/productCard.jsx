@@ -32,7 +32,7 @@ const ProductCard = ({ product, cardWidth }) => {
         >
           {product.title}
         </Text>
-        <View className=" rounded-sm justify-center items-center">
+        <View className=" rounded-md justify-center items-center">
           <Text
             className="text-white bg-myOrange"
             style={{

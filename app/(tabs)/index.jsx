@@ -68,7 +68,7 @@ const HomeScreen = () => {
   });
 
   return (
-    <View className="flex-1  ">
+    <View className="flex-1 bg-grayb  ">
       <FlatList
         showsVerticalScrollIndicator={false}
         style={{ marginTop: ys(marginxxs) }}
@@ -89,7 +89,7 @@ const HomeScreen = () => {
             <View style={{ paddingTop: ys(10) }}>
               <Text
                 className="text-b200 text-xl"
-                style={{ fontFamily: "jakartaSemibold" }}
+                style={{ fontFamily: "jakartaSemibold", letterSpacing: 0.3 }}
               >
                 Discover Fresh, Seasonal Fruits and Vegetables
               </Text>

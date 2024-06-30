@@ -17,6 +17,8 @@ import {
 import sizes from "../../constants/sizes";
 import PriceQuantityCard from "../../components/singleProductPage/PriceQuantityCard";
 
+//TODO: make the main image carousel
+
 const ProductDetail = () => {
   const { id: productId } = useLocalSearchParams();
   const router = useRouter();

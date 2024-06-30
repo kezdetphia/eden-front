@@ -47,7 +47,7 @@ export default function CustomHeader({ searchBarValue, setSearchBarValue }) {
               <Entypo
                 className="pr-1 "
                 name="location-pin"
-                size={ms(18)}
+                size={ms(16)}
                 color="#69D94E"
               />
               <Text style={{ fontFamily: "jakarta" }} className="text-b100">
