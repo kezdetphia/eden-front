@@ -47,7 +47,16 @@ const SellerInfo = ({ owner }) => {
             >
               {owner?.username}
             </Text>
-            <SecondaryPill props={"View Profile"} />
+            <Pressable
+              onPress={() =>
+                router.push({
+                  pathname: `/sellerprofile/[id]`,
+                  params: { id: owner._id },
+                })
+              }
+            >
+              <SecondaryPill props={"View Profile"} />
+            </Pressable>
           </View>
           <Text
             style={{

@@ -8,8 +8,12 @@ import {
 } from "react-native-size-matters";
 import sizes from "../../constants/sizes";
 
+// TODO: - implement adding comments to the owner's product
+//       - display comments conditionally if there is or isnt
+//       - message user buttin direct user to the owners message window to send message
+
 const ProductComments = () => {
-  const { xsm, sm, xl, xxl, subtitle, paddingTop } = sizes;
+  const { xsm, xl, xxl, subtitle, paddingTop } = sizes;
   return (
     <View>
       <Text

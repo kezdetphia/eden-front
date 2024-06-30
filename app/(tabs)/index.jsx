@@ -14,6 +14,8 @@ import { LinearGradient } from "expo-linear-gradient";
 import FilterScroll from "../../components/FilterScroll";
 import CustomHeader from "../../components/homescreen/HomeCustomHeader";
 
+//TODO: -change back the headercomponent or find a solution to a sticky search bar
+
 const HomeScreen = () => {
   const { paddingSides, marginxxs, xxs, xsm, sm, md, lg, xl, xxl } = sizes;
   const categories = ["Fruit", "Vegetable"];
@@ -66,7 +68,7 @@ const HomeScreen = () => {
   });
 
   return (
-    <View className="flex-1 ">
+    <View className="flex-1  ">
       <FlatList
         showsVerticalScrollIndicator={false}
         style={{ marginTop: ys(marginxxs) }}

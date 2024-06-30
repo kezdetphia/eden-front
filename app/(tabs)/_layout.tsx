@@ -4,7 +4,7 @@ import React from "react";
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
-import HomeCustomHeader from "../../components/homescreen/HomeCustomHeader";
+import CustomHeader from "../../components/homescreen/HomeCustomHeader";
 // import CreateListingCustomHeader from "@/components/createListing/CreateListingCustomHeader";
 
 import {
@@ -47,7 +47,7 @@ export default function TabLayout() {
         name="index"
         options={{
           headerShown: false,
-          // header: () => <HomeCustomHeader />,
+          // header: () => <CustomHeader />,
           title: "Home",
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
