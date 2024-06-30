@@ -24,7 +24,7 @@ const ProductDetail = () => {
   const scrollY = useRef(new Animated.Value(0)).current;
   const [imageHeight, setImageHeight] = useState(ys(300));
   const [error, setError] = useState(null);
-  const { xsm, sm, md, lg, xl, title, paddingSides } = sizes;
+  const { xsm, sm, md, lg, xl, title, paddingSides, paddingTop } = sizes;
 
   useEffect(() => {
     const fetchProductDetails = async () => {
@@ -59,6 +59,7 @@ const ProductDetail = () => {
     <View className="flex-1 bg-grayb ">
       <StatusBar hidden={true} />
       <Animated.View
+        className=""
         style={{
           position: "absolute",
           left: 0,
@@ -71,7 +72,7 @@ const ProductDetail = () => {
         }}
       >
         <View
-          className="flex flex-row justify-between"
+          className="flex flex-row justify-between "
           style={{ paddingHorizontal: xs(xsm) }}
         >
           <View>
@@ -145,7 +146,8 @@ const ProductDetail = () => {
           style={{
             paddingHorizontal: xs(paddingSides),
             marginTop: -ys(20), // Move the view up to cover part of the image
-            backgroundColor: "#fff", // Ensure the background color matches the desired color
+            // backgroundColor: "#F6F7F9",
+            backgroundColor: "#FFF",
             borderTopLeftRadius: 30, // Apply border radius to the top corners
             borderTopRightRadius: ms(30),
             paddingBottom: ys(5),
@@ -155,7 +157,7 @@ const ProductDetail = () => {
         >
           <View
             style={{
-              paddingTop: ys(paddingSides),
+              paddingTop: ys(paddingTop),
             }}
           >
             <View className="flex-row justify-between">
@@ -164,6 +166,7 @@ const ProductDetail = () => {
                 style={{
                   fontSize: ms(title),
                   fontFamily: "jakartaBold",
+                  letterSpacing: 0.3,
                 }}
               >
                 {product?.title}
@@ -179,8 +182,8 @@ const ProductDetail = () => {
                     className="text-white"
                     style={{
                       fontFamily: "jakartaSemibold",
-                      fontSize: 10,
-                      paddingHorizontal: xs(5),
+                      fontSize: ms(11),
+                      paddingHorizontal: xs(8),
                       paddingVertical: ys(2),
                     }}
                   >
@@ -190,7 +193,7 @@ const ProductDetail = () => {
               </View>
             </View>
             <View
-              style={{ paddingTop: ys(10) }}
+              style={{ paddingTop: ys(paddingTop) }}
               className="flex-row items-center"
             >
               <Entypo
@@ -205,6 +208,7 @@ const ProductDetail = () => {
                   fontFamily: "jakarta",
                   fontSize: ms(xsm),
                   paddingRight: ms(xsm),
+                  letterSpacing: 0.3,
                 }}
               >
                 {product?.location}
@@ -213,7 +217,7 @@ const ProductDetail = () => {
           </View>
           <View
             className="flex-row justify-between"
-            style={{ paddingTop: ys(paddingSides) }}
+            style={{ paddingTop: ys(paddingTop) }}
           >
             <PriceQuantityCard
               quantity={product?.amount}
@@ -222,16 +226,38 @@ const ProductDetail = () => {
             />
           </View>
           <View>
-            <SendMessage product={product} style={{ marginBottom: ys(xl) }} />
-            <ProductDesc product={product} style={{ paddingTop: ys(xl) }} />
-            <View style={{ marginHorizontal: -ys(sm) }}>
-              <WapperNeeds product={product} wantUnderLine={false} />
+            <View
+              style={{
+                paddingTop: ys(paddingSides + paddingSides + paddingTop - 5),
+              }}
+            >
+              <WapperNeeds
+                productOwner={product?.owner}
+                wantUnderLine={false}
+              />
             </View>
-            <Divider customStyle={{ marginVertical: ys(md) }} />
-            <Divider customStyle={{ marginVertical: ys(md) }} />
-            <ProductComments product={product} />
-            <Divider customStyle={{ marginVertical: ys(md) }} />
-            <SellerInfo product={product} />
+            {/* <SendMessage product={product} style={{ marginBottom: ys(xl) }} /> */}
+            <View
+              style={{
+                paddingTop: ys(paddingSides + paddingSides + paddingTop - 5),
+              }}
+            >
+              <ProductDesc desc={product?.desc} />
+            </View>
+            <View
+              style={{
+                paddingTop: ys(paddingSides + paddingSides + paddingTop - 5),
+              }}
+            >
+              <SellerInfo owner={product?.owner} />
+            </View>
+            <View
+              style={{
+                paddingTop: ys(paddingSides + paddingSides + paddingTop - 5),
+              }}
+            >
+              <ProductComments product={product} />
+            </View>
           </View>
         </View>
       </Animated.ScrollView>

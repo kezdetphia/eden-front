@@ -8,42 +8,63 @@ import {
 } from "react-native-size-matters";
 import sizes from "../../constants/sizes";
 import { useRouter } from "expo-router";
+import { Image } from "expo-image";
+import SecondaryPill from "../SecondaryPill";
 
-const SellerInfo = ({ product }) => {
+const SellerInfo = ({ owner }) => {
   const router = useRouter();
 
-  const { xsm, sm, md, lg, xl, xxl } = sizes;
+  const { xsm, sm, md, lg, subtitle } = sizes;
   return (
     <View className="">
-      <View className="SELLER_INFO_HEADER">
-        <Text
-          className="font-bold"
-          style={{ fontSize: ms(md), fontFamily: "poppins" }}
-        >
-          Meet the wapper
-        </Text>
-      </View>
-      <View className="">
-        <View className="flex flex-row items-center">
-          <AntDesign
-            name="user"
-            size={ms(lg)}
-            color="black"
-            className=" rounded-full p-2"
+      <Text
+        className="text-b300"
+        style={{
+          fontSize: ms(subtitle),
+          fontFamily: "jakartaBold",
+          letterSpacing: 0.3,
+        }}
+      >
+        Seller Information
+      </Text>
+      <View className="flex-row" style={{ paddingTop: ys(7) }}>
+        <View>
+          <Image
+            style={{ height: ms(40), width: ms(40), borderRadius: ms(20) }}
+            source={require("../../assets/images/avatar.png")}
           />
-          <Pressable
-            onPress={() => {
-              router.push(`/sellerprofile/${product?.owner?._id}`);
-            }}
-          >
-            <Text style={{ fontSize: ms(md), fontFamily: "poppins" }}>
-              @{product?.owner?.username}
-            </Text>
-          </Pressable>
         </View>
-        <Text className="" style={{ fontSize: ms(xsm), fontFamily: "poppins" }}>
-          Member since: {product?.owner?.createdAt?.substring(0, 10)}
-        </Text>
+
+        <View className="flex-1 " style={{ paddingLeft: xs(md) }}>
+          <View className="flex-row justify-between ">
+            <Text
+              className="text-b300"
+              style={{
+                fontSize: ms(15),
+                fontFamily: "jakartaBold",
+                letterSpacing: 0.3,
+              }}
+            >
+              {owner?.username}
+            </Text>
+            <SecondaryPill props={"View Profile"} />
+          </View>
+          <Text
+            style={{
+              letterSpacing: 0.3,
+              fontFamily: "jakarta",
+              fontSize: ms(12),
+            }}
+            className="text-b100"
+          >
+            Joined{" "}
+            {new Date(owner?.createdAt).toLocaleDateString("en-US", {
+              month: "short",
+              day: "2-digit",
+              year: "numeric",
+            })}
+          </Text>
+        </View>
       </View>
     </View>
   );

@@ -35,14 +35,22 @@ const PriceQuantityCard = ({ quantity, price, tier }) => {
       >
         {tier === "Exchange" ? (
           <Text
-            style={{ fontSize: ms(sm), fontFamily: "jakartaBold" }}
+            style={{
+              fontSize: ms(sm),
+              fontFamily: "jakartaBold",
+              letterSpacing: 0.3,
+            }}
             className="text-white"
           >
             Offer Me!
           </Text>
         ) : tier === "Free" ? (
           <Text
-            style={{ fontSize: ms(sm), fontFamily: "jakartaBold" }}
+            style={{
+              fontSize: ms(sm),
+              fontFamily: "jakartaBold",
+              letterSpacing: 0.3,
+            }}
             className="text-white"
           >
             Yay, Its free!
@@ -50,13 +58,21 @@ const PriceQuantityCard = ({ quantity, price, tier }) => {
         ) : (
           <View className=" items-center  justify-center ">
             <Text
-              style={{ fontSize: ms(sm), fontFamily: "jakartaBold" }}
+              style={{
+                fontSize: ms(sm),
+                fontFamily: "jakartaBold",
+                letterSpacing: 0.3,
+              }}
               className="text-white"
             >
               ${price}/lb
             </Text>
             <Text
-              style={{ fontSize: ms(10), fontFamily: "jakarta" }}
+              style={{
+                fontSize: ms(10),
+                fontFamily: "jakarta",
+                letterSpacing: 0.3,
+              }}
               className="text-white"
             >
               Price

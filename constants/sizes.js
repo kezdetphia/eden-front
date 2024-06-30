@@ -17,7 +17,10 @@ const sizes = {
   xl: 20,
   xxl: 22,
   title: 24,
+  subtitle: 17,
+  // paddingSides: 16,
   paddingSides: 12,
+  paddingTop: 15,
 };
 
 export default sizes;

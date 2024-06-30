@@ -7,24 +7,29 @@ import {
 } from "react-native-size-matters";
 import sizes from "../../constants/sizes";
 
-const ProductDesc = ({ product }) => {
-  const { xsm, sm, md, lg, xl, xxl } = sizes;
+const ProductDesc = ({ desc }) => {
+  const { paddingTop, paddingSides, sm, subtitle } = sizes;
   return (
-    <View className="" style={{ gap: ys(6) }}>
-      <View>
-        <Text
-          className=" font-bold"
-          style={{ fontSize: ms(md), fontFamily: "poppins" }}
-        >
-          Description
-        </Text>
-      </View>
-      <View>
-        {/* <Text>{product?.description}</Text> */}
-        <Text style={{ fontSize: ms(sm), fontFamily: "poppins" }}>
-          {product?.desc}
-        </Text>
-      </View>
+    <View>
+      <Text
+        className="text-b300"
+        style={{
+          fontSize: ms(subtitle),
+          fontFamily: "jakartaBold",
+        }}
+      >
+        Description
+      </Text>
+      <Text
+        className="text-b200 "
+        style={{
+          fontFamily: "jakarta",
+          paddingTop: ys(7),
+          letterSpacing: 0.3,
+        }}
+      >
+        {desc}
+      </Text>
     </View>
   );
 };

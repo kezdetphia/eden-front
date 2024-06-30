@@ -10,26 +10,22 @@ import {
 import CategoryScroll from "../homescreen/CategoryScroll";
 import sizes from "../../constants/sizes";
 
-const WapperNeeds = ({ product }) => {
-  const { xxs, xsm, sm, md, lg, xl } = sizes;
+const WapperNeeds = ({ productOwner }) => {
+  const { subtitle, paddingSides, paddingTop } = sizes;
   return (
-    <View
-      className="DESIRE-CONTAINER flex flex-col  "
-      style={{ paddingHorizontal: xs(xxs) }}
-    >
-      <View
-        className=""
-        style={{ paddingHorizontal: xs(xxs), paddingBottom: ys(5) }}
+    <View className="DESIRE-CONTAINER flex flex-col  ">
+      <Text
+        className="text-b300 "
+        style={{
+          fontSize: ms(subtitle),
+          fontFamily: "jakartaBold",
+          letterSpacing: 0.3,
+        }}
       >
-        <Text
-          className="font-bold "
-          style={{ fontSize: ms(md), fontFamily: "poppins" }}
-        >
-          Swapper in lookout for: 👀
-        </Text>
-      </View>
-      <View className=" " style={{ paddingBottom: ys(xsm) }}>
-        <CategoryScroll categories={product?.owner?.inNeedOf} />
+        Swapper in lookout for: 👀
+      </Text>
+      <View style={{ paddingTop: ys(paddingTop) }}>
+        <CategoryScroll categories={productOwner?.inNeedOf} />
       </View>
     </View>
   );
