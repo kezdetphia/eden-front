@@ -7,36 +7,20 @@ import {
   moderateScale as ms,
 } from "react-native-size-matters";
 import sizes from "../../constants/sizes";
-import { Entypo } from "@expo/vector-icons";
+import { Entypo, Feather } from "@expo/vector-icons";
 import { EvilIcons } from "@expo/vector-icons";
 
-export default function CustomHeader() {
-  const {
-    marginxxs,
-    marginxs,
-    marginsm,
-    marginmd,
-    marginlg,
-    marginxl,
-    marginxxl,
-    marginxxxl,
-    xxs,
-    xsm,
-    sm,
-    md,
-    lg,
-    xl,
-    xxl,
-    paddingSides,
-  } = sizes;
+export default function CustomHeader({ searchBarValue, setSearchBarValue }) {
+  const { sm, paddingSides } = sizes;
+
   return (
     <>
-      <StatusBar hidden={false} />
+      {/* <StatusBar hidden={false} /> */}
       <SafeAreaView className="bg-grayb">
         <View
           className="flex flex-row justify-between "
           style={{
-            paddingHorizontal: xs(paddingSides),
+            // paddingHorizontal: xs(paddingSides),
             paddingTop: ys(sm),
           }}
         >
@@ -85,7 +69,7 @@ export default function CustomHeader() {
           <View
             className="flex-row items-center bg-white rounded-xl border border-g200    "
             style={{
-              marginHorizontal: xs(paddingSides),
+              // marginHorizontal: xs(paddingSides),
               height: ys(35),
               marginTop: ys(paddingSides + 2),
             }}
@@ -100,6 +84,15 @@ export default function CustomHeader() {
               className=" flex-1 "
               placeholder="Search Apple"
               style={{ marginLeft: 10, fontFamily: "jakarta" }}
+              value={searchBarValue}
+              onChangeText={(text) => setSearchBarValue(text)}
+            />
+            <Feather
+              style={{ paddingRight: xs(paddingSides) }}
+              name="delete"
+              size={ms(18)}
+              color="#6C6C6C"
+              onPress={() => setSearchBarValue(null)}
             />
           </View>
         </View>

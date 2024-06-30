@@ -6,7 +6,7 @@ import {
   moderateScale as ms,
 } from "react-native-size-matters";
 import sizes from "../../constants/sizes";
-import { categories } from "../../constants/corpsStuff";
+import { categories } from "../../utils/corpsStuff";
 
 const ChooseListingCategory = ({ listingDetails, updateListingDetails }) => {
   const { xsm, sm, md, lg, xl, xxl } = sizes;

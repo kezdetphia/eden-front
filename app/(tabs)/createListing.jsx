@@ -25,11 +25,10 @@ import AddListingDetails from "../../components/createListing/addListingDetails"
 import * as SecureStore from "expo-secure-store";
 import { useAuth } from "../../context/authContext";
 import DropdownComponent from "../../components/createListing/dropDown";
-import { categories, fruits, veggies } from "../../constants/corpsStuff";
+import { categories, fruits, veggies } from "../../utils/corpsStuff";
 import { Picker } from "@react-native-picker/picker";
 
 import sizes from "../../constants/sizes";
-import { StyleSheet } from "react-native";
 
 const CreateListing = () => {
   const { xsm, sm, md, lg, xl, xxl } = sizes;

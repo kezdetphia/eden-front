@@ -4,7 +4,7 @@ import React from "react";
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
-import HomeCustomHeader from "@/components/homescreen/HomeCustomHeader";
+import HomeCustomHeader from "../../components/homescreen/HomeCustomHeader";
 // import CreateListingCustomHeader from "@/components/createListing/CreateListingCustomHeader";
 
 import {
@@ -28,11 +28,26 @@ export default function TabLayout() {
         },
       }}
     >
+      {/* //// */}
+      <Tabs.Screen
+        name="test2"
+        options={{
+          title: "Test2",
+
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon
+              name={focused ? "search-outline" : "search-outline"}
+              color={color}
+            />
+          ),
+        }}
+      />
+      {/* //// */}
       <Tabs.Screen
         name="index"
         options={{
-          headerShown: true,
-          header: () => <HomeCustomHeader />,
+          headerShown: false,
+          // header: () => <HomeCustomHeader />,
           title: "Home",
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon

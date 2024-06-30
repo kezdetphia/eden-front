@@ -16,6 +16,7 @@ const sizes = {
   lg: 18,
   xl: 20,
   xxl: 22,
+  title: 24,
   paddingSides: 12,
 };
 
