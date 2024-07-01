@@ -21,9 +21,9 @@ const SignUp = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const router = useRouter();
 
-  useEffect(() => {
-    if (errorMessage === "User registered successfully");
-  }, [errorMessage]);
+  // useEffect(() => {
+  //   if (errorMessage === "User registered successfully");
+  // }, [errorMessage]);
 
   const showToast = (message) => {
     if (message === "User registered successfully") return;
@@ -82,7 +82,7 @@ const SignUp = () => {
     formData.password.length > 6;
 
   if (isAuthenticated) {
-    router.replace("home");
+    router.replace("/home");
   }
 
   return (

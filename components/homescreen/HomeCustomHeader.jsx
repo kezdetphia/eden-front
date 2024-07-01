@@ -22,6 +22,7 @@ export default function CustomHeader({ searchBarValue, setSearchBarValue }) {
           style={{
             // paddingHorizontal: xs(paddingSides),
             paddingTop: ys(sm),
+            paddingHorizontal: xs(paddingSides),
           }}
         >
           <View>
@@ -65,7 +66,8 @@ export default function CustomHeader({ searchBarValue, setSearchBarValue }) {
             {/* Added style for image size */}
           </View>
         </View>
-        <View>
+
+        <View style={{ paddingHorizontal: xs(paddingSides) }}>
           <View
             className="flex-row items-center bg-white rounded-xl border border-g200    "
             style={{

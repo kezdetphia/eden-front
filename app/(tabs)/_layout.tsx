@@ -28,23 +28,8 @@ export default function TabLayout() {
         },
       }}
     >
-      {/* //// */}
       <Tabs.Screen
-        name="test2"
-        options={{
-          title: "Test2",
-
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon
-              name={focused ? "search-outline" : "search-outline"}
-              color={color}
-            />
-          ),
-        }}
-      />
-      {/* //// */}
-      <Tabs.Screen
-        name="index"
+        name="home"
         options={{
           headerShown: false,
           // header: () => <CustomHeader />,
@@ -92,7 +77,19 @@ export default function TabLayout() {
           ),
         }}
       />
+      <Tabs.Screen
+        name="test2"
+        options={{
+          title: "Test2",
 
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon
+              name={focused ? "search-outline" : "search-outline"}
+              color={color}
+            />
+          ),
+        }}
+      />
       <Tabs.Screen
         name="test"
         options={{

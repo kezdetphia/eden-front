@@ -1,5 +1,5 @@
 import { View, FlatList, Dimensions, Pressable, Text } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useAuth } from "../../context/authContext";
 import { useRouter } from "expo-router";
 import ProductCard from "../../components/productCard";
@@ -69,6 +69,10 @@ const HomeScreen = () => {
 
   return (
     <View className="flex-1 bg-grayb  ">
+      <CustomHeader
+        searchBarValue={searchBarValue}
+        setSearchBarValue={setSearchBarValue}
+      />
       <FlatList
         showsVerticalScrollIndicator={false}
         style={{ marginTop: ys(marginxxs) }}
@@ -82,10 +86,6 @@ const HomeScreen = () => {
               paddingTop: ys(paddingSides),
             }}
           >
-            <CustomHeader
-              searchBarValue={searchBarValue}
-              setSearchBarValue={setSearchBarValue}
-            />
             <View style={{ paddingTop: ys(10) }}>
               <Text
                 className="text-b200 text-xl"

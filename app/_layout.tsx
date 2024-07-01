@@ -46,10 +46,8 @@ function MainLayout() {
   }
   return (
     <>
-      {/* <GlobalStylesWrapper> */}
       <Slot />
       <Toast />
-      {/* </GlobalStylesWrapper> */}
     </>
   );
 }
