@@ -59,14 +59,13 @@ const CreateListing = () => {
     }
   };
 
-  console.log("ezx a user", user);
+  // console.log("ezx a user", user);
 
   const [listingDetails, setListingDetails] = useState({
     price: null,
-    title: null,
+    title: "fdfd",
     desc: null,
-    image:
-      "https://cdn1.iconfinder.com/data/icons/fruit-cartoon-flat-cute-fruity/512/orange-1024.png",
+    image: null,
     category: null,
     owner: user._id,
     amount: selectedAvailableAmount,
@@ -78,7 +77,6 @@ const CreateListing = () => {
       ...prevDetails,
       amount: selectedAvailableAmount,
     }));
-    console.log("selectedAvailableAmount", selectedAvailableAmount);
   }, [selectedAvailableAmount]);
 
   useEffect(() => {
@@ -146,6 +144,7 @@ const CreateListing = () => {
             <ImageUpload
               listingDetails={listingDetails}
               updateListingDetails={updateListingDetails}
+              user={user}
             />
           </View>
           <ChooseListingCategory

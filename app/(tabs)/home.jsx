@@ -67,7 +67,7 @@ const HomeScreen = () => {
   });
 
   console.log("home is authenticated", isAuthenticated);
-  console.log("home is user", user);
+  // console.log("home is user", user);
 
   return (
     <View className="flex-1 bg-grayb  ">

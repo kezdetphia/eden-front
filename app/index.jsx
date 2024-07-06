@@ -13,6 +13,7 @@ import LottieView from "lottie-react-native";
 const index = () => {
   const { isAuthenticated, user } = useAuth();
   const router = useRouter();
+  const { paddingSides, paddingTop, title } = sizes;
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -20,7 +21,6 @@ const index = () => {
     }
   }, [isAuthenticated, router]);
 
-  const { paddingSides, paddingTop, title } = sizes;
   return (
     <SafeAreaView className="flex-1 bg-grayb">
       <View

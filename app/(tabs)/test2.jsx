@@ -3,20 +3,9 @@ import React from "react";
 import LottieView from "lottie-react-native";
 
 const test2 = () => {
-  return (
-    <View className="flex-1 items-center justify-center px-100 bg-red-200 ">
-      <View className="h-50">
-        <LottieView
-          style={{ flex: 1, height: 200, width: 100 }}
-          source={require("../../assets/icons/signin.json")}
-          autoPlay
-          loop
-          onError={(error) => console.log("Lottie error:", error)} // Add error logging
-        />
-      </View>
-      <Text>hello</Text>
-    </View>
-  );
+  <View>
+    <Text>test2</Text>
+  </View>;
 };
 
 export default test2;
