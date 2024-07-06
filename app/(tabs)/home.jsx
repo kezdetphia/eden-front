@@ -10,7 +10,6 @@ import {
 } from "react-native-size-matters";
 import sizes from "../../constants/sizes";
 import CategoryCard from "../../components/CategoryCard";
-import { LinearGradient } from "expo-linear-gradient";
 import FilterScroll from "../../components/FilterScroll";
 import CustomHeader from "../../components/homescreen/HomeCustomHeader";
 
@@ -66,6 +65,9 @@ const HomeScreen = () => {
       : true;
     return categoryMatch && filterMatch && titleMatch;
   });
+
+  console.log("home is authenticated", isAuthenticated);
+  console.log("home is user", user);
 
   return (
     <View className="flex-1 bg-grayb  ">

@@ -9,9 +9,11 @@ import {
 import sizes from "../../constants/sizes";
 import { Entypo, Feather } from "@expo/vector-icons";
 import { EvilIcons } from "@expo/vector-icons";
+import { useAuth } from "@/context/authContext";
 
 export default function CustomHeader({ searchBarValue, setSearchBarValue }) {
   const { sm, paddingSides } = sizes;
+  const { isAuthenticated, authLoading, user } = useAuth();
 
   return (
     <>
@@ -38,7 +40,9 @@ export default function CustomHeader({ searchBarValue, setSearchBarValue }) {
                 className="text-b300"
                 style={{ fontFamily: "jakartaBold", fontSize: "20px" }}
               >
-                , Mark Feher
+                ,{" "}
+                {user?.username?.charAt(0).toUpperCase() +
+                  user.username.slice(1)}
               </Text>
             </View>
             <View
@@ -52,7 +56,7 @@ export default function CustomHeader({ searchBarValue, setSearchBarValue }) {
                 color="#69D94E"
               />
               <Text style={{ fontFamily: "jakarta" }} className="text-b100">
-                Los Angels
+                {user?.location}
               </Text>
             </View>
           </View>
