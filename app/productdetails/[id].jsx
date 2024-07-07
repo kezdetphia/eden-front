@@ -47,7 +47,6 @@ const ProductDetail = () => {
           throw new Error("Network response was not ok");
         }
         const data = await response.json();
-        console.log(data.corp);
         setProduct(data.corp);
       } catch (error) {
         console.error("Failed to fetch product details:", error);
@@ -57,9 +56,19 @@ const ProductDetail = () => {
       }
     };
 
-    console.log("single page product", product);
     fetchProductDetails();
   }, [productId]);
+
+  // useEffect(() => {
+  //   if (product && product.comments) {
+  //     const comments = product.comments.map((comment) => ({
+  //       text: comment.text,
+  //       userId: comment.user._id,
+  //       username: comment.user.username,
+  //     }));
+  //     console.log("Extracted comments:", comments);
+  //   }
+  // }, [product]);
 
   const backgroundColor = scrollY.interpolate({
     inputRange: [ys(100), imageHeight - ys(20)],
