@@ -12,6 +12,7 @@ import sizes from "../../constants/sizes";
 import CategoryCard from "../../components/CategoryCard";
 import FilterScroll from "../../components/FilterScroll";
 import CustomHeader from "../../components/homescreen/HomeCustomHeader";
+import * as SecureStore from "expo-secure-store";
 
 //TODO: -change back the headercomponent or find a solution to a sticky search bar
 
@@ -36,8 +37,15 @@ const HomeScreen = () => {
   }, []);
 
   const fetchCorps = async () => {
+    const token = await SecureStore.getItemAsync("authToken");
     try {
-      const response = await fetch("http://localhost:3000/getcorps");
+      const response = await fetch("http://localhost:3000/getcorps", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }

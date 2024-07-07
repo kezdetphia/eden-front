@@ -29,16 +29,19 @@ import { categories, fruits, veggies } from "../../utils/corpsStuff";
 import { Picker } from "@react-native-picker/picker";
 
 import sizes from "../../constants/sizes";
+import CustomButton from "../../components/customButton";
 
 const CreateListing = () => {
-  const { xsm, sm, md, lg, xl, xxl } = sizes;
+  const { sm, md } = sizes;
   const router = useRouter();
   const [dropdownData, setDropdownData] = useState([]);
   const scrollViewRef = useRef(null);
   const [selectedAvailableAmount, setSelectedAvailableAmount] = useState(0);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { user } = useAuth();
 
   const handleSubmit = async () => {
+    setIsSubmitting(true);
     try {
       const res = await fetch("http://localhost:3000/createcorp", {
         method: "POST",
@@ -49,6 +52,7 @@ const CreateListing = () => {
       });
 
       if (!res.ok) {
+        setIsSubmitting(false);
         throw new Error("Failed to create listing");
       }
 
@@ -56,6 +60,8 @@ const CreateListing = () => {
       console.log("Listing created successfully:", data);
     } catch (error) {
       console.error("Error creating listing:", error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -206,22 +212,11 @@ const CreateListing = () => {
               <Picker.Item label="50 <" value="More than 50" />
             </Picker>
           </View>
-          <Pressable
-            onPress={handleSubmit}
-            className="bg-gray-800 rounded-full "
-            style={{
-              padding: ms(12),
-              marginTop: ys(xxl),
-              marginHorizontal: xs(sm),
-            }}
-          >
-            <Text
-              style={{ fontSize: ms(md), fontFamily: "poppins" }}
-              className="text-white text-center"
-            >
-              Publish
-            </Text>
-          </Pressable>
+
+          <CustomButton
+            submit={handleSubmit}
+            text={isSubmitting ? "Publishing..." : "Publish"}
+          />
         </ScrollView>
       </View>
     </SafeAreaView>

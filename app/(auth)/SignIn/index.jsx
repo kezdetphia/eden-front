@@ -42,10 +42,12 @@ const SignIn = () => {
   const handleSignIn = async () => {
     setIsLoading(true);
     try {
+      // const authHeader = req.headers["authorization"];
       const res = await fetch("http://localhost:3000/api/users/signin", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          // Authorization: authHeader,
         },
         body: JSON.stringify(formData),
       });

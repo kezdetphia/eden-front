@@ -4,15 +4,16 @@ import { Dropdown } from "react-native-element-dropdown";
 import AntDesign from "@expo/vector-icons/AntDesign";
 
 const DropdownComponent = ({
-  data,
-  listingDetails,
-  updateListingDetails,
+  data = [],
+  listingDetails = {},
+  updateListingDetails = () => {},
   // onOpen,
   // onClose,
 }) => {
   const newData = data.map((item) => {
     return { label: item, value: item };
   });
+  console.log("dataaaaa", data);
 
   const [value, setValue] = useState(listingDetails.title);
 

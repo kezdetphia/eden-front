@@ -16,6 +16,7 @@ import {
 } from "react-native-size-matters";
 import sizes from "../../constants/sizes";
 import PriceQuantityCard from "../../components/singleProductPage/PriceQuantityCard";
+import * as SecureStore from "expo-secure-store";
 
 //TODO: make the main image carousel
 
@@ -30,9 +31,17 @@ const ProductDetail = () => {
 
   useEffect(() => {
     const fetchProductDetails = async () => {
+      const token = await SecureStore.getItemAsync("authToken");
       try {
         const response = await fetch(
-          `http://localhost:3000/getcorp/${productId}`
+          `http://localhost:3000/getcorp/${productId}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -44,6 +53,7 @@ const ProductDetail = () => {
         console.error("Failed to fetch product details:", error);
         setError(error);
       } finally {
+        // Any cleanup code if needed
       }
     };
 

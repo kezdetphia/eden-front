@@ -14,10 +14,9 @@ import {
 import * as ImageManipulator from "expo-image-manipulator";
 import sizes from "../../constants/sizes";
 
-const ImageUpload = ({ user, listingDetails, updateListingDetails }) => {
+const ImageUpload = ({ user, updateListingDetails }) => {
   const { xsm, sm, md, lg, xl, xxl } = sizes;
   const [selectedImage, setSelectedImage] = useState(null);
-  const [uploading, setUploading] = useState(false);
 
   const requestPermissions = async () => {
     try {
