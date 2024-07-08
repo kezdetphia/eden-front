@@ -33,6 +33,12 @@ const HomeScreen = () => {
   const cardWidth = screenWidth / numColumns - 10; // Adjust for margin
 
   useEffect(() => {
+    if (user === "undefined" || !isAuthenticated) {
+      router.replace("/");
+    }
+  });
+
+  useEffect(() => {
     fetchCorps();
   }, []);
 
@@ -75,7 +81,7 @@ const HomeScreen = () => {
   });
 
   console.log("home is authenticated", isAuthenticated);
-  // console.log("home is user", user);
+  console.log("home is user", user);
 
   return (
     <View className="flex-1 bg-grayb  ">
