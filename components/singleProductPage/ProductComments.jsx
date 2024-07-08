@@ -35,7 +35,7 @@ const ProductComments = ({ product }) => {
         userId: comment.user._id,
         username: comment.user.username,
       }));
-      console.log("productcomments, ", comments);
+      // console.log("productcomments, ", comments);
     } else {
       console.log("Product or comments are undefined");
     }
@@ -79,7 +79,9 @@ const ProductComments = ({ product }) => {
       if (!res.ok) throw new Error("Network response was not ok");
       const data = await res.json();
       console.log("retuirn data", data);
-      setComment("");
+      //TODO: not sure if directinh back to the page after submitting the commet
+      // will be a good user experience but keep it for now
+      router.replace(`/productdetails/${product?._id}`);
     } catch (error) {
       console.error("Failed to submit comment:", error);
       setError(error);
@@ -142,7 +144,7 @@ const ProductComments = ({ product }) => {
                 <View
                   key={comment._id}
                   className="flex-row"
-                  style={{ paddingTop: ys(paddingTop * 2) }}
+                  style={{ paddingTop: ys(paddingTop) }}
                 >
                   <View>
                     <Pressable

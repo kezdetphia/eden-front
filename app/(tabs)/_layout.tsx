@@ -5,7 +5,7 @@ import { TabBarIcon } from "@/components/navigation/TabBarIcon";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import CustomHeader from "../../components/homescreen/HomeCustomHeader";
-// import CreateListingCustomHeader from "@/components/createListing/CreateListingCustomHeader";
+import { AntDesign } from "@expo/vector-icons";
 
 import {
   scale as xs,
@@ -24,7 +24,9 @@ export default function TabLayout() {
         tabBarShowLabel: false,
         tabBarStyle: {
           justifyContent: "center",
-          paddingTop: ys(10),
+          paddingTop: ys(5),
+          paddingBottom: ys(20),
+          height: ys(60),
         },
       }}
     >
@@ -73,7 +75,8 @@ export default function TabLayout() {
           headerShown: false,
           title: "Create listing",
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? "add" : "add-outline"} color={color} />
+            // <TabBarIcon name={focused ? "add" : "add-outline"} color={color} />
+            <AntDesign name="pluscircle" size={ms(40)} color="#69D94E" />
           ),
         }}
       />

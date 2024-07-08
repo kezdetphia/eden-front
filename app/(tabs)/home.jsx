@@ -103,16 +103,6 @@ const HomeScreen = () => {
               >
                 Discover Fresh, Seasonal Fruits and Vegetables
               </Text>
-              {/* <LinearGradient
-                colors={["#83DF6C", "#FFFFFF"]}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 0 }}
-                style={{
-                  height: 1, // Thin line
-                  marginTop: ys(5), // Space between text and line
-                  width: 500,
-                }}
-              /> */}
             </View>
 
             <View style={{ paddingTop: ys(paddingSides + 4) }}>

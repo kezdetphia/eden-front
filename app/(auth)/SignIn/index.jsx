@@ -1,4 +1,11 @@
-import { Text, TextInput, Pressable, View } from "react-native";
+import {
+  Text,
+  TextInput,
+  Pressable,
+  View,
+  Platform,
+  Animated,
+} from "react-native";
 import React, { useState } from "react";
 import Toast from "react-native-toast-message";
 import { useRouter } from "expo-router";
@@ -11,6 +18,7 @@ import {
   moderateScale as ms,
 } from "react-native-size-matters";
 import sizes from "../../../constants/sizes";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 const SignIn = () => {
   const { paddingTop, paddingSides, title, subtitle } = sizes;
@@ -78,112 +86,120 @@ const SignIn = () => {
     isEmailValid(formData.email) && formData.password.length > 6;
 
   return (
-    <View
-      className="flex-1 items-center bg-white "
-      style={{ paddingHorizontal: xs(paddingSides * 1.5) }}
+    <KeyboardAwareScrollView
+      contentContainerStyle={{ flexGrow: 1 }}
+      enableOnAndroid={true}
+      keyboardShouldPersistTaps="handled"
+      extraScrollHeight={Platform.OS === "ios" ? ms(30) : 0}
+      // extraHeight={150}
+      scrollEventThrottle={ms(16)}
     >
-      <LottieView
-        style={{ height: 200, width: 200, marginTop: ys(paddingTop * 2.5) }}
-        source={require("../../../assets/icons/signin.json")}
-        autoPlay
-        loop
-        onError={(error) => console.log("Lottie error:", error)} // Add error logging
-      />
-      <Text
-        className="text-b300"
-        style={{
-          fontSize: title * 1.5,
-          fontFamily: "jakartaBold",
-          letterSpacing: 0.3,
-          // paddingTop: ys(paddingTop),
-        }}
+      <View
+        className="flex-1 items-center bg-white "
+        style={{ paddingHorizontal: xs(paddingSides * 1.5) }}
       >
-        Hey Swapper!
-      </Text>
-      <Text
-        className="text-b300"
-        style={{
-          fontSize: subtitle * 1.5,
-          fontFamily: "jakartaBold",
-          letterSpacing: 0.3,
-          paddingTop: ys(paddingTop),
-        }}
-      >
-        Sign In
-      </Text>
-      <TextInput
-        value={formData.email}
-        onChangeText={(text) => handleInputChange("email", text)}
-        className="w-full p-3  bg-white rounded-lg border border-b50"
-        placeholder="Email"
-        placeholderTextColor="#9CA3AF"
-        autoCapitalize="none"
-        style={{
-          fontFamily: "jakarta",
-          marginBottom: ys(paddingTop * 1.5),
-          marginTop: ys(paddingTop * 3),
-        }}
-      />
-      <TextInput
-        value={formData.password}
-        onChangeText={(text) => handleInputChange("password", text)}
-        className="w-full p-3 mb-6 bg-white rounded-lg border border-b50"
-        placeholder="Password"
-        placeholderTextColor="#9CA3AF"
-        autoCapitalize="none"
-        secureTextEntry
-      />
-      <View className="w-full" style={{ paddingTop: ys(paddingTop / 2) }}>
-        <Pressable
-          onPress={handleSignIn}
+        <LottieView
+          style={{ height: 200, width: 200, marginTop: ys(paddingTop * 2.5) }}
+          source={require("../../../assets/icons/signin.json")}
+          autoPlay
+          loop
+          onError={(error) => console.log("Lottie error:", error)} // Add error logging
+        />
+        <Text
+          className="text-b300"
           style={{
-            backgroundColor: "#69D94E",
-            paddingVertical: ys(10),
-            paddingHorizontal: xs(20),
-            borderRadius: ms(5),
-            alignItems: "center",
-            justifyContent: "center",
-            marginTop: ys(10),
-            flexDirection: "row",
-            opacity: isLoading || !isFormValid ? 0.7 : 1,
+            fontSize: title * 1.5,
+            fontFamily: "jakartaBold",
+            letterSpacing: 0.3,
+            // paddingTop: ys(paddingTop),
           }}
-          disabled={!isFormValid}
         >
-          <Text
+          Hey Swapper!
+        </Text>
+        <Text
+          className="text-b300"
+          style={{
+            fontSize: subtitle * 1.5,
+            fontFamily: "jakartaBold",
+            letterSpacing: 0.3,
+            paddingTop: ys(paddingTop),
+          }}
+        >
+          Sign In
+        </Text>
+        <TextInput
+          value={formData.email}
+          onChangeText={(text) => handleInputChange("email", text)}
+          className="w-full p-3  bg-white rounded-lg border border-b50"
+          placeholder="Email"
+          placeholderTextColor="#9CA3AF"
+          autoCapitalize="none"
+          style={{
+            fontFamily: "jakarta",
+            marginBottom: ys(paddingTop * 1.5),
+            marginTop: ys(paddingTop * 3),
+          }}
+        />
+        <TextInput
+          value={formData.password}
+          onChangeText={(text) => handleInputChange("password", text)}
+          className="w-full p-3 mb-6 bg-white rounded-lg border border-b50"
+          placeholder="Password"
+          placeholderTextColor="#9CA3AF"
+          autoCapitalize="none"
+          secureTextEntry
+        />
+        <View className="w-full" style={{ paddingTop: ys(paddingTop / 2) }}>
+          <Pressable
+            onPress={handleSignIn}
             style={{
-              color: "#FFFFFF",
-              fontSize: ms(14),
-              fontFamily: "jakartaSemibold",
+              backgroundColor: "#69D94E",
+              paddingVertical: ys(10),
+              paddingHorizontal: xs(20),
+              borderRadius: ms(5),
+              alignItems: "center",
+              justifyContent: "center",
+              marginTop: ys(10),
+              flexDirection: "row",
+              opacity: isLoading || !isFormValid ? 0.7 : 1,
+            }}
+            disabled={!isFormValid}
+          >
+            <Text
+              style={{
+                color: "#FFFFFF",
+                fontSize: ms(14),
+                fontFamily: "jakartaSemibold",
+                letterSpacing: 0.3,
+              }}
+            >
+              {isLoading ? "Signing in.." : "Sign In"}
+            </Text>
+          </Pressable>
+        </View>
+        <Pressable onPress={() => router.push("SignUp")}>
+          <Text
+            className="text-b100"
+            style={{
+              paddingTop: ys(paddingTop),
+              fontFamily: "jakarta",
               letterSpacing: 0.3,
             }}
           >
-            {isLoading ? "Signing in.." : "Sign In"}
+            Dont't have an account yet?{"  "}
+            <Text
+              style={{
+                fontFamily: "jakartaSemibold",
+                letterSpacing: 0.3,
+              }}
+              className="text-g300"
+            >
+              Sign Up!
+            </Text>
           </Text>
         </Pressable>
       </View>
-
-      <Pressable onPress={() => router.push("SignUp")}>
-        <Text
-          className="text-b100"
-          style={{
-            paddingTop: ys(paddingTop),
-            fontFamily: "jakarta",
-            letterSpacing: 0.3,
-          }}
-        >
-          Dont't have an account yet?{"  "}
-          <Text
-            style={{
-              fontFamily: "jakartaSemibold",
-              letterSpacing: 0.3,
-            }}
-            className="text-g300"
-          >
-            Sign Up!
-          </Text>
-        </Text>
-      </Pressable>
-    </View>
+    </KeyboardAwareScrollView>
   );
 };
 

@@ -1,4 +1,11 @@
-import { View, Text, Pressable, Animated, StatusBar } from "react-native";
+import {
+  View,
+  Text,
+  Pressable,
+  Animated,
+  StatusBar,
+  Platform,
+} from "react-native";
 import { Image } from "expo-image";
 import React, { useEffect, useState, useRef } from "react";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -16,6 +23,7 @@ import sizes from "../../constants/sizes";
 import PriceQuantityCard from "../../components/singleProductPage/PriceQuantityCard";
 import * as SecureStore from "expo-secure-store";
 import CustomButton from "../../components/customButton";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 //TODO: make the main image carousel
 
@@ -57,17 +65,6 @@ const ProductDetail = () => {
 
     fetchProductDetails();
   }, [productId]);
-
-  // useEffect(() => {
-  //   if (product && product.comments) {
-  //     const comments = product.comments.map((comment) => ({
-  //       text: comment.text,
-  //       userId: comment.user._id,
-  //       username: comment.user.username,
-  //     }));
-  //     console.log("Extracted comments:", comments);
-  //   }
-  // }, [product]);
 
   const backgroundColor = scrollY.interpolate({
     inputRange: [ys(100), imageHeight - ys(20)],
@@ -162,7 +159,17 @@ const ProductDetail = () => {
             }}
           />
         </View>
-        <View
+
+        <KeyboardAwareScrollView
+          keyboardShouldPersistTaps="handled"
+          enableOnAndroid={true}
+          extraScrollHeight={Platform.OS === "ios" ? 20 : 0}
+          extraHeight={150}
+          scrollEventThrottle={16}
+          onScroll={Animated.event(
+            [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+            { useNativeDriver: false }
+          )}
           style={{
             paddingHorizontal: xs(paddingSides),
             marginTop: -ys(20), // Move the view up to cover part of the image
@@ -299,9 +306,10 @@ const ProductDetail = () => {
               />
             </View>
           </View>
-        </View>
+        </KeyboardAwareScrollView>
       </Animated.ScrollView>
     </View>
+    // </KeyboardAwareScrollView>
   );
 };
 
