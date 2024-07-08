@@ -8,16 +8,21 @@ import {
 } from "react-native-size-matters";
 import sizes from "../../constants/sizes";
 import { useAuth } from "../../context/authContext";
+import { Image } from "expo-image";
+import { format, parseISO } from "date-fns";
 
-// TODO: - implement adding comments to the owner's product
-//       - display comments conditionally if there is or isnt
+const { md, paddingTop, paddingSides } = sizes;
+
+// TODO: - DONE- implement adding comments to the owner's product
+//       - DONE - display comments conditionally if there is or isnt
 //       - message user buttin direct user to the owners message window to send message
 
 const ProductComments = ({ product }) => {
+  const { xsm, xl, xxl, subtitle, paddingTop } = sizes;
   const { user } = useAuth();
   const [comment, setComment] = useState();
-  const [commentingUser, setCommentingUser] = useState();
-  const { xsm, xl, xxl, subtitle, paddingTop } = sizes;
+  const [showAllComments, setShowAllComments] = useState(false);
+  const [sortedComments, setSortedComments] = useState([]);
 
   useEffect(() => {
     if (product && product.comments) {
@@ -32,9 +37,31 @@ const ProductComments = ({ product }) => {
     }
   }, [product]);
 
+  useEffect(() => {
+    // Sort comments when component mounts or product prop changes
+    if (product?.comments) {
+      const sorted = sortComments(product.comments);
+      setSortedComments(sorted);
+    }
+  }, [product?.comments]);
+
+  const handleToggleComments = () => {
+    setShowAllComments(!showAllComments);
+  };
+
+  const commentsToShow = showAllComments
+    ? sortedComments
+    : sortedComments.slice(0, 3);
+
+  const sortComments = (comments) => {
+    return comments
+      .slice()
+      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  };
+
   const submitComment = async () => {
     try {
-      console.log("User object before sending request:", user); // Log the user object
+      console.log("prodict object before sending request:", product); // Log the user object
       const res = await fetch(
         `http://localhost:3000/addcropcomment/${product?._id}`,
         {
@@ -46,13 +73,9 @@ const ProductComments = ({ product }) => {
           body: JSON.stringify({ comment: { text: comment, user: user._id } }),
         }
       );
-      console.log("this is user stufff", user);
-
       if (!res.ok) throw new Error("Network response was not ok");
-
       const data = await res.json();
-      console.log(data.comment);
-      // setComment(data.comment);
+      console.log("retuirn data", data);
       setComment("");
     } catch (error) {
       console.error("Failed to submit comment:", error);
@@ -61,31 +84,6 @@ const ProductComments = ({ product }) => {
       // Any cleanup code if needed
     }
   };
-
-  // useEffect(() => {
-  //   const getCommentingUser = async () => {
-  //     if (!comment?.user) return;
-
-  //     try {
-  //       const res = await fetch(
-  //         `http://localhost:3000/api/users/${product?.comments?.user}`
-  //       );
-  //       if (!res.ok)
-  //         throw new Error(
-  //           "Network response was not ok while fetching commenting user"
-  //         );
-  //       const data = await res.json();
-  //       console.log("commenting user data", data);
-  //       setCommentingUser(data);
-  //     } catch (error) {
-  //       console.error("Failed to fetch commenting user:", error);
-  //     }
-  //   };
-
-  //   getCommentingUser();
-  // }, []);
-
-  console.log("rpdict commentssss", product?.comments);
 
   return (
     <View>
@@ -96,7 +94,7 @@ const ProductComments = ({ product }) => {
           letterSpacing: 0.3,
         }}
       >
-        Comments
+        Comments ({product?.comments.length})
       </Text>
 
       <View style={{ paddingTop: ys(paddingTop) }}>
@@ -133,43 +131,120 @@ const ProductComments = ({ product }) => {
             }}
           />
         </View>
-
+        {/* //TODO: maybe change this a flatlist later, but then the parent comonent needs to be changed too to a flatlist */}
         <View>
-          {product?.comments?.map((comment) => (
-            <View key={comment._id}>
-              <Text>{comment.text}</Text>
-              <Text>{comment.user.username}</Text>
+          {product?.comments.length > 0 ? (
+            <View>
+              {commentsToShow.map((comment) => (
+                <View
+                  key={comment._id}
+                  className="flex-row"
+                  style={{ paddingTop: ys(paddingTop * 2) }}
+                >
+                  <View>
+                    <Image
+                      style={{
+                        height: ms(40),
+                        width: ms(40),
+                        borderRadius: ms(20),
+                      }}
+                      source={require("../../assets/images/avatar.png")}
+                    />
+                  </View>
+
+                  <View className="flex-1" style={{ paddingLeft: xs(md) }}>
+                    <View className="flex-col items-start">
+                      <View className="w-full flex-row justify-between">
+                        <Text
+                          className="text-b300"
+                          style={{
+                            fontSize: ms(15),
+                            fontFamily: "jakartaBold",
+                            letterSpacing: 0.3,
+                          }}
+                        >
+                          {comment?.user?.username}
+                        </Text>
+                        <Text
+                          className="text-b75"
+                          style={{
+                            fontSize: ms(10),
+                            fontFamily: "jakarta",
+                            letterSpacing: 0.3,
+                          }}
+                        >
+                          {format(
+                            parseISO(comment?.createdAt),
+                            "h:mma  M/d/yy"
+                          )}
+                        </Text>
+                      </View>
+
+                      <Text
+                        className="text-b100"
+                        style={{
+                          fontFamily: "jakarta",
+                          paddingTop: ys(7),
+                          letterSpacing: 0.3,
+                        }}
+                      >
+                        {comment?.text}
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+              ))}
+
+              {product?.comments.length > 3 && (
+                // <View>
+                <Pressable
+                  style={{ paddingTop: ys(paddingTop * 1.5) }}
+                  onPress={handleToggleComments}
+                >
+                  <Text
+                    className="text-g300 text-center"
+                    style={{
+                      fontFamily: "jakarta",
+                      paddingTop: ys(7),
+                      letterSpacing: 0.3,
+                    }}
+                  >
+                    {showAllComments ? "Show Less" : "Read More..."}
+                  </Text>
+                </Pressable>
+                // </View>
+              )}
             </View>
-          ))}
-        </View>
-
-        <View style={{ paddingTop: ys(paddingTop + 4) }}>
-          <Text
-            className="text-center "
-            style={{
-              fontSize: ms(12),
-              fontFamily: "jakarta",
-
-              fontStyle: "#E6E6E6",
-              letterSpacing: 0.3,
-            }}
-          >
-            No comments yet...
-          </Text>
-          <Text
-            className=" text-center text-b100"
-            style={{
-              fontSize: ms(xsm),
-              paddingHorizontal: xs(xsm),
-              fontFamily: "jakarta",
-              letterSpacing: 0.3,
-            }}
-          >
-            Be the firts to ask questions, comments about this item, or share
-            your experience
-          </Text>
+          ) : (
+            <View style={{ paddingTop: ys(paddingTop + 4) }}>
+              <Text
+                className="text-center"
+                style={{
+                  fontSize: ms(12),
+                  fontFamily: "jakarta",
+                  fontStyle: "#E6E6E6",
+                  letterSpacing: 0.3,
+                }}
+              >
+                No comments yet...
+              </Text>
+              <Text
+                className="text-center text-b100"
+                style={{
+                  fontSize: ms(xsm),
+                  paddingHorizontal: xs(xsm),
+                  fontFamily: "jakarta",
+                  letterSpacing: 0.3,
+                }}
+              >
+                Be the first to ask questions, comment about this item, or share
+                your experience
+              </Text>
+            </View>
+          )}
         </View>
       </View>
+
       <View style={{ paddingTop: ys(paddingTop + paddingTop / 2) }}>
         <Pressable
           onPress={() => {

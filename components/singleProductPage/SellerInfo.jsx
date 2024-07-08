@@ -27,7 +27,7 @@ const SellerInfo = ({ owner }) => {
       >
         Seller Information
       </Text>
-      <View className="flex-row" style={{ paddingTop: ys(7) }}>
+      <View className="flex-row" style={{ paddingTop: ys(10) }}>
         <View>
           <Image
             style={{ height: ms(40), width: ms(40), borderRadius: ms(20) }}

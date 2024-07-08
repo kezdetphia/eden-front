@@ -102,8 +102,7 @@ const SellerProfile = () => {
                   >
                     {item.title}
                   </Text>
-                  {/* <Text>{item.desc}</Text> */}
-                  {/* <Text>{item.location}</Text> */}
+
                   <Text
                     style={{ fontSize: ms(xsm), fontFamily: "poppins" }}
                     className="text-midgrey"

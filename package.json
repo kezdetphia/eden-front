@@ -19,6 +19,7 @@
     "@react-native-google-signin/google-signin": "^12.2.1",
     "@react-native-picker/picker": "^2.7.5",
     "@react-navigation/drawer": "^6.6.15",
+    "date-fns": "^3.6.0",
     "expo": "~51.0.9",
     "expo-auth-session": "~5.5.2",
     "expo-constants": "~16.0.2",
@@ -27,6 +28,7 @@
     "expo-font": "~12.0.7",
     "expo-google-app-auth": "^10.0.0",
     "expo-image": "~1.12.11",
+    "expo-image-manipulator": "~12.0.5",
     "expo-image-picker": "~15.0.5",
     "expo-linear-gradient": "~13.0.2",
     "expo-linking": "~6.3.1",
@@ -57,8 +59,7 @@
     "react-native-svg": "^13.4.0",
     "react-native-toast-message": "^2.2.0",
     "react-native-web": "~0.19.10",
-    "react-navigation": "^5.0.0",
-    "expo-image-manipulator": "~12.0.5"
+    "react-navigation": "^5.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
