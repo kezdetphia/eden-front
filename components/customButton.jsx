@@ -1,4 +1,4 @@
-import { View, Text, Pressable } from "react-native";
+import { Text, Pressable } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import React from "react";
 import {
@@ -27,6 +27,9 @@ const CustomButton = ({ ...props }) => {
         flexDirection: "row",
       }}
     >
+      {props.iconType === "Feather" && (
+        <Feather name={props.icon} size={ms(xl)} color="#FFF" />
+      )}
       <Text
         style={{
           color: "#FFFFFF",

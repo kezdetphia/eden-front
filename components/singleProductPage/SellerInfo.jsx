@@ -1,6 +1,5 @@
 import { View, Text, Pressable } from "react-native";
 import React from "react";
-import { AntDesign } from "@expo/vector-icons";
 import {
   scale as xs,
   verticalScale as ys,
@@ -14,7 +13,7 @@ import SecondaryPill from "../SecondaryPill";
 const SellerInfo = ({ owner }) => {
   const router = useRouter();
 
-  const { xsm, sm, md, lg, subtitle } = sizes;
+  const { md, subtitle } = sizes;
   return (
     <View className="">
       <Text

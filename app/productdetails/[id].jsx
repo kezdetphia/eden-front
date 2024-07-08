@@ -6,8 +6,6 @@ import { Fontisto, AntDesign, Entypo } from "@expo/vector-icons";
 import ProductDesc from "../../components/singleProductPage/ProductDesc";
 import SellerInfo from "../../components/singleProductPage/SellerInfo";
 import WapperNeeds from "../../components/singleProductPage/WapperNeeds";
-import SendMessage from "../../components/singleProductPage/SendMessage";
-import Divider from "../../components/Divider";
 import ProductComments from "../../components/singleProductPage/ProductComments";
 import {
   scale as xs,
@@ -17,6 +15,7 @@ import {
 import sizes from "../../constants/sizes";
 import PriceQuantityCard from "../../components/singleProductPage/PriceQuantityCard";
 import * as SecureStore from "expo-secure-store";
+import CustomButton from "../../components/customButton";
 
 //TODO: make the main image carousel
 
@@ -278,6 +277,26 @@ const ProductDetail = () => {
               }}
             >
               <ProductComments product={product} />
+            </View>
+            <View
+              style={{
+                paddingTop: ys(paddingTop * 1.5),
+                paddingBottom: ys(paddingTop * 2),
+              }}
+            >
+              <CustomButton
+                iconType={"Feather"}
+                icon={"message-square"}
+                text={"Send Message to Swapper"}
+                submit={() =>
+                  // TODO: this needs to be specified to the owner once routes and controller is done
+                  router.push({
+                    pathname: `/messages/`,
+                    // pathname: `/messages/[id]`,
+                    params: { id: product?.owner },
+                  })
+                }
+              />
             </View>
           </View>
         </View>

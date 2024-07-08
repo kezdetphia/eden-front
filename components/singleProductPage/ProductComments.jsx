@@ -1,4 +1,4 @@
-import { View, Text, TextInput, Pressable, Button } from "react-native";
+import { View, Text, TextInput, Pressable } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Feather } from "@expo/vector-icons";
 import {
@@ -10,12 +10,14 @@ import sizes from "../../constants/sizes";
 import { useAuth } from "../../context/authContext";
 import { Image } from "expo-image";
 import { format, parseISO } from "date-fns";
+import { useRouter } from "expo-router";
 
-const { md, paddingTop, paddingSides } = sizes;
+const { md } = sizes;
 
 // TODO: - DONE- implement adding comments to the owner's product
 //       - DONE - display comments conditionally if there is or isnt
 //       - message user buttin direct user to the owners message window to send message
+//       - Refresh comments when new comment added by the user
 
 const ProductComments = ({ product }) => {
   const { xsm, xl, xxl, subtitle, paddingTop } = sizes;
@@ -23,6 +25,8 @@ const ProductComments = ({ product }) => {
   const [comment, setComment] = useState();
   const [showAllComments, setShowAllComments] = useState(false);
   const [sortedComments, setSortedComments] = useState([]);
+
+  const router = useRouter();
 
   useEffect(() => {
     if (product && product.comments) {
@@ -61,7 +65,6 @@ const ProductComments = ({ product }) => {
 
   const submitComment = async () => {
     try {
-      console.log("prodict object before sending request:", product); // Log the user object
       const res = await fetch(
         `http://localhost:3000/addcropcomment/${product?._id}`,
         {
@@ -142,29 +145,47 @@ const ProductComments = ({ product }) => {
                   style={{ paddingTop: ys(paddingTop * 2) }}
                 >
                   <View>
-                    <Image
-                      style={{
-                        height: ms(40),
-                        width: ms(40),
-                        borderRadius: ms(20),
-                      }}
-                      source={require("../../assets/images/avatar.png")}
-                    />
+                    <Pressable
+                      onPress={() =>
+                        router.push({
+                          pathname: `/sellerprofile/[id]`,
+                          params: { id: comment?.user?._id },
+                        })
+                      }
+                    >
+                      <Image
+                        style={{
+                          height: ms(40),
+                          width: ms(40),
+                          borderRadius: ms(20),
+                        }}
+                        source={require("../../assets/images/avatar.png")}
+                      />
+                    </Pressable>
                   </View>
 
                   <View className="flex-1" style={{ paddingLeft: xs(md) }}>
                     <View className="flex-col items-start">
                       <View className="w-full flex-row justify-between">
-                        <Text
-                          className="text-b300"
-                          style={{
-                            fontSize: ms(15),
-                            fontFamily: "jakartaBold",
-                            letterSpacing: 0.3,
-                          }}
+                        <Pressable
+                          onPress={() =>
+                            router.push({
+                              pathname: `/sellerprofile/[id]`,
+                              params: { id: comment?.user?._id },
+                            })
+                          }
                         >
-                          {comment?.user?.username}
-                        </Text>
+                          <Text
+                            className="text-b300"
+                            style={{
+                              fontSize: ms(15),
+                              fontFamily: "jakartaBold",
+                              letterSpacing: 0.3,
+                            }}
+                          >
+                            {comment?.user?.username}
+                          </Text>
+                        </Pressable>
                         <Text
                           className="text-b75"
                           style={{
@@ -186,6 +207,7 @@ const ProductComments = ({ product }) => {
                           fontFamily: "jakarta",
                           paddingTop: ys(7),
                           letterSpacing: 0.3,
+                          paddingRight: xs(xsm),
                         }}
                       >
                         {comment?.text}
@@ -243,37 +265,6 @@ const ProductComments = ({ product }) => {
             </View>
           )}
         </View>
-      </View>
-
-      <View style={{ paddingTop: ys(paddingTop + paddingTop / 2) }}>
-        <Pressable
-          onPress={() => {
-            // Add your onPress functionality here
-          }}
-          style={{
-            backgroundColor: "#69D94E",
-            paddingVertical: ys(10),
-            paddingHorizontal: xs(20),
-            borderRadius: ms(5),
-            alignItems: "center",
-            justifyContent: "center",
-            marginTop: ys(10),
-            flexDirection: "row",
-          }}
-        >
-          <Feather name="message-square" size={ms(xl)} color="#FFF" />
-          <Text
-            style={{
-              color: "#FFFFFF",
-              fontSize: ms(14),
-              fontFamily: "jakartaSemibold",
-              marginLeft: xs(5),
-              letterSpacing: 0.3,
-            }}
-          >
-            Send Message to Swapper
-          </Text>
-        </Pressable>
       </View>
     </View>
   );
