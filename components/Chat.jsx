@@ -1,42 +1,19 @@
-// import React, { useEffect } from "react";
-// import { View, Text } from "react-native";
-// import io from "socket.io-client";
+import { View, Text } from "react-native";
+import React from "react";
+import {
+  scale as xs,
+  verticalScale as ys,
+  moderateScale as ms,
+} from "react-native-size-matters";
+import sizes from "../constants/sizes";
 
-// const SERVER_URL = "http://localhost:3000"; // Update with your server URL
+const Chat = () => {
+  const { paddingSides, xsm, sm, md, lg, xl, xxl } = sizes;
+  return (
+    <View>
+      <Text>Chat</Text>
+    </View>
+  );
+};
 
-// const App = () => {
-//   useEffect(() => {
-//     const socket = io(SERVER_URL);
-
-//     socket.on("connect", () => {
-//       console.log("Connected to server");
-//     });
-
-//     socket.on("disconnect", () => {
-//       console.log("Disconnected from server");
-//     });
-
-//     // Example of sending a message
-//     socket.emit("chat message", {
-//       text: "Hello from React Native!",
-//       user: "user123", // Replace with actual user identifier
-//     });
-
-//     socket.on("chat message", (msg) => {
-//       console.log("Received message:", msg);
-//       // Handle received message in your React Native app
-//     });
-
-//     return () => {
-//       socket.disconnect();
-//     };
-//   }, []);
-
-//   return (
-//     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-//       <Text>Socket.io Chat Example</Text>
-//     </View>
-//   );
-// };
-
-// export default App;
+export default Chat;

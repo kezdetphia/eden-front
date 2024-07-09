@@ -87,7 +87,7 @@ export default function TabLayout() {
 
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
-              name={focused ? "search-outline" : "search-outline"}
+              name={focused ? "airplane-outline" : "airplane-outline"}
               color={color}
             />
           ),
