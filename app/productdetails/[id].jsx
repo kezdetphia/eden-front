@@ -298,9 +298,9 @@ const ProductDetail = () => {
                 submit={() =>
                   // TODO: this needs to be specified to the owner once routes and controller is done
                   router.push({
-                    pathname: `/messages/`,
+                    pathname: `/test2`,
                     // pathname: `/messages/[id]`,
-                    params: { id: product?.owner },
+                    params: { owner: JSON.stringify(product?.owner) },
                   })
                 }
               />
