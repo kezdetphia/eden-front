@@ -12,9 +12,9 @@ import { Slot } from "expo-router";
 
 // Import your global CSS file
 import "../global.css";
-import { useColorScheme } from "@/hooks/useColorScheme";
+import { useColorScheme } from "../hooks/useColorScheme";
 import Toast from "react-native-toast-message";
-import { AuthContextProvider } from "@/context/authContext";
+import { AuthContextProvider } from "../context/authContext";
 import GlobalStylesWrapper from "../components/GlobalStylesWrapper";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.

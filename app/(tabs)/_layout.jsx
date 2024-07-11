@@ -1,12 +1,9 @@
 import { Tabs } from "expo-router";
 import React from "react";
-
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
-// import CustomHeader from "../../components/homescreen/HomeCustomHeader";
 import { AntDesign } from "@expo/vector-icons";
-
 import {
   scale as xs,
   verticalScale as ys,
@@ -83,7 +80,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="Messenger"
         options={{
-          title: "messenger",
+          title: "Messenger",
 
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
