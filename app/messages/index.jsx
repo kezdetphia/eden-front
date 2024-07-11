@@ -8,10 +8,13 @@ import {
   StyleSheet,
   Pressable,
   SafeAreaView,
+  Platform,
+  KeyboardAvoidingView,
+  Keyboard,
 } from "react-native";
 import io from "socket.io-client";
 import { useAuth } from "../../context/authContext";
-import { router, useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { AntDesign, Feather } from "@expo/vector-icons";
 import {
   scale as xs,
@@ -21,6 +24,7 @@ import {
 import sizes from "../../constants/sizes";
 import { useRoute } from "@react-navigation/native";
 import { Image } from "expo-image";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 const ChatScreen = () => {
   const { paddingSides, paddingTop, title, subtitle, xl, xxl } = sizes;
@@ -30,12 +34,9 @@ const ChatScreen = () => {
   const [message, setMessage] = useState("");
   const socket = useRef(null);
   const router = useRouter();
-  const route = useRoute();
-  console.log("route", route);
-  console.log("route params", route.params);
+  const flatListRef = useRef(null);
 
   const owner = params.owner ? JSON.parse(params.owner) : null; // Deserialize the owner object
-
   const recipient = owner;
 
   useEffect(() => {
@@ -80,16 +81,16 @@ const ChatScreen = () => {
       );
 
       // Log the response status and headers
-      console.log("Response status:", response.status);
-      console.log("Response headers:", response.headers);
+      // console.log("Response status:", response.status);
+      // console.log("Response headers:", response.headers);
 
       // Log the response to inspect it
       const text = await response.text();
-      console.log("Server response:", text);
+      // console.log("Server response:", text);
 
       // Parse the response as JSON
       const data = JSON.parse(text);
-      console.log("Parsed data:", data);
+      // console.log("Parsed data:", data);
 
       setMessages(data.messages);
     } catch (error) {
@@ -126,9 +127,38 @@ const ChatScreen = () => {
     }
   };
 
+  // Scroll to the end when the component mounts
   useEffect(() => {
-    console.log("messages", messages);
+    if (flatListRef.current && messages.length > 0) {
+      flatListRef.current.scrollToEnd({ animated: true });
+    }
   }, [messages]);
+
+  // Scroll to the end when new messages are received
+  // useEffect(() => {
+  //   if (flatListRef.current && messages.length > 0) {
+  //     flatListRef.current.scrollToIndex({
+  //       index: messages.length - 1,
+  //       animated: true,
+  //     });
+  //   }
+  // }, [messages]);
+
+  // Scroll to the end when the keyboard is shown
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      () => {
+        if (flatListRef.current) {
+          flatListRef.current.scrollToEnd({ animated: true });
+        }
+      }
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+    };
+  }, []);
 
   const renderItem = ({ item }) => {
     const isSentByCurrentUser = item.from._id === user._id;
@@ -176,39 +206,60 @@ const ChatScreen = () => {
             <AntDesign name="arrowleft" size={ms(18)} color="white" />
           </View>
         </Pressable>
-        <Image
-          source={require("../../assets/images/avatar.png")}
-          style={{ width: xs(30), height: ys(30), borderRadius: 25 }}
-        />
+        <Pressable
+          onPress={() => {
+            router.push(`/sellerprofile/${recipient?._id}`);
+          }}
+        >
+          <Image
+            source={require("../../assets/images/avatar.png")}
+            style={{ width: xs(30), height: ys(30), borderRadius: 25 }}
+          />
+        </Pressable>
       </View>
       <FlatList
-        style={{ paddingTop: ys(paddingTop / 2) }}
+        ref={flatListRef}
+        contentContainerStyle={{
+          // paddingBottom: ys(20),
+          paddingTop: ys(paddingTop / 2),
+        }} // Add padding to the bottom
         data={messages}
         keyExtractor={(item, index) => index.toString()}
         renderItem={renderItem}
+        onContentSizeChange={() => {
+          if (flatListRef.current && messages.length > 0) {
+            flatListRef.current.scrollToEnd({ animated: true });
+          }
+        }}
       />
-      <View className="bg-grayb rounded-lg" style={{ position: "relative" }}>
-        <TextInput
-          value={message}
-          onChangeText={setMessage}
-          placeholder="Type a message"
-          style={[styles.input, { marginBottom: ys(10) }]}
-        />
-        <Feather
-          title="Send"
-          onPress={sendMessage}
-          name="send"
-          size={ms(xl)}
-          color="#69D94E"
-          style={{
-            position: "absolute",
-            right: xs(16),
-            top: "55%",
-            transform: [{ translateY: -ms(xxl) / 2 }],
-          }}
-        />
-      </View>
-      {/* <Button title="Send" onPress={sendMessage} /> */}
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        // keyboardVerticalOffset={ys(10)} // Adjust this value as needed
+        style={{ flexDirection: "column", justifyContent: "flex-end" }}
+      >
+        <View className="bg-grayb rounded-lg" style={{ position: "relative" }}>
+          <TextInput
+            value={message}
+            onChangeText={setMessage}
+            placeholder="Type a message"
+            style={[styles.input, { marginBottom: ys(10) }]}
+          />
+          <Feather
+            title="Send"
+            onPress={sendMessage}
+            name="send"
+            size={ms(xl)}
+            color="#69D94E"
+            style={{
+              position: "absolute",
+              right: xs(16),
+              top: "55%",
+              transform: [{ translateY: -ms(xxl) / 2 }],
+            }}
+          />
+        </View>
+        {/* <Button title="Send" onPress={sendMessage} /> */}
+      </KeyboardAvoidingView>
     </View>
   );
 };

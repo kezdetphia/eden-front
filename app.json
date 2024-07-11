@@ -4,7 +4,13 @@
     "slug": "eden",
     "version": "1.0.0",
     "extra": {
-      "googleClientId": "./apps.googleusercontent.json"
+      "googleClientId": "./apps.googleusercontent.json",
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "5be4c9ea-a9f7-4fbb-b0e9-a59e18463765"
+      }
     },
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -22,14 +28,19 @@
       },
       "infoPlist": {
         "NSCameraUsageDescription": "This app uses the camera to upload images to their listings."
-      }
+      },
+      "bundleIdentifier": "com.kezdetphia.eden"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "permissions": ["android.permission.CAMERA"]
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.kezdetphia.eden"
     },
     "web": {
       "bundler": "metro",
@@ -40,7 +51,6 @@
       "expo-router",
       "expo-secure-store",
       "expo-font",
-
       [
         "expo-image-picker",
         {
@@ -50,6 +60,7 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "owner": "kezdetphia"
   }
 }
