@@ -4,7 +4,7 @@ import React from "react";
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
-import CustomHeader from "../../components/homescreen/HomeCustomHeader";
+// import CustomHeader from "../../components/homescreen/HomeCustomHeader";
 import { AntDesign } from "@expo/vector-icons";
 
 import {
@@ -81,9 +81,9 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="test2"
+        name="Messenger"
         options={{
-          title: "Test2",
+          title: "messenger",
 
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon

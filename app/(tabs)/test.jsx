@@ -34,3 +34,60 @@ export default function Test() {
     </View>
   );
 }
+
+// import { Text, View } from "react-native";
+// import { useAuth } from "../../context/authContext";
+// import { useEffect, useState } from "react";
+// const Chatt = () => {
+//   const [convos, setConvos] = useState();
+//   const { user } = useAuth();
+//   // const userId = user?._id;
+
+//   useEffect(() => {
+//     getMyConvos();
+//   }, []);
+
+//   const getMyConvos = async () => {
+//     try {
+//       const res = await fetch(`http://192.168.0.236:3000/message/${user._id}`);
+//       if (!res.ok) {
+//         console.log("getMyConvos res not ok");
+//       }
+//       const data = await res.json();
+//       console.log("this is data from getMyConvos", data);
+//       setConvos(data);
+//     } catch (err) {
+//       console.log("getMyConvos error", err);
+//     }
+//   };
+
+//   const notMe = convos?.flatMap((convo) =>
+//     convo.participants?.filter((participant) => participant !== user?._id)
+//   );
+//   console.log("NOT ME", notMe);
+//   const lastMessages = convos?.map((convo) => {
+//     const lastMessage = convo.messages[convo.messages.length - 1];
+//     return {
+//       from: lastMessage.from,
+//       message: lastMessage.message,
+//       timestamp: lastMessage.timestamp,
+//     };
+//   });
+
+//   console.log("Last Messages", lastMessages);
+
+//   return (
+//     <View className="flex-1 justify-center items-center">
+//       <Text>{convos?.length}</Text>
+//       {lastMessages?.map((lastMessage, index) => (
+//         <View key={index}>
+//           <Text>From: {lastMessage.from}</Text>
+//           <Text>Message: {lastMessage.message}</Text>
+//           <Text>timestamp: {lastMessage.message}</Text>
+//         </View>
+//       ))}
+//     </View>
+//   );
+// };
+
+// export default Chatt;

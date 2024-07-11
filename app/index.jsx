@@ -1,5 +1,5 @@
 import { View, Text, Pressable, SafeAreaView, StatusBar } from "react-native";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   scale as xs,
   verticalScale as ys,
@@ -9,17 +9,64 @@ import sizes from "../constants/sizes";
 import { useAuth } from "../context/authContext";
 import { useRouter } from "expo-router";
 import LottieView from "lottie-react-native";
+// import * as AuthSession from "expo-auth-session";
 
-const index = () => {
-  const { isAuthenticated, user } = useAuth();
+// const discovery = {
+//   authorizationEndpoint: "https://accounts.google.com/o/oauth2/v2/auth",
+//   tokenEndpoint: "https://oauth2.googleapis.com/token",
+//   revocationEndpoint: "https://oauth2.googleapis.com/revoke",
+// };
+
+const Index = () => {
+  const { isAuthenticated } = useAuth();
   const router = useRouter();
   const { paddingSides, paddingTop, title } = sizes;
+  // const [response, setResponse] = useState(null);
+  // const [authAction, setAuthAction] = useState(null); // New state to determine sign-up or sign-in
+
+  // const [request, result, promptAsync] = AuthSession.useAuthRequest(
+  //   {
+  //     clientId: "./apps.googleusercontent.json",
+  //     scopes: ["openid", "profile", "email"],
+  //     redirectUri: AuthSession.makeRedirectUri({
+  //       scheme: "https://auth.expo.io/kezdetphia/eden",
+  //     }),
+  //   },
+  //   discovery
+  // );
 
   useEffect(() => {
     if (isAuthenticated) {
       router.replace("home");
     }
   }, [isAuthenticated, router]);
+
+  // useEffect(() => {
+  //   if (response?.type === "success") {
+  //     const { id_token } = response.params;
+  //     console.log("response", response);
+  //     if (authAction === "signup") {
+  //       // Handle sign-up specific logic here
+  //       console.log("User signed up");
+  //     } else if (authAction === "signin") {
+  //       // Handle sign-in specific logic here
+  //       console.log("User signed in");
+  //     }
+  //     // handle the received token here
+  //   }
+  // }, [response, authAction]);
+
+  const handleSignUp = async () => {
+    setAuthAction("signup");
+    const result = await promptAsync();
+    setResponse(result);
+  };
+
+  const handleSignIn = async () => {
+    setAuthAction("signin");
+    const result = await promptAsync();
+    setResponse(result);
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-grayb">
@@ -40,7 +87,7 @@ const index = () => {
               letterSpacing: 0.3,
             }}
           >
-            Greenz
+            Eden
           </Text>
           <LottieView
             style={{ height: 200, width: 200, marginTop: ys(paddingTop * 1) }}
@@ -77,7 +124,7 @@ const index = () => {
             </Text>
           </Pressable>
           <Pressable
-            onPress={null}
+            onPress={handleSignUp}
             style={{
               backgroundColor: "FFF",
               paddingVertical: ys(10),
@@ -99,7 +146,33 @@ const index = () => {
                 letterSpacing: 0.3,
               }}
             >
-              Continue with Google
+              Sign Up with Google
+            </Text>
+          </Pressable>
+          <Pressable
+            onPress={handleSignIn}
+            style={{
+              backgroundColor: "FFF",
+              paddingVertical: ys(10),
+              paddingHorizontal: xs(20),
+              borderRadius: ms(5),
+              alignItems: "center",
+              justifyContent: "center",
+              marginTop: ys(10),
+              flexDirection: "row",
+              borderColor: "black",
+              borderWidth: 1,
+            }}
+          >
+            <Text
+              style={{
+                color: "black",
+                fontSize: ms(14),
+                fontFamily: "jakartaSemibold",
+                letterSpacing: 0.3,
+              }}
+            >
+              Sign In with Google
             </Text>
           </Pressable>
           <Text
@@ -188,4 +261,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default Index;

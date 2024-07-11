@@ -24,6 +24,7 @@ import PriceQuantityCard from "../../components/singleProductPage/PriceQuantityC
 import * as SecureStore from "expo-secure-store";
 import CustomButton from "../../components/customButton";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { useAuth } from "../../context/authContext";
 
 //TODO: make the main image carousel
 
@@ -35,6 +36,7 @@ const ProductDetail = () => {
   const [imageHeight, setImageHeight] = useState(ys(300));
   const [error, setError] = useState(null);
   const { xsm, sm, md, lg, xl, title, paddingSides, paddingTop } = sizes;
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchProductDetails = async () => {
@@ -296,10 +298,9 @@ const ProductDetail = () => {
                 icon={"message-square"}
                 text={"Send Message to Swapper"}
                 submit={() =>
-                  // TODO: this needs to be specified to the owner once routes and controller is done
+                  // TODO:  - this needs to be specified to the owner once routes and controller is done
                   router.push({
-                    pathname: `/test2`,
-                    // pathname: `/messages/[id]`,
+                    pathname: `/messages`,
                     params: { owner: JSON.stringify(product?.owner) },
                   })
                 }

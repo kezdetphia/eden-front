@@ -1,8 +1,11 @@
 {
   "expo": {
     "name": "corps-wap",
-    "slug": "corps-wap",
+    "slug": "eden",
     "version": "1.0.0",
+    "extra": {
+      "googleClientId": "./apps.googleusercontent.json"
+    },
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
@@ -19,8 +22,7 @@
       },
       "infoPlist": {
         "NSCameraUsageDescription": "This app uses the camera to upload images to their listings."
-      },
-      "googleServicesFile": "./GoogleService-Info.plist"
+      }
     },
     "android": {
       "adaptiveIcon": {
