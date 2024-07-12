@@ -3,7 +3,6 @@ import {
   View,
   Text,
   TextInput,
-  Button,
   FlatList,
   StyleSheet,
   Pressable,
@@ -22,13 +21,12 @@ import {
   moderateScale as ms,
 } from "react-native-size-matters";
 import sizes from "../../constants/sizes";
-import { useRoute } from "@react-navigation/native";
 import { Image } from "expo-image";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import defaultAvatar from "../../assets/images/avatar.png";
 
 const ChatScreen = () => {
-  const { paddingSides, paddingTop, title, subtitle, xl, xxl } = sizes;
-  const params = useLocalSearchParams(); // Use useLocalSearchParams to get the params
+  const { paddingSides, paddingTop, xl, xxl } = sizes;
+  const params = useLocalSearchParams();
   const { user } = useAuth();
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
@@ -36,15 +34,14 @@ const ChatScreen = () => {
   const router = useRouter();
   const flatListRef = useRef(null);
 
-  const owner = params.owner ? JSON.parse(params.owner) : null; // Deserialize the owner object
+  const owner = params.owner ? JSON.parse(params.owner) : null;
   const recipient = owner;
 
   useEffect(() => {
     if (user && user._id && !socket.current) {
       socket.current = io("http://192.168.0.236:3000", {
-        query: { userId: user._id }, // Pass the user ID here
+        query: { userId: user._id },
       });
-      console.log("Attempting to connect to socket...");
 
       socket.current.on("connect", () => {
         console.log("Connected to socket");
@@ -55,43 +52,31 @@ const ChatScreen = () => {
       });
 
       socket.current.on("private message", (msg) => {
-        // Ensure the 'from' field is populated
         if (!msg.from) {
           msg.from = { _id: recipient._id, username: recipient.username };
         }
         setMessages((prevMessages) => [...prevMessages, msg]);
-        console.log("Received private message:", msg);
       });
 
       socket.current.on("disconnect", (reason) => {
         console.log(`Disconnected from socket: ${reason}`);
       });
     }
+
     return () => {
       if (socket.current) {
         socket.current.disconnect();
       }
     };
-  }, [user._id, recipient?._id]); // Ensure this useEffect runs only once by passing user._id and recipient._id as dependencies
+  }, [user._id, recipient?._id]);
 
-  const fetchMessages = useCallback(async () => {
+  const fetchMessagesBetweenTwoUsers = useCallback(async () => {
     try {
       const response = await fetch(
-        `http://192.168.0.236:3000/message/${user?._id}/${recipient?._id}`
+        `http://192.168.0.236:3000/message/conversationbetween/${user?._id}/${recipient?._id}`
       );
 
-      // Log the response status and headers
-      // console.log("Response status:", response.status);
-      // console.log("Response headers:", response.headers);
-
-      // Log the response to inspect it
-      const text = await response.text();
-      // console.log("Server response:", text);
-
-      // Parse the response as JSON
-      const data = JSON.parse(text);
-      // console.log("Parsed data:", data);
-
+      const data = await response.json();
       setMessages(data.messages);
     } catch (error) {
       console.error("Error fetching messages:", error);
@@ -99,12 +84,12 @@ const ChatScreen = () => {
   }, [user._id, recipient?._id]);
 
   useEffect(() => {
-    if (user && user._id && recipient && recipient?._id) {
-      fetchMessages();
+    if (user && user._id && recipient && recipient._id) {
+      fetchMessagesBetweenTwoUsers();
     }
-  }, [user._id, recipient?._id, fetchMessages]);
+  }, [user._id, recipient._id, fetchMessagesBetweenTwoUsers]);
 
-  const sendMessage = () => {
+  const sendMessage = useCallback(() => {
     if (message && recipient && socket.current) {
       const newMessage = {
         from: { _id: user._id, username: user.username },
@@ -112,39 +97,23 @@ const ChatScreen = () => {
         timestamp: new Date().toISOString(),
       };
 
-      // Add the message to the local state immediately
       setMessages((prevMessages) => [...prevMessages, newMessage]);
 
-      console.log(
-        `Sending message from ${user._id} to ${recipient._id}: ${message}`
-      );
       socket.current.emit("private message", {
         from: user._id,
-        to: recipient._id, // Use the dynamic recipient ID
+        to: recipient._id,
         message,
       });
       setMessage("");
     }
-  };
+  }, [message, recipient, user._id, user.username]);
 
-  // Scroll to the end when the component mounts
   useEffect(() => {
     if (flatListRef.current && messages.length > 0) {
       flatListRef.current.scrollToEnd({ animated: true });
     }
   }, [messages]);
 
-  // Scroll to the end when new messages are received
-  // useEffect(() => {
-  //   if (flatListRef.current && messages.length > 0) {
-  //     flatListRef.current.scrollToIndex({
-  //       index: messages.length - 1,
-  //       animated: true,
-  //     });
-  //   }
-  // }, [messages]);
-
-  // Scroll to the end when the keyboard is shown
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
       "keyboardDidShow",
@@ -195,34 +164,33 @@ const ChatScreen = () => {
         >
           <View
             style={{
-              backgroundColor: "rgba(0, 0, 0, 0.5)", // Blackish transparent background
-              borderRadius: ms(24), // Make the background fully rounded
-              width: ms(30), // Set width to make it a circle
-              height: ms(30), // Set height to make it a circle
-              justifyContent: "center", // Center the icon vertically
-              alignItems: "center", // Center the icon horizontally
+              backgroundColor: "rgba(0, 0, 0, 0.5)",
+              borderRadius: ms(24),
+              width: ms(30),
+              height: ms(30),
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
             <AntDesign name="arrowleft" size={ms(18)} color="white" />
           </View>
         </Pressable>
         <Pressable
-          onPress={() => {
-            router.push(`/sellerprofile/${recipient?._id}`);
-          }}
+          onPress={() => router.push(`/sellerprofile/${recipient?._id}`)}
         >
           <Image
-            source={require("../../assets/images/avatar.png")}
+            source={
+              recipient?.avatar && recipient.avatar.trim() !== ""
+                ? { uri: recipient.avatar }
+                : defaultAvatar
+            }
             style={{ width: xs(30), height: ys(30), borderRadius: 25 }}
           />
         </Pressable>
       </View>
       <FlatList
         ref={flatListRef}
-        contentContainerStyle={{
-          // paddingBottom: ys(20),
-          paddingTop: ys(paddingTop / 2),
-        }} // Add padding to the bottom
+        contentContainerStyle={{ paddingTop: ys(paddingTop / 2) }}
         data={messages}
         keyExtractor={(item, index) => index.toString()}
         renderItem={renderItem}
@@ -234,7 +202,6 @@ const ChatScreen = () => {
       />
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        // keyboardVerticalOffset={ys(10)} // Adjust this value as needed
         style={{ flexDirection: "column", justifyContent: "flex-end" }}
       >
         <View className="bg-grayb rounded-lg" style={{ position: "relative" }}>
@@ -258,7 +225,6 @@ const ChatScreen = () => {
             }}
           />
         </View>
-        {/* <Button title="Send" onPress={sendMessage} /> */}
       </KeyboardAvoidingView>
     </View>
   );
@@ -287,15 +253,12 @@ const styles = StyleSheet.create({
     borderWidth: 0.2,
     padding: 10,
     marginVertical: 10,
-
     fontFamily: "jakarta",
     fontSize: ms(14),
     color: "#2D2D2D",
-    // color: "#69D94E",
     padding: xs(10),
     letterSpacing: 0.3,
-
-    paddingRight: xs(40), // Add padding to the right to make space for the icon
+    paddingRight: xs(40),
   },
 });
 
