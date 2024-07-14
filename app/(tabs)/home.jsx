@@ -58,20 +58,22 @@ const HomeScreen = () => {
     }
   }, [dataStatus, dispatch]);
 
-  const filteredData = data.filter((item) => {
-    const categoryMatch = selectedCategory
-      ? item.category.toLowerCase() === selectedCategory.toLowerCase()
-      : true;
-    const filterMatch = selectedFilter
-      ? selectedFilter === "All"
-        ? true
-        : item.tier && item.tier === selectedFilter
-      : true;
-    const titleMatch = searchBarValue
-      ? item.title.toLowerCase().includes(searchBarValue.toLowerCase())
-      : true;
-    return categoryMatch && filterMatch && titleMatch;
-  });
+  const filteredData = data
+    .filter((item) => {
+      const categoryMatch = selectedCategory
+        ? item.category.toLowerCase() === selectedCategory.toLowerCase()
+        : true;
+      const filterMatch = selectedFilter
+        ? selectedFilter === "All"
+          ? true
+          : item.tier && item.tier === selectedFilter
+        : true;
+      const titleMatch = searchBarValue
+        ? item.title.toLowerCase().includes(searchBarValue.toLowerCase())
+        : true;
+      return categoryMatch && filterMatch && titleMatch;
+    })
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // Sort by newest first
 
   return (
     <View className="flex-1 bg-grayb">

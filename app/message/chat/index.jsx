@@ -366,7 +366,6 @@ import {
   Platform,
   KeyboardAvoidingView,
   Keyboard,
-  ImageBackground,
 } from "react-native";
 import io from "socket.io-client";
 import { useAuth } from "@context/authContext";
@@ -382,7 +381,6 @@ import { Image } from "expo-image";
 import defaultAvatar from "@assets/images/avatar.png";
 import { format, isToday, isThisWeek, parseISO } from "date-fns";
 import Constants from "expo-constants";
-import * as SecureStore from "expo-secure-store";
 
 const ChatScreen = () => {
   const { EXPO_API_URL } = Constants.expoConfig.extra;
@@ -395,33 +393,10 @@ const ChatScreen = () => {
   const router = useRouter();
   const flatListRef = useRef(null);
   const previousScreen = params.previousScreen || null;
-  const [isChatProductImageSaved, setIsChatProductImageSaved] = useState();
   const paramDetails = params.paramDetails
     ? JSON.parse(params.paramDetails)
     : null;
   const productDetails = paramDetails;
-
-  // useEffect(() => {
-  //   console.log("asyncstore triggered");
-  //   const saveImageUrlToSecureStore = async () => {
-  //     const userIdLast5 = user?._id.slice(-5);
-  //     const ownerIdLast5 = productDetails?.ownerId?.slice(-5);
-  //     const productIdLast5 = paramDetails?.productId?.slice(-5);
-  //     const key = `${userIdLast5}${ownerIdLast5}${productIdLast5}`;
-  //     const value = encodeURIComponent(paramDetails?.productImage);
-
-  //     try {
-  //       await SecureStore.setItemAsync(key, value);
-  //       console.log(`Image URL saved with key: ${key}`);
-  //     } catch (error) {
-  //       console.error("Error saving image URL to SecureStore:", error);
-  //     }
-  //   };
-  //   if (isChatProductImageSaved && paramDetails.productImage) {
-  //     console.log("useEffect triggered", { user, paramDetails });
-  //     saveImageUrlToSecureStore();
-  //   }
-  // }, [isChatProductImageSaved, user, paramDetails, productDetails]);
 
   const handleBackPress = () => {
     if (previousScreen === "notification") {
@@ -494,7 +469,7 @@ const ChatScreen = () => {
   }, [user._id, productDetails.ownerId, fetchMessagesBetweenTwoUsers]);
 
   const sendMessage = useCallback(() => {
-    setIsChatProductImageSaved(true);
+    // setIsChatProductImageSaved(true);
     if (message && productDetails && socket.current) {
       const newMessage = {
         from: { _id: user?._id, username: user?.username },
@@ -629,7 +604,7 @@ const ChatScreen = () => {
             source={
               productDetails?.productImage &&
               productDetails.productImage.trim() !== ""
-                ? { uri: encodeURI(productDetails.productImage) }
+                ? { uri: productDetails.productImage }
                 : defaultAvatar
             }
             style={{ width: xs(70), height: ys(30), borderRadius: 50 }}

@@ -9,8 +9,6 @@ const CategoryCard = ({
   selectedCategory,
   categories,
 }) => {
-  const { paddingSides, xsm, sm, md, lg, xl, xxl } = sizes;
-
   return (
     <View style={{ flexDirection: "row", gap: xs(20) }}>
       {categories.map((category, index) => (

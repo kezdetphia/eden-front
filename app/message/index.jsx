@@ -466,8 +466,11 @@ const Messages = () => {
     }
     return (
       <Pressable onPress={() => onClickOnConversation(item.to)}>
-        <View className="py-5">
-          <View className="flex-row">
+        <View className="pt-5 ">
+          <View
+            className="flex-row bg-white rounded-xl shadow-sm"
+            style={{ padding: ms(15) }}
+          >
             <Image
               source={
                 typeof item.productImageUrl === "string" &&
@@ -489,11 +492,11 @@ const Messages = () => {
               <View className={`flex-row items-center  `}>
                 <Text className="text-b200" style={styles.text}>
                   {item.message.length > 25
-                    ? item.message.substring(0, 25) + "..."
+                    ? item.message.substring(0, 28) + "..."
                     : item.message}
                 </Text>
-                <Text className="text-b200 pl-3" style={styles.text}>
-                  - {formatDate(item.timestamp)}
+                <Text className="text-b200 pl-3 " style={styles.text}>
+                  {formatDate(item.timestamp)}
                 </Text>
               </View>
             </View>
@@ -508,7 +511,10 @@ const Messages = () => {
       <SafeAreaView />
       <FlatList
         data={lastMessages}
-        contentContainerStyle={{ paddingHorizontal: xs(paddingSides) }}
+        contentContainerStyle={{
+          paddingHorizontal: xs(paddingSides),
+          // paddingTop: ys(paddingTop),
+        }}
         keyExtractor={(item) => item.timestamp}
         renderItem={renderItem}
       />

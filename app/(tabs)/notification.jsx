@@ -26,8 +26,8 @@ const NotificationScreen = () => {
     <View className="flex-1">
       <SafeAreaView />
       <View
-        className="flex-row justify-around"
-        style={{ paddingTop: ys(paddingTop) }}
+        className="flex-row justify-around border-b border-gray-300 "
+        style={{ paddingTop: ys(paddingTop), paddingBottom: ys(paddingTop) }}
       >
         <Pressable onPress={() => setActiveWindow("messages")}>
           <Text

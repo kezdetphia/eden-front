@@ -15,7 +15,7 @@ const { xxs, xsm, sm, md, lg, xl, xxl, paddingSides } = sizes;
 const ProductCard = ({ product, cardWidth }) => {
   return (
     <View
-      className=" bg-white shadow-md shadow-white "
+      className=" bg-white shadow-sm  "
       style={[styles.card, { width: cardWidth }]}
     >
       <View className="items-center">

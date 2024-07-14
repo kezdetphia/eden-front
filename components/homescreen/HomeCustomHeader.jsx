@@ -13,12 +13,12 @@ import { useAuth } from "@/context/authContext";
 
 export default function CustomHeader({ searchBarValue, setSearchBarValue }) {
   const { sm, paddingSides } = sizes;
-  const { isAuthenticated, authLoading, user } = useAuth();
+  const { user } = useAuth();
 
   return (
     <>
       {/* <StatusBar hidden={false} /> */}
-      <SafeAreaView className="bg-grayb">
+      <SafeAreaView style={{ backgroundColor: "transparent" }}>
         <View
           className="flex flex-row justify-between "
           style={{
@@ -77,7 +77,7 @@ export default function CustomHeader({ searchBarValue, setSearchBarValue }) {
 
         <View style={{ paddingHorizontal: xs(paddingSides) }}>
           <View
-            className="flex-row items-center bg-white rounded-xl border border-g200    "
+            className="flex-row items-center bg-white rounded-xl border border-g200     "
             style={{
               // marginHorizontal: xs(paddingSides),
               height: ys(35),
