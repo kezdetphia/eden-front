@@ -3,6 +3,7 @@
     "name": "corps-wap",
     "slug": "eden",
     "version": "1.0.0",
+
     "extra": {
       "googleClientId": "./apps.googleusercontent.json",
       "router": {
@@ -10,7 +11,8 @@
       },
       "eas": {
         "projectId": "5be4c9ea-a9f7-4fbb-b0e9-a59e18463765"
-      }
+      },
+      "EXPO_API_URL": "http://eden-back.vercel.app"
     },
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",

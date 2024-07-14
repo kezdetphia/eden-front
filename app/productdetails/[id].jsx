@@ -25,6 +25,8 @@ import * as SecureStore from "expo-secure-store";
 import CustomButton from "../../components/customButton";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useAuth } from "../../context/authContext";
+import Constants from "expo-constants";
+const { EXPO_API_URL } = Constants.expoConfig.extra;
 
 //TODO: make the main image carousel
 
@@ -43,7 +45,8 @@ const ProductDetail = () => {
       const token = await SecureStore.getItemAsync("authToken");
       try {
         const response = await fetch(
-          `http://localhost:3000/getcorp/${productId}`,
+          // `http://localhost:3000/getcorp/${productId}`,
+          `${EXPO_API_URL}/getcorp/${productId}`,
           {
             method: "GET",
             headers: {
@@ -57,6 +60,7 @@ const ProductDetail = () => {
         }
         const data = await response.json();
         setProduct(data.corp);
+        console.log("SINGLEPRODUCT data", data);
       } catch (error) {
         console.error("Failed to fetch product details:", error);
         setError(error);
@@ -300,8 +304,17 @@ const ProductDetail = () => {
                 submit={() =>
                   // TODO:  - this needs to be specified to the owner once routes and controller is done
                   router.push({
-                    pathname: `/messages`,
-                    params: { owner: JSON.stringify(product?.owner) },
+                    pathname: `/message/chat`,
+                    // params: { owner: JSON.stringify(product?.owner) },
+                    // params: { owner: JSON.stringify({ paramDetails }) },
+                    params: {
+                      paramDetails: JSON.stringify({
+                        ownerId: product?.owner?._id,
+                        ownerUsername: product?.owner?.username,
+                        productId,
+                        productImage: encodeURI(product?.image),
+                      }),
+                    },
                   })
                 }
               />

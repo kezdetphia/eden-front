@@ -5,15 +5,15 @@ import {
   verticalScale as ys,
   moderateScale as ms,
 } from "react-native-size-matters";
-import sizes from "../constants/sizes";
+import sizes from "../../constants/sizes";
 
-const Chat = () => {
-  const { paddingSides, xsm, sm, md, lg, xl, xxl } = sizes;
+const Notifications = () => {
+  const { paddingSides, paddingTop, title, subtitle } = sizes;
   return (
     <View>
-      <Text>Chat</Text>
+      <Text>Notifications</Text>
     </View>
   );
 };
 
-export default Chat;
+export default Notifications;

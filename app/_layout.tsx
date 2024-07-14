@@ -4,18 +4,19 @@ import {
   ThemeProvider,
 } from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import { Stack } from "expo-router";
+
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import "react-native-reanimated";
 import { Slot } from "expo-router";
+import { Provider } from "react-redux";
+import { store } from "../store/store";
 
 // Import your global CSS file
 import "../global.css";
-import { useColorScheme } from "../hooks/useColorScheme";
+
 import Toast from "react-native-toast-message";
 import { AuthContextProvider } from "../context/authContext";
-import GlobalStylesWrapper from "../components/GlobalStylesWrapper";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -56,7 +57,9 @@ export default function RootLayout() {
   return (
     <>
       <AuthContextProvider>
-        <MainLayout />
+        <Provider store={store}>
+          <MainLayout />
+        </Provider>
       </AuthContextProvider>
     </>
   );

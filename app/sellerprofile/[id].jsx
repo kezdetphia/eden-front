@@ -11,8 +11,10 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import CategoryScroll from "../../components/homescreen/CategoryScroll";
 import { Image } from "expo-image";
 import { EvilIcons } from "@expo/vector-icons";
+import Constants from "expo-constants";
 
 const SellerProfile = () => {
+  const { EXPO_API_URL } = Constants.expoConfig.extra;
   const router = useRouter();
   const [sellerData, setSellerData] = useState(null);
   const { xsm, sm, md, lg, xl, xxl } = sizes;
@@ -31,7 +33,8 @@ const SellerProfile = () => {
   const getSellerData = async () => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/users/getuserwithcorps/${id}`
+        `${EXPO_API_URL}/api/users/getuserwithcorps/${id}`
+        // `http://localhost:3000/api/users/getuserwithcorps/${id}`
       );
       // const response = await fetch(`${API_URL}/user/${id}`);
       if (response.ok) {

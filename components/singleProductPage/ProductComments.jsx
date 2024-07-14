@@ -11,7 +11,9 @@ import { useAuth } from "../../context/authContext";
 import { Image } from "expo-image";
 import { format, parseISO } from "date-fns";
 import { useRouter } from "expo-router";
+import Constants from "expo-constants";
 
+const { EXPO_API_URL } = Constants.expoConfig.extra;
 const { md } = sizes;
 
 // TODO: - DONE- implement adding comments to the owner's product
@@ -66,7 +68,8 @@ const ProductComments = ({ product }) => {
   const submitComment = async () => {
     try {
       const res = await fetch(
-        `http://localhost:3000/addcropcomment/${product?._id}`,
+        // `http://localhost:3000/addcropcomment/${product?._id}`,
+        `${EXPO_API_URL}/addcropcomment/${product?._id}`,
         {
           method: "POST",
           headers: {
@@ -161,7 +164,11 @@ const ProductComments = ({ product }) => {
                           width: ms(40),
                           borderRadius: ms(20),
                         }}
-                        source={require("../../assets/images/avatar.png")}
+                        source={
+                          comment?.user?.avatar
+                            ? { uri: comment.user.avatar }
+                            : require("../../assets/images/avatar.png")
+                        }
                       />
                     </Pressable>
                   </View>

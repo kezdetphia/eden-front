@@ -32,10 +32,10 @@ export default function TabLayout() {
         options={{
           headerShown: false,
           // header: () => <CustomHeader />,
-          title: "Home",
+          title: "home",
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
-              name={focused ? "home" : "home-outline"}
+              name={focused ? "home-outline" : "home-outline"}
               color={color}
             />
           ),
@@ -60,7 +60,7 @@ export default function TabLayout() {
 
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
-              name={focused ? "search-outline" : "search-outline"}
+              name={focused ? "search" : "search-outline"}
               color={color}
             />
           ),
@@ -78,13 +78,13 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="Messenger"
+        name="notification"
         options={{
-          title: "Messenger",
+          title: "notification",
 
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
-              name={focused ? "airplane-outline" : "airplane-outline"}
+              name={focused ? "notifications-outline" : "notifications-outline"}
               color={color}
             />
           ),

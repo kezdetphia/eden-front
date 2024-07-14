@@ -64,7 +64,11 @@ export default function CustomHeader({ searchBarValue, setSearchBarValue }) {
           <View>
             <Image
               className="rounded-xl"
-              source={require("../../assets/images/avatar.png")}
+              source={
+                user?.avatar
+                  ? { uri: user.avatar }
+                  : require("../../assets/images/avatar.png")
+              }
               style={{ width: 50, height: 50 }}
             />
             {/* Added style for image size */}

@@ -11,8 +11,10 @@ import {
 } from "react-native-size-matters";
 import sizes from "../../../constants/sizes";
 import LottieView from "lottie-react-native";
+import Constants from "expo-constants";
 
 const SignUp = () => {
+  const { EXPO_API_URL } = Constants.expoConfig.extra;
   const { paddingTop, paddingSides, title, subtitle } = sizes;
   const { isAuthenticated, user } = useAuth();
   console.log("isAuthenticated", isAuthenticated, user);
@@ -49,7 +51,8 @@ const SignUp = () => {
   const handleSignUp = async () => {
     setIsLoading(true);
     try {
-      const res = await fetch("http://localhost:3000/api/users/signup", {
+      const res = await fetch(`${EXPO_API_URL}/api/users/signup`, {
+        // const res = await fetch("http://localhost:3000/api/users/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

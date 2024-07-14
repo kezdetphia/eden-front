@@ -27,11 +27,13 @@ import { useAuth } from "../../context/authContext";
 import DropdownComponent from "../../components/createListing/dropDown";
 import { categories, fruits, veggies } from "../../utils/corpsStuff";
 import { Picker } from "@react-native-picker/picker";
+import Constants from "expo-constants";
 
 import sizes from "../../constants/sizes";
 import CustomButton from "../../components/customButton";
 
 const CreateListing = () => {
+  const { EXPO_API_URL } = Constants.expoConfig.extra;
   const { sm, md } = sizes;
   const router = useRouter();
   const [dropdownData, setDropdownData] = useState([]);
@@ -42,11 +44,14 @@ const CreateListing = () => {
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
+    const token = await SecureStore.getItemAsync("authToken");
     try {
-      const res = await fetch("http://localhost:3000/createcorp", {
+      // const res = await fetch("http://localhost:3000/createcorp", {
+      const res = await fetch(`${EXPO_API_URL}/createcorp`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(listingDetails),
       });
