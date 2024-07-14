@@ -12,7 +12,7 @@ import { useLocalSearchParams } from "expo-router";
 
 const NotificationScreen = () => {
   const { paddingSides, paddingTop, xsm, sm, md, lg, xl, xxl } = sizes;
-  const [activeWindow, setActiveWindow] = useState("notifications");
+  const [activeWindow, setActiveWindow] = useState("messages");
   const params = useLocalSearchParams();
   const previousWindow = params.previousWindow || null;
 

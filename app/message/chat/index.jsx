@@ -25,10 +25,11 @@
 // import defaultAvatar from "@assets/images/avatar.png";
 // import { format, isToday, isThisWeek, parseISO } from "date-fns";
 // import Constants from "expo-constants";
+// import * as SecureStore from "expo-secure-store";
 
 // const ChatScreen = () => {
 //   const { EXPO_API_URL } = Constants.expoConfig.extra;
-//   const { paddingSides, paddingTop, xl, xxl } = sizes;
+//   const { paddingTop, xl, xxl } = sizes;
 //   const params = useLocalSearchParams();
 //   const { user } = useAuth();
 //   const [messages, setMessages] = useState([]);
@@ -37,19 +38,43 @@
 //   const router = useRouter();
 //   const flatListRef = useRef(null);
 //   const previousScreen = params.previousScreen || null;
+//   const [isChatProductImageSaved, setIsChatProductImageSaved] = useState();
+//   const paramDetails = params.paramDetails
+//     ? JSON.parse(params.paramDetails)
+//     : null;
 
-//   const owner = params.owner ? JSON.parse(params.owner) : null;
-//   const recipient = owner;
+//   const productDetails = paramDetails;
 
+//   useEffect(() => {
+//     console.log("asyncstore triggered");
+//     const saveImageUrlToSecureStore = async () => {
+//       const userIdLast5 = user?._id.slice(-5);
+//       const ownerIdLast5 = productDetails?.ownerId?.slice(-5);
+//       const productIdLast5 = paramDetails?.productId?.slice(-5);
+//       const key = `${userIdLast5}${ownerIdLast5}${productIdLast5}`;
+//       const value = encodeURIComponent(paramDetails?.productImage);
+
+//       try {
+//         await SecureStore.setItemAsync(key, value);
+//         console.log(`Image URL saved with key: ${key}`);
+//       } catch (error) {
+//         console.error("Error saving image URL to SecureStore:", error);
+//       }
+//     };
+//     if (isChatProductImageSaved && paramDetails.productImage) {
+//       console.log("useEffect triggered", { user, paramDetails });
+//       saveImageUrlToSecureStore();
+//     }
+//   }, [isChatProductImageSaved, user, paramDetails, productDetails]);
+
+//   // console.log("CHAT RECIPIENT", productDetails);
 //   const handleBackPress = () => {
 //     if (previousScreen === "notification") {
 //       router.push({
 //         pathname: "/notification",
 //         params: {
 //           previousWindow: "chat",
-//           chatImage: encodeURI(
-//             "https://cubanvr.com/wp-content/uploads/2023/07/ai-image-generators.webp"
-//           ),
+//           productIdForImage: productDetails.productId,
 //         },
 //       });
 //     } else {
@@ -75,12 +100,16 @@
 
 //       socket.current.on("private message", (msg) => {
 //         if (!msg.from) {
-//           msg.from = { _id: recipient._id, username: recipient.username };
+//           msg.from = {
+//             _id: productDetails.ownerId,
+//             username: productDetails.ownerUsername,
+//           };
 //         }
 //         setMessages((prevMessages) => [...prevMessages, msg]);
 //       });
 
 //       socket.current.on("disconnect", (reason) => {
+//         // setSendProductId(true)
 //         console.log(`Disconnected from socket: ${reason}`);
 //       });
 //     }
@@ -90,13 +119,13 @@
 //         socket.current.disconnect();
 //       }
 //     };
-//   }, [user._id, recipient?._id]);
+//   }, [user._id, productDetails?.ownerId]);
 
 //   const fetchMessagesBetweenTwoUsers = useCallback(async () => {
 //     try {
 //       const response = await fetch(
-//         `${EXPO_API_URL}/message/conversationbetween/${user?._id}/${recipient?._id}`
-//         // `http://192.168.0.236:3000/message/conversationbetween/${user?._id}/${recipient?._id}`
+//         `${EXPO_API_URL}/message/conversationbetween/${user?._id}/${productDetails?.ownerId}`
+//         // `http://192.168.0.236:3000/message/conversationbetween/${user?._id}/${productDetails?._id}`
 //       );
 
 //       const data = await response.json();
@@ -104,18 +133,19 @@
 //     } catch (error) {
 //       console.error("Error fetching messages:", error);
 //     }
-//   }, [user._id, recipient?._id]);
+//   }, [user._id, productDetails?.ownerId]);
 
 //   useEffect(() => {
-//     if (user && user._id && recipient && recipient._id) {
+//     if (user && user._id && productDetails && productDetails.ownerId) {
 //       fetchMessagesBetweenTwoUsers();
 //     }
-//   }, [user._id, recipient._id, fetchMessagesBetweenTwoUsers]);
+//   }, [user._id, productDetails.ownerId, fetchMessagesBetweenTwoUsers]);
 
 //   const sendMessage = useCallback(() => {
-//     if (message && recipient && socket.current) {
+//     setIsChatProductImageSaved(true);
+//     if (message && productDetails && socket.current) {
 //       const newMessage = {
-//         from: { _id: user._id, username: user.username },
+//         from: { _id: user?._id, username: user?.username },
 //         message,
 //         timestamp: new Date().toISOString(),
 //       };
@@ -123,16 +153,16 @@
 //       setMessages((prevMessages) => [...prevMessages, newMessage]);
 
 //       socket.current.emit("private message", {
-//         from: user._id,
-//         to: recipient._id,
+//         from: user?._id,
+//         to: productDetails?.ownerId,
 //         message,
 //       });
 //       setMessage("");
 //     }
-//   }, [message, recipient, user._id, user.username]);
+//   }, [message, productDetails, user?._id, user?.username]);
 
 //   useEffect(() => {
-//     if (flatListRef.current && messages.length > 0) {
+//     if (flatListRef.current && messages?.length > 0) {
 //       flatListRef.current.scrollToEnd({ animated: true });
 //     }
 //   }, [messages]);
@@ -234,12 +264,15 @@
 //           </View>
 //         </Pressable>
 //         <Pressable
-//           onPress={() => router.push(`/sellerprofile/${recipient?._id}`)}
+//           onPress={() =>
+//             router.push(`/sellerprofile/${productDetails?.ownerId}`)
+//           }
 //         >
 //           <Image
 //             source={
-//               recipient?.avatar && recipient.avatar.trim() !== ""
-//                 ? { uri: recipient.avatar }
+//               productDetails?.productImage &&
+//               productDetails.productImage.trim() !== ""
+//                 ? { uri: productDetails.productImage }
 //                 : defaultAvatar
 //             }
 //             style={{ width: xs(30), height: ys(30), borderRadius: 25 }}
@@ -321,7 +354,6 @@
 // });
 
 // export default ChatScreen;
-
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import {
   View,
@@ -334,6 +366,7 @@ import {
   Platform,
   KeyboardAvoidingView,
   Keyboard,
+  ImageBackground,
 } from "react-native";
 import io from "socket.io-client";
 import { useAuth } from "@context/authContext";
@@ -366,33 +399,30 @@ const ChatScreen = () => {
   const paramDetails = params.paramDetails
     ? JSON.parse(params.paramDetails)
     : null;
-  const [sendProductId, setSendProductId] = useState(false);
-
   const productDetails = paramDetails;
 
-  useEffect(() => {
-    console.log("asyncstore triggered");
-    const saveImageUrlToSecureStore = async () => {
-      const userIdLast5 = user?._id.slice(-5);
-      const ownerIdLast5 = productDetails?.ownerId?.slice(-5);
-      const productIdLast5 = paramDetails?.productId?.slice(-5);
-      const key = `${userIdLast5}${ownerIdLast5}${productIdLast5}`;
-      const value = encodeURIComponent(paramDetails?.productImage);
+  // useEffect(() => {
+  //   console.log("asyncstore triggered");
+  //   const saveImageUrlToSecureStore = async () => {
+  //     const userIdLast5 = user?._id.slice(-5);
+  //     const ownerIdLast5 = productDetails?.ownerId?.slice(-5);
+  //     const productIdLast5 = paramDetails?.productId?.slice(-5);
+  //     const key = `${userIdLast5}${ownerIdLast5}${productIdLast5}`;
+  //     const value = encodeURIComponent(paramDetails?.productImage);
 
-      try {
-        await SecureStore.setItemAsync(key, value);
-        console.log(`Image URL saved with key: ${key}`);
-      } catch (error) {
-        console.error("Error saving image URL to SecureStore:", error);
-      }
-    };
-    if (isChatProductImageSaved && paramDetails.productImage) {
-      console.log("useEffect triggered", { user, paramDetails });
-      saveImageUrlToSecureStore();
-    }
-  }, [isChatProductImageSaved, user, paramDetails, productDetails]);
+  //     try {
+  //       await SecureStore.setItemAsync(key, value);
+  //       console.log(`Image URL saved with key: ${key}`);
+  //     } catch (error) {
+  //       console.error("Error saving image URL to SecureStore:", error);
+  //     }
+  //   };
+  //   if (isChatProductImageSaved && paramDetails.productImage) {
+  //     console.log("useEffect triggered", { user, paramDetails });
+  //     saveImageUrlToSecureStore();
+  //   }
+  // }, [isChatProductImageSaved, user, paramDetails, productDetails]);
 
-  // console.log("CHAT RECIPIENT", productDetails);
   const handleBackPress = () => {
     if (previousScreen === "notification") {
       router.push({
@@ -410,7 +440,6 @@ const ChatScreen = () => {
   useEffect(() => {
     if (user && user._id && !socket.current) {
       console.log("url", EXPO_API_URL);
-      // socket.current = io(`${EXPO_API_URL}`, {
       socket.current = io("http://192.168.0.236:3000", {
         query: { userId: user._id },
       });
@@ -434,7 +463,6 @@ const ChatScreen = () => {
       });
 
       socket.current.on("disconnect", (reason) => {
-        // setSendProductId(true)
         console.log(`Disconnected from socket: ${reason}`);
       });
     }
@@ -450,7 +478,6 @@ const ChatScreen = () => {
     try {
       const response = await fetch(
         `${EXPO_API_URL}/message/conversationbetween/${user?._id}/${productDetails?.ownerId}`
-        // `http://192.168.0.236:3000/message/conversationbetween/${user?._id}/${productDetails?._id}`
       );
 
       const data = await response.json();
@@ -473,6 +500,7 @@ const ChatScreen = () => {
         from: { _id: user?._id, username: user?.username },
         message,
         timestamp: new Date().toISOString(),
+        productImageUrl: encodeURIComponent(productDetails?.productImage), // Encode the product image URL
       };
 
       setMessages((prevMessages) => [...prevMessages, newMessage]);
@@ -481,6 +509,7 @@ const ChatScreen = () => {
         from: user?._id,
         to: productDetails?.ownerId,
         message,
+        productImageUrl: encodeURIComponent(productDetails?.productImage), // Encode the product image URL
       });
       setMessage("");
     }
@@ -529,37 +558,40 @@ const ChatScreen = () => {
         style={[
           styles.message,
           isSentByCurrentUser ? styles.sentMessage : styles.receivedMessage,
+          { maxWidth: "60%" }, // Limit the width to 60%
         ]}
       >
-        <View className="flex-col justify-between">
+        <Text
+          style={{
+            fontFamily: "jakarta",
+            letterSpacing: 0.3,
+          }}
+        >
+          {item.message}
+        </Text>
+        <View className="items-end" style={{ paddingTop: ys(1) }}>
           <Text
-            className="text-b200 "
+            className="text-b100"
             style={{
               fontFamily: "jakarta",
               letterSpacing: 0.3,
+              paddingTop: ys(3),
+              fontSize: ms(9),
             }}
           >
-            {item.message}
+            {formatDate(item.timestamp)}
           </Text>
-          <View className="items-end  " style={{ paddingTop: ys(1) }}>
-            <Text
-              className="text-b100 "
-              style={{
-                fontFamily: "jakarta",
-                letterSpacing: 0.3,
-                paddingTop: ys(3),
-                fontSize: ms(9),
-              }}
-            >
-              {formatDate(item.timestamp)}
-            </Text>
-          </View>
         </View>
       </View>
     );
   };
 
   return (
+    // <ImageBackground
+    //   source={{ uri: encodeURI(productDetails?.productImage) }}
+    //   style={{ flex: 1 }}
+    //   imageStyle={{ opacity: 0.5 }} // Adjust the opacity to make the image light and transparent
+    // >
     <View style={styles.container}>
       <SafeAreaView />
       <View
@@ -597,13 +629,14 @@ const ChatScreen = () => {
             source={
               productDetails?.productImage &&
               productDetails.productImage.trim() !== ""
-                ? { uri: productDetails.productImage }
+                ? { uri: encodeURI(productDetails.productImage) }
                 : defaultAvatar
             }
-            style={{ width: xs(30), height: ys(30), borderRadius: 25 }}
+            style={{ width: xs(70), height: ys(30), borderRadius: 50 }}
           />
         </Pressable>
       </View>
+
       <FlatList
         ref={flatListRef}
         contentContainerStyle={{ paddingTop: ys(paddingTop / 2) }}
@@ -616,11 +649,12 @@ const ChatScreen = () => {
           }
         }}
       />
+
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flexDirection: "column", justifyContent: "flex-end" }}
       >
-        <View className="bg-grayb rounded-lg" style={{ position: "relative" }}>
+        <View className="" style={{ position: "relative" }}>
           <TextInput
             value={message}
             onChangeText={setMessage}
@@ -643,6 +677,7 @@ const ChatScreen = () => {
         </View>
       </KeyboardAvoidingView>
     </View>
+    // </ImageBackground>
   );
 };
 
@@ -667,14 +702,14 @@ const styles = StyleSheet.create({
   input: {
     borderRadius: 10,
     borderWidth: 0.2,
-    padding: 10,
+    // padding: 10,
     marginVertical: 10,
     fontFamily: "jakarta",
     fontSize: ms(14),
-    // color: "#2D2D2D",
     padding: xs(10),
     letterSpacing: 0.3,
     paddingRight: xs(40),
+    // backgroundColor: "white", // Ensure no background color
   },
 });
 

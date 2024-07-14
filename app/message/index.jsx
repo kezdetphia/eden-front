@@ -266,51 +266,48 @@
 //   },
 // });
 
+import React, { useEffect, useState, useCallback } from "react";
 import {
+  View,
+  Text,
   FlatList,
   Pressable,
-  SafeAreaView,
+  Image,
   StyleSheet,
-  Text,
-  View,
+  SafeAreaView,
 } from "react-native";
 import { useAuth } from "../../context/authContext";
-import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "expo-router";
+import { useFocusEffect } from "@react-navigation/native";
+import { io } from "socket.io-client";
+import Constants from "expo-constants";
+import { format, isToday, isThisWeek } from "date-fns";
 import {
   scale as xs,
   verticalScale as ys,
   moderateScale as ms,
 } from "react-native-size-matters";
 import sizes from "../../constants/sizes";
-import { Image } from "expo-image";
 import defaultAvatar from "../../assets/images/avatar.png";
-import { format, isToday, isThisWeek, parseISO } from "date-fns";
-import { useFocusEffect } from "@react-navigation/native"; // Import useFocusEffect
-import { io } from "socket.io-client"; // Import Socket.IO client
-import Constants from "expo-constants";
+
 const { EXPO_API_URL } = Constants.expoConfig.extra;
 
 const Messages = () => {
-  const { paddingSides, paddingTop, title, subtitle } = sizes;
+  const { paddingSides, paddingTop } = sizes;
   const { user } = useAuth();
   const [convos, setConvos] = useState([]);
   const [lastMessages, setLastMessages] = useState([]);
   const userId = user?._id;
   const router = useRouter();
-  // const socket = io(`${EXPO_API_URL}`, {
   const socket = io("http://192.168.0.236:3000", {
     query: { userId },
-  }); // Connect to your Socket.IO server with userId
+  });
 
   const getMyConvos = useCallback(async () => {
-    // console.log("getMyConvos function");
     try {
       const res = await fetch(
         `${EXPO_API_URL}/message/conversation/user/${userId}`
-        // `http://192.168.0.236:3000/message/conversation/user/${userId}`
       );
-
       if (!res.ok) {
         const errorData = await res.json();
         console.log(
@@ -319,7 +316,6 @@ const Messages = () => {
         );
         return;
       }
-
       const data = await res.json();
       processConversations(data, userId);
       setConvos(data);
@@ -336,13 +332,9 @@ const Messages = () => {
 
   useFocusEffect(
     useCallback(() => {
-      // Listen for new messages
       socket.on("newMessage", (newMessage) => {
-        // console.log("New message received:", newMessage);
         updateConvosWithNewMessage(newMessage);
       });
-
-      // Clean up the socket connection when the component loses focus
       return () => {
         socket.off("newMessage");
       };
@@ -379,12 +371,11 @@ const Messages = () => {
             to: otherParticipant?._id || "",
             message: lastMessage.message || "",
             timestamp: lastMessage.timestamp || "",
-            avatar: otherParticipant?.avatar || defaultAvatar,
+            productImageUrl: convo.productImageUrl || defaultAvatar, // Use productImageUrl
             toUsername: otherParticipant?.username || "Unknown",
           };
         });
         setLastMessages(lastMessages);
-        // console.log("Last Messages", lastMessages);
       } else {
         console.log("convos is empty or undefined");
       }
@@ -400,13 +391,17 @@ const Messages = () => {
     const recepientUser = convos
       .flatMap((convo) => convo.participants)
       .find((participant) => participant._id === recepientId);
-    if (recepientUser) {
+    const conversation = convos.find((convo) =>
+      convo.participants.some((participant) => participant._id === recepientId)
+    );
+    if (recepientUser && conversation) {
       router.push({
         pathname: `/message/chat`,
         params: {
           paramDetails: JSON.stringify({
             ownerId: recepientUser?._id,
             ownerUsername: recepientUser?.username,
+            productImage: encodeURIComponent(conversation.productImageUrl), // Pass encoded productImageUrl
           }),
           previousScreen: "notification",
         },
@@ -416,15 +411,10 @@ const Messages = () => {
 
   const processConversations = (conversations, currentUserId) => {
     conversations.forEach((conversation) => {
-      // console.log(`Conversation ID: ${conversation._id}`);
-
-      // Find the other participant's ID (the one that is not the current user)
       const otherParticipant = conversation.participants.find(
         (participant) => participant._id !== currentUserId
       );
       const otherParticipantId = otherParticipant ? otherParticipant._id : null;
-
-      // console.log(`Other Participant ID: ${otherParticipantId}`);
 
       conversation.messages.forEach((message) => {
         const sender = conversation.participants.find(
@@ -459,7 +449,6 @@ const Messages = () => {
       );
     }
 
-    // Ensure the timestamp is in Date format
     const date = new Date(timestamp);
     if (isToday(date)) {
       return format(date, "h:mm a");
@@ -481,8 +470,9 @@ const Messages = () => {
           <View className="flex-row">
             <Image
               source={
-                typeof item.avatar === "string" && item.avatar.trim() !== ""
-                  ? { uri: item.avatar }
+                typeof item.productImageUrl === "string" &&
+                item.productImageUrl.trim() !== ""
+                  ? { uri: item.productImageUrl }
                   : defaultAvatar
               }
               style={{
@@ -516,7 +506,6 @@ const Messages = () => {
   return (
     <View className="flex-1">
       <SafeAreaView />
-
       <FlatList
         data={lastMessages}
         contentContainerStyle={{ paddingHorizontal: xs(paddingSides) }}
@@ -527,8 +516,6 @@ const Messages = () => {
   );
 };
 
-export default Messages;
-
 const styles = StyleSheet.create({
   text: {
     fontFamily: "jakarta",
@@ -536,3 +523,5 @@ const styles = StyleSheet.create({
     letterSpacing: 0.3,
   },
 });
+
+export default Messages;
