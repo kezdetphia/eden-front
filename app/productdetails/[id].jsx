@@ -37,8 +37,9 @@ const ProductDetail = () => {
   const scrollY = useRef(new Animated.Value(0)).current;
   const [imageHeight, setImageHeight] = useState(ys(300));
   const [error, setError] = useState(null);
-  const { xsm, sm, md, lg, xl, title, paddingSides, paddingTop } = sizes;
-  const { user } = useAuth();
+  const { xsm, title, paddingSides, paddingTop } = sizes;
+  const params = useLocalSearchParams();
+  console.log("singlepage params", params);
 
   useEffect(() => {
     const fetchProductDetails = async () => {
@@ -60,7 +61,7 @@ const ProductDetail = () => {
         }
         const data = await response.json();
         setProduct(data.corp);
-        console.log("SINGLEPRODUCT data", data);
+        // console.log("SINGLEPRODUCT data", data);
       } catch (error) {
         console.error("Failed to fetch product details:", error);
         setError(error);
@@ -77,6 +78,14 @@ const ProductDetail = () => {
     outputRange: ["rgba(0, 0, 0, 0)", "rgba(255, 255, 255, 0.8)"],
     extrapolate: "clamp",
   });
+
+  const handleBackPress = () => {
+    if (params.previousWindow === "home") {
+      router.navigate("home");
+    } else {
+      router.back();
+    }
+  };
 
   return (
     <View className="flex-1 bg-grayb ">
@@ -99,10 +108,7 @@ const ProductDetail = () => {
           style={{ paddingHorizontal: xs(xsm) }}
         >
           <View>
-            <Pressable
-              onPress={() => router.back()}
-              style={{ marginTop: ys(25) }}
-            >
+            <Pressable onPress={handleBackPress} style={{ marginTop: ys(25) }}>
               <View
                 style={{
                   backgroundColor: "rgba(0, 0, 0, 0.5)", // Blackish transparent background

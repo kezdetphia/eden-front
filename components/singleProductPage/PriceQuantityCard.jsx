@@ -8,7 +8,7 @@ import {
 import sizes from "../../constants/sizes";
 
 const PriceQuantityCard = ({ quantity, price, tier }) => {
-  const { paddingSides, xsm, sm, md, lg, xl, xxl } = sizes;
+  const { sm } = sizes;
   return (
     <>
       <View
@@ -30,7 +30,7 @@ const PriceQuantityCard = ({ quantity, price, tier }) => {
       </View>
 
       <View
-        className="bg-g300  rounded-lg items-center  justify-center "
+        className="bg-g300  rounded-lg items-center  justify-center  "
         style={{ paddingHorizontal: xs(40), paddingVertical: ys(12) }}
       >
         {tier === "Exchange" ? (

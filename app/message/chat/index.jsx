@@ -400,13 +400,15 @@ const ChatScreen = () => {
 
   const handleBackPress = () => {
     if (previousScreen === "notification") {
-      router.push({
+      router.navigate({
         pathname: "/notification",
         params: {
           previousWindow: "chat",
           productIdForImage: productDetails.productId,
         },
       });
+    } else if (previousScreen === "home") {
+      router.navigate("home");
     } else {
       router.back();
     }

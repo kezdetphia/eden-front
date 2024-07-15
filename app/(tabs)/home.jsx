@@ -45,7 +45,6 @@ const HomeScreen = () => {
     }
   });
 
-  console.log("main page data", data);
   useEffect(() => {
     if (user === "undefined" || !isAuthenticated) {
       router.replace("/");
@@ -124,7 +123,7 @@ const HomeScreen = () => {
             onPress={() =>
               router.push({
                 pathname: `/productdetails/[id]`,
-                params: { id: item._id },
+                params: { id: item._id, previousWindow: "home" },
               })
             }
           >

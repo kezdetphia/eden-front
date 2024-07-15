@@ -8,19 +8,19 @@ import {
 import sizes from "../../constants/sizes";
 import Messages from "../message";
 import Notifications from "../notifications/notifications";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 
 const NotificationScreen = () => {
   const { paddingSides, paddingTop, xsm, sm, md, lg, xl, xxl } = sizes;
   const [activeWindow, setActiveWindow] = useState("messages");
   const params = useLocalSearchParams();
   const previousWindow = params.previousWindow || null;
-
+  const router = useRouter();
   useEffect(() => {
     if (previousWindow === "chat") {
       setActiveWindow("messages");
     }
-  }, []);
+  }, [previousWindow]);
 
   return (
     <View className="flex-1">
