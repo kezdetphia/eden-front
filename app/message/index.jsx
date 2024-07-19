@@ -31,7 +31,7 @@ const Messages = () => {
   const [lastMessages, setLastMessages] = useState([]);
   const userId = user?._id;
   const router = useRouter();
-  const socket = io("http://192.168.0.236:3000", {
+  const socket = io("http://192.168.0.225", {
     query: { userId },
   });
 
