@@ -6,6 +6,7 @@ import {
   Pressable,
   Alert,
   FlatList,
+  StyleSheet,
 } from "react-native";
 import React, { useEffect, useState, useRef } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -32,6 +33,7 @@ import Constants from "expo-constants";
 import sizes from "../../constants/sizes";
 import CustomButton from "../../components/customButton";
 
+const { paddingSides, paddingTop, subtitle, title } = sizes;
 const CreateListing = () => {
   const { EXPO_API_URL } = Constants.expoConfig.extra;
   const { sm, md } = sizes;
@@ -116,18 +118,13 @@ const CreateListing = () => {
     );
   };
 
-  console.log("listingDetails", listingDetails);
-
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "" }}>
       <StatusBar hidden={false} />
       <View
+        className="flex-row justify-center items-center"
         style={{
-          flexDirection: "row",
-          justifyContent: "center",
-          alignItems: "center",
-          backgroundColor: "white",
-          height: ys(30),
+          height: ys(paddingTop * 3),
         }}
       >
         <Pressable
@@ -137,21 +134,26 @@ const CreateListing = () => {
           <Feather name="arrow-left" size={ms(24)} color="black" />
         </Pressable>
         <Text className=" font-semibold" style={{ fontSize: ms(md) }}>
-          Post what you got
+          Create a listing
         </Text>
       </View>
+
       <Divider customStyle={{ marginTop: ys(2), paddingHorizontal: 16 }} />
-      <View className="flex-1 ">
+      <View
+        className="flex-1  "
+        style={{ paddingHorizontal: xs(paddingSides) }}
+      >
         <ScrollView
           // contentContainerStyle={{ flex: 1 }}
-          className="bg-white"
+          className=""
           ref={scrollViewRef}
         >
           {/* <View
           style={{ paddingLeft: ms(14), paddingTop: ys(8) }}
           className="flex-row items-center"
         ></View> */}
-          <View className="items-center" style={{ paddingTop: ys(md) }}>
+          <View className="" style={{ paddingTop: ys(paddingTop) }}>
+            <Text style={styles.subTitle}>Photos</Text>
             <ImageUpload
               listingDetails={listingDetails}
               updateListingDetails={updateListingDetails}
@@ -229,3 +231,11 @@ const CreateListing = () => {
 };
 
 export default CreateListing;
+
+const styles = StyleSheet.create({
+  subTitle: {
+    textColor: "#020202",
+    fontFamily: "jakartaSemibold",
+    fontSize: ms(subtitle),
+  },
+});

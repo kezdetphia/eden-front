@@ -1,6 +1,6 @@
 import banana from "../assets/icons/banana.png";
 
-export const categories = ["fruit", "veggie"];
+export const categories = ["fruit", "vegetable"];
 
 export const fruits = [
   "Apple",

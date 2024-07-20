@@ -133,7 +133,7 @@ const ImageUpload = ({ user, updateListingDetails }) => {
   };
 
   return (
-    <View className="flex-1 w-full " style={{ paddingHorizontal: xs(8) }}>
+    <View className="flex-1 w-full ">
       <ScrollView
         horizontal={true}
         showsHorizontalScrollIndicator={false}
