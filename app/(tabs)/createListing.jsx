@@ -32,6 +32,7 @@ import Constants from "expo-constants";
 
 import sizes from "../../constants/sizes";
 import CustomButton from "../../components/customButton";
+import ListingType from "../../components/createListing/listingType";
 
 const { paddingSides, paddingTop, subtitle, title } = sizes;
 const CreateListing = () => {
@@ -80,10 +81,13 @@ const CreateListing = () => {
     desc: null,
     image: null,
     category: null,
+    tier: null,
     owner: user._id,
     amount: selectedAvailableAmount,
     location: user.location,
   });
+
+  console.log("Initial listingDetails", listingDetails);
 
   useEffect(() => {
     setListingDetails((prevDetails) => ({
@@ -144,7 +148,7 @@ const CreateListing = () => {
         style={{ paddingHorizontal: xs(paddingSides) }}
       >
         <ScrollView
-          // contentContainerStyle={{ flex: 1 }}
+          showsVerticalScrollIndicator={false}
           className=""
           ref={scrollViewRef}
         >
@@ -152,7 +156,7 @@ const CreateListing = () => {
           style={{ paddingLeft: ms(14), paddingTop: ys(8) }}
           className="flex-row items-center"
         ></View> */}
-          <View className="" style={{ paddingTop: ys(paddingTop) }}>
+          <View className="" style={{ paddingTop: ys(paddingTop * 2) }}>
             <Text style={styles.subTitle}>Photos</Text>
             <ImageUpload
               listingDetails={listingDetails}
@@ -160,26 +164,38 @@ const CreateListing = () => {
               user={user}
             />
           </View>
-          <ChooseListingCategory
-            listingDetails={listingDetails}
-            updateListingDetails={updateListingDetails}
-          />
-          {/* {listingDetails.category && ( */}
-          <DropdownComponent
-            // onOpen={handleDropdownOpen}
-            // onClose={handleDropdownClose}
-            data={dropdownData}
-            updateListingDetails={updateListingDetails}
-            listingDetails={listingDetails}
-          />
-          {/* )} */}
-          <View style={{ paddingHorizontal: xs(sm) }}>
-            <AddListingDetails
+          <View className="" style={{ paddingTop: ys(paddingTop * 2) }}>
+            <Text style={styles.subTitle}>Category</Text>
+            <ChooseListingCategory
               listingDetails={listingDetails}
               updateListingDetails={updateListingDetails}
             />
           </View>
-          <View
+
+          <View className="" style={{ paddingTop: ys(paddingTop * 2) }}>
+            <Text style={styles.subTitle}>Item</Text>
+            <DropdownComponent
+              // onOpen={handleDropdownOpen}
+              // onClose={handleDropdownClose}
+              data={dropdownData}
+              updateListingDetails={updateListingDetails}
+              listingDetails={listingDetails}
+            />
+          </View>
+          {/* <View style={{}}>
+            <AddListingDetails
+              listingDetails={listingDetails}
+              updateListingDetails={updateListingDetails}
+            />
+          </View> */}
+          <View className="" style={{ paddingTop: ys(paddingTop * 2) }}>
+            <Text style={styles.subTitle}>Type</Text>
+            <ListingType
+              listingDetails={listingDetails}
+              updateListingDetails={updateListingDetails}
+            />
+          </View>
+          {/* <View
             style={{
               marginHorizontal: xs(sm),
               height: ys(100),
@@ -200,7 +216,7 @@ const CreateListing = () => {
             }}
           >
             {/* <Text className="text-gray-500">How many do you have?</Text> */}
-            <Picker
+          {/* <Picker
               selectedValue={selectedAvailableAmount}
               onValueChange={(itemValue, itemIndex) =>
                 setSelectedAvailableAmount(itemValue)
@@ -218,7 +234,7 @@ const CreateListing = () => {
               <Picker.Item label="50" value="50" />
               <Picker.Item label="50 <" value="More than 50" />
             </Picker>
-          </View>
+          </View> */}
 
           <CustomButton
             submit={handleSubmit}

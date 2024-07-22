@@ -18,7 +18,7 @@ import { categories } from "../../utils/corpsStuff";
 const ChooseListingCategory = ({ listingDetails, updateListingDetails }) => {
   const { paddingTop, paddingSides, subtitle } = sizes;
   const screenWidth = Dimensions.get("window").width;
-  const itemWidth = screenWidth / 2 - xs(paddingSides * 2);
+  const itemWidth = screenWidth / 2 - xs(paddingSides * 1.7);
 
   useEffect(() => {
     if (listingDetails.category) {
@@ -38,24 +38,20 @@ const ChooseListingCategory = ({ listingDetails, updateListingDetails }) => {
   return (
     <View
       style={{
-        marginTop: ys(paddingTop),
+        marginTop: ys(paddingTop * 0.75),
       }}
     >
-      <Text style={{ fontFamily: "jakartaSemibold", fontSize: ms(subtitle) }}>
-        Category
-      </Text>
       <FlatList
         data={categories}
         renderItem={({ item }) => (
           <Pressable onPress={() => handleCategorySelect(item)}>
             <View
               className={`${
-                selectedCategory === item ? "border border-g400 " : ""
+                selectedCategory === item ? "border border-g400 " : "b-200"
               } rounded-lg bg-white  `}
               style={{
                 paddingVertical: ys(paddingTop),
                 // paddingHorizontal: xs(paddingSides * 5),
-                marginTop: xs(paddingTop),
                 width: itemWidth,
               }}
             >
@@ -70,24 +66,28 @@ const ChooseListingCategory = ({ listingDetails, updateListingDetails }) => {
                 </Text>
 
                 <View
+                  className={`${
+                    selectedCategory === item
+                      ? "border border-g400"
+                      : "border border-gray"
+                  }`}
                   style={{
                     height: ms(16),
                     width: ms(16),
                     borderRadius: ms(8),
                     borderWidth: 2,
-                    borderColor: selectedCategory === item ? "green" : "gray",
                     alignItems: "center",
                     justifyContent: "center",
-                    marginLeft: xs(8),
+                    borderColor: selectedCategory === item ? "#4A9837" : "gray",
                   }}
                 >
                   {selectedCategory === item && (
                     <View
+                      className="bg-g400"
                       style={{
                         height: ms(8),
                         width: ms(8),
                         borderRadius: ms(4),
-                        backgroundColor: "green",
                       }}
                     />
                   )}
@@ -100,7 +100,7 @@ const ChooseListingCategory = ({ listingDetails, updateListingDetails }) => {
         keyExtractor={(item) => item}
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={{
-          paddingHorizontal: xs(paddingSides),
+          // paddingHorizontal: xs(paddingSides),
           justifyContent: "center",
           gap: xs(paddingTop),
           width: "100%",
