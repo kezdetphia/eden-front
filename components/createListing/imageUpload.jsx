@@ -12,6 +12,8 @@ import {
   moderateScale as ms,
 } from "react-native-size-matters";
 
+//TODO: fix delete image based on id
+
 const ImageUpload = ({ user, updateListingDetails }) => {
   const { xsm, sm, md, lg, xl, xxl } = sizes;
   const [selectedImage, setSelectedImage] = useState(null);
@@ -111,20 +113,20 @@ const ImageUpload = ({ user, updateListingDetails }) => {
     }
   };
 
-  const handleImageContainerClick = () => {
+  const handleImageSelectContainerClick = () => {
     Alert.alert(
       "Choose an option",
       "Where do you want to upload the image from?",
       [
-        { text: "Take a photo", onPress: () => pickImage("camera") },
         { text: "Pick from library", onPress: () => pickImage("library") },
+        { text: "Take a photo", onPress: () => pickImage("camera") },
       ]
     );
   };
 
   return (
     <ScrollView>
-      <View style={{ padding: xs(10) }}>
+      <View>
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -132,7 +134,7 @@ const ImageUpload = ({ user, updateListingDetails }) => {
         >
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <Pressable
-              onPress={() => handleImageContainerClick()}
+              onPress={() => handleImageSelectContainerClick()}
               className="border-2 border-dashed border-g200 rounded-md justify-center items-center bg-white mr-2"
               style={{
                 width: xs(100),
