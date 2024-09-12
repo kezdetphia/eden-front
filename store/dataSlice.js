@@ -7,6 +7,7 @@ const { EXPO_API_URL } = Constants.expoConfig.extra;
 export const fetchCorps = createAsyncThunk("data/fetchCorps", async () => {
   const token = await SecureStore.getItemAsync("authToken");
   const response = await fetch(`${EXPO_API_URL}/getcorps`, {
+    // const response = await fetch(`http://localhost:3000/getcorps`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

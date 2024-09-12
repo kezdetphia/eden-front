@@ -49,6 +49,7 @@ const CreateListing = () => {
     setIsSubmitting(true);
     const token = await SecureStore.getItemAsync("authToken");
     try {
+      console.log("Submitting listing details:", listingDetails); // Log the payload
       // const res = await fetch("http://localhost:3000/createcorp", {
       const res = await fetch(`${EXPO_API_URL}/createcorp`, {
         method: "POST",
@@ -60,8 +61,12 @@ const CreateListing = () => {
       });
 
       if (!res.ok) {
+        const errorData = await res.json();
+        console.error("Server error response:", errorData);
         setIsSubmitting(false);
-        throw new Error("Failed to create listing");
+        throw new Error(
+          `Failed to create listing: ${errorData.error || res.statusText}`
+        );
       }
 
       const data = await res.json();
@@ -79,7 +84,7 @@ const CreateListing = () => {
     price: "much",
     title: "fdfd",
     desc: "fdfd",
-    image: "",
+    image: [],
     category: "fdfd",
     tier: "fdfd",
     owner: user._id,
@@ -106,10 +111,18 @@ const CreateListing = () => {
 
   //Function to update the listing details with key value pairs
   const updateListingDetails = (key, value) => {
-    setListingDetails((prevDetails) => ({
-      ...prevDetails,
-      [key]: value,
-    }));
+    setListingDetails((prevDetails) => {
+      if (key === "image") {
+        return {
+          ...prevDetails,
+          [key]: [...prevDetails[key], value], // Append the new URL to the existing array
+        };
+      }
+      return {
+        ...prevDetails,
+        [key]: value,
+      };
+    });
   };
 
   const handleBack = () => {
@@ -117,7 +130,22 @@ const CreateListing = () => {
       "Discard listing?",
       "Are you sure you want to discard your listing?",
       [
-        { text: "Discard", onPress: () => router.back() },
+        {
+          text: "Discard",
+          onPress: () => {
+            setListingDetails({
+              title: "",
+              desc: "",
+              image: [],
+              category: "",
+              tier: "",
+              owner: user._id,
+              amount: 0,
+              location: user.location,
+            });
+            router.back();
+          },
+        },
         { text: "Cancel", onPress: () => {} },
       ]
     );
@@ -170,7 +198,6 @@ const CreateListing = () => {
             <ChooseListingCategory
               listingDetails={listingDetails}
               updateListingDetails={updateListingDetails}
-              setListingDetails={setListingDetails}
             />
           </View>
 

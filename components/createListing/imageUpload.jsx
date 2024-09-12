@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { View, Text, Image, Pressable, ScrollView, Alert } from "react-native";
 import * as ImagePicker from "expo-image-picker";
-import { EvilIcons } from "@expo/vector-icons";
+import { AntDesign, EvilIcons } from "@expo/vector-icons";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "../../config/firebaseConfig"; // Adjust the path as needed
 import * as ImageManipulator from "expo-image-manipulator";
@@ -15,6 +15,7 @@ import {
 const ImageUpload = ({ user, updateListingDetails }) => {
   const { xsm, sm, md, lg, xl, xxl } = sizes;
   const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedImages, setSelectedImages] = useState([]);
 
   // Function to request permissions for accessing the camera and media library
   const requestPermissions = async () => {
@@ -65,6 +66,7 @@ const ImageUpload = ({ user, updateListingDetails }) => {
         const imageUri = result.assets[0].uri;
         const resizedImageUri = await resizeImage(imageUri); // Resize the image before uploading
         setSelectedImage(resizedImageUri);
+        setSelectedImages((prevImages) => [...prevImages, resizedImageUri]);
         await uploadImage(resizedImageUri);
       }
     } catch (error) {
@@ -109,48 +111,54 @@ const ImageUpload = ({ user, updateListingDetails }) => {
     }
   };
 
+  const handleImageContainerClick = () => {
+    Alert.alert(
+      "Choose an option",
+      "Where do you want to upload the image from?",
+      [
+        { text: "Take a photo", onPress: () => pickImage("camera") },
+        { text: "Pick from library", onPress: () => pickImage("library") },
+      ]
+    );
+  };
+
   return (
     <ScrollView>
       <View style={{ padding: xs(10) }}>
-        <Text style={{ fontSize: ms(18), fontWeight: "bold" }}>
-          Upload Image
-        </Text>
-        <View style={{ marginVertical: ys(10) }}>
-          {selectedImage && (
-            <Image
-              source={{ uri: selectedImage }}
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={{ marginVertical: ys(10) }}
+        >
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Pressable
+              onPress={() => handleImageContainerClick()}
+              className="border-2 border-dashed border-g200 rounded-md justify-center items-center bg-white mr-2"
               style={{
-                width: xs(200),
-                height: ys(200),
-                resizeMode: "cover",
-                borderRadius: ms(10),
+                width: xs(100),
+                height: ys(80),
               }}
-            />
-          )}
-          {!selectedImage && <Text>No image selected</Text>}
-        </View>
-        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-          <Pressable
-            style={{
-              backgroundColor: "blue",
-              padding: xs(10),
-              borderRadius: ms(5),
-            }}
-            onPress={() => pickImage("camera")}
-          >
-            <Text style={{ color: "white" }}>Take a Photo</Text>
-          </Pressable>
-          <Pressable
-            style={{
-              backgroundColor: "green",
-              padding: xs(10),
-              borderRadius: ms(5),
-            }}
-            onPress={() => pickImage("library")}
-          >
-            <Text style={{ color: "white" }}>Pick from Gallery</Text>
-          </Pressable>
-        </View>
+            >
+              <AntDesign name="upload" size={ms(30)} color="#4A9837" />
+            </Pressable>
+            {selectedImages.map((imageUri, index) => (
+              <Image
+                key={index}
+                source={{ uri: imageUri }}
+                style={{
+                  width: xs(100),
+                  height: ys(80),
+                  resizeMode: "cover",
+                  borderRadius: ms(10),
+                  marginRight: xs(10),
+                }}
+              />
+            ))}
+          </View>
+        </ScrollView>
+        <View
+          style={{ flexDirection: "row", justifyContent: "space-between" }}
+        ></View>
         {selectedImage && (
           <View style={{ marginVertical: ys(10) }}>
             <Pressable
@@ -159,7 +167,10 @@ const ImageUpload = ({ user, updateListingDetails }) => {
                 padding: xs(10),
                 borderRadius: ms(5),
               }}
-              onPress={() => updateListingDetails("image", null)} // Reset selected image
+              onPress={() => {
+                setSelectedImage(null); // Reset selected image
+                updateListingDetails("image", null); // Remove image from listing details
+              }}
             >
               <Text style={{ color: "white" }}>Remove Image</Text>
             </Pressable>

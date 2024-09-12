@@ -156,7 +156,7 @@ const ProductDetail = () => {
         <View>
           <Image
             source={{
-              uri: product?.image,
+              uri: product?.image[0],
             }}
             onLayout={(event) => {
               const { height } = event.nativeEvent.layout;
