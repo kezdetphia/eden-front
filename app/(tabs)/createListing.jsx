@@ -76,18 +76,18 @@ const CreateListing = () => {
   // console.log("ezx a user", user);
 
   const [listingDetails, setListingDetails] = useState({
-    price: null,
+    price: "much",
     title: "fdfd",
-    desc: null,
-    image: null,
-    category: null,
-    tier: null,
+    desc: "fdfd",
+    image: "",
+    category: "fdfd",
+    tier: "fdfd",
     owner: user._id,
     amount: selectedAvailableAmount,
     location: user.location,
   });
 
-  console.log("Initial listingDetails", listingDetails);
+  console.log("Initial listingDetailssss        ", listingDetails);
 
   useEffect(() => {
     setListingDetails((prevDetails) => ({
@@ -104,6 +104,7 @@ const CreateListing = () => {
     }
   }, [listingDetails.category]);
 
+  //Function to update the listing details with key value pairs
   const updateListingDetails = (key, value) => {
     setListingDetails((prevDetails) => ({
       ...prevDetails,
@@ -160,8 +161,8 @@ const CreateListing = () => {
             <Text style={styles.subTitle}>Photos</Text>
             <ImageUpload
               listingDetails={listingDetails}
-              updateListingDetails={updateListingDetails}
               user={user}
+              updateListingDetails={updateListingDetails}
             />
           </View>
           <View className="" style={{ paddingTop: ys(paddingTop * 2) }}>
@@ -169,6 +170,7 @@ const CreateListing = () => {
             <ChooseListingCategory
               listingDetails={listingDetails}
               updateListingDetails={updateListingDetails}
+              setListingDetails={setListingDetails}
             />
           </View>
 

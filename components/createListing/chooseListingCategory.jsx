@@ -15,7 +15,11 @@ import {
 import sizes from "../../constants/sizes";
 import { categories } from "../../utils/corpsStuff";
 
-const ChooseListingCategory = ({ listingDetails, updateListingDetails }) => {
+const ChooseListingCategory = ({
+  listingDetails,
+  updateListingDetails,
+  setListingDetails,
+}) => {
   const { paddingTop, paddingSides, subtitle } = sizes;
   const screenWidth = Dimensions.get("window").width;
   const itemWidth = screenWidth / 2 - xs(paddingSides * 1.7);
