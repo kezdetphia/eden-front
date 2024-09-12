@@ -3,21 +3,20 @@ import { View, Text, Image, Pressable, ScrollView, Alert } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { EvilIcons } from "@expo/vector-icons";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { collection, addDoc } from "firebase/firestore";
-import { storage, db } from "../../config/firebaseConfig"; // Adjust the path as needed
-import * as FileSystem from "expo-file-system";
+import { storage } from "../../config/firebaseConfig"; // Adjust the path as needed
+import * as ImageManipulator from "expo-image-manipulator";
+import sizes from "../../constants/sizes";
 import {
   scale as xs,
   verticalScale as ys,
   moderateScale as ms,
 } from "react-native-size-matters";
-import * as ImageManipulator from "expo-image-manipulator";
-import sizes from "../../constants/sizes";
 
 const ImageUpload = ({ user, updateListingDetails }) => {
   const { xsm, sm, md, lg, xl, xxl } = sizes;
   const [selectedImage, setSelectedImage] = useState(null);
 
+  // Function to request permissions for accessing the camera and media library
   const requestPermissions = async () => {
     try {
       const { status: cameraStatus } =
@@ -39,6 +38,7 @@ const ImageUpload = ({ user, updateListingDetails }) => {
     }
   };
 
+  // Function to pick an image from camera or library
   const pickImage = async (source) => {
     const hasPermission = await requestPermissions();
     if (!hasPermission) {
@@ -73,6 +73,7 @@ const ImageUpload = ({ user, updateListingDetails }) => {
     }
   };
 
+  // Function to resize the image before uploading
   const resizeImage = async (uri) => {
     try {
       const resizedImage = await ImageManipulator.manipulateAsync(
@@ -87,108 +88,85 @@ const ImageUpload = ({ user, updateListingDetails }) => {
     }
   };
 
+  // Function to upload the image to Firebase storage
   const uploadImage = async (uri) => {
     try {
       console.log("Starting image upload...");
 
       const response = await fetch(uri); // Fetch the image from the URI
-      console.log("Fetched image from URI:", uri);
-
       const blob = await response.blob(); // Convert the image to a blob
-      console.log("Converted image to blob");
 
       const storageRef = ref(storage, `images/${Date.now()}`); // Create a storage reference
-      console.log("Created storage reference:", storageRef);
-
       await uploadBytes(storageRef, blob); // Upload the blob to storage
-      console.log("Uploaded blob to storage");
 
-      const downloadURL = await getDownloadURL(storageRef); // Retrieve the download URL
-      console.log("Retrieved download URL:", downloadURL);
+      const downloadURL = await getDownloadURL(storageRef); // Get the download URL for the image
+      console.log("Image uploaded, download URL:", downloadURL);
 
-      await updateListingDetails("image", downloadURL); // Update listing details with the image URL
-      await saveImageUrl(downloadURL); // Save the image URL to Firestore
-      console.log("Saved image URL to Firestore");
+      updateListingDetails("image", downloadURL); // Update the listing details with the image URL
     } catch (error) {
-      console.error("Error uploading image: ", error);
+      console.error("Error uploading image:", error);
       Alert.alert("Error uploading image", error.message);
     }
   };
 
-  const saveImageUrl = async (url) => {
-    try {
-      // const user = { userId: user.id }; // Replace with actual user ID logic
-      await addDoc(collection(db, "images"), {
-        imageUrl: url,
-        // userId: user?._id,
-        createdAt: new Date(),
-      });
-      console.log("Image URL saved successfully");
-      Alert.alert("Image uploaded and URL saved to database!");
-    } catch (error) {
-      console.error("Error saving image URL to Firestore: ", error);
-      console.log("Firestore error details:", JSON.stringify(error));
-      Alert.alert("Error saving image URL", error.message);
-    }
-  };
-
   return (
-    <View className="flex-1 w-full " style={{ paddingHorizontal: xs(8) }}>
-      <ScrollView
-        horizontal={true}
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{
-          flex: 1,
-          justifyContent: selectedImage ? "flex-start" : "center",
-          alignItems: "center",
-          flexDirection: "row",
-        }}
-      >
-        {selectedImage && (
-          <View className="items-center justify-center gap-y-2">
+    <ScrollView>
+      <View style={{ padding: xs(10) }}>
+        <Text style={{ fontSize: ms(18), fontWeight: "bold" }}>
+          Upload Image
+        </Text>
+        <View style={{ marginVertical: ys(10) }}>
+          {selectedImage && (
             <Image
               source={{ uri: selectedImage }}
-              style={{ width: xs(250), height: ys(200) }}
-              className="rounded-xl"
+              style={{
+                width: xs(200),
+                height: ys(200),
+                resizeMode: "cover",
+                borderRadius: ms(10),
+              }}
             />
+          )}
+          {!selectedImage && <Text>No image selected</Text>}
+        </View>
+        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+          <Pressable
+            style={{
+              backgroundColor: "blue",
+              padding: xs(10),
+              borderRadius: ms(5),
+            }}
+            onPress={() => pickImage("camera")}
+          >
+            <Text style={{ color: "white" }}>Take a Photo</Text>
+          </Pressable>
+          <Pressable
+            style={{
+              backgroundColor: "green",
+              padding: xs(10),
+              borderRadius: ms(5),
+            }}
+            onPress={() => pickImage("library")}
+          >
+            <Text style={{ color: "white" }}>Pick from Gallery</Text>
+          </Pressable>
+        </View>
+        {selectedImage && (
+          <View style={{ marginVertical: ys(10) }}>
+            <Pressable
+              style={{
+                backgroundColor: "red",
+                padding: xs(10),
+                borderRadius: ms(5),
+              }}
+              onPress={() => updateListingDetails("image", null)} // Reset selected image
+            >
+              <Text style={{ color: "white" }}>Remove Image</Text>
+            </Pressable>
           </View>
         )}
-
-        <Pressable onPress={() => pickImage("library")}>
-          <View
-            style={{ width: xs(250), height: ys(200), borderWidth: 1 }}
-            className="rounded-xl border-gray-300 justify-center items-center"
-          >
-            <View className="flex-col items-center justify-center gap-y-2">
-              <EvilIcons name="image" size={ms(32)} color="black" />
-              <Text
-                style={{ fontSize: ms(12), fontWeight: "inter" }}
-                className="text-gray-400 font-semibold"
-              >
-                Upload Image
-              </Text>
-            </View>
-          </View>
-        </Pressable>
-
-        <Pressable onPress={() => pickImage("camera")}>
-          <View
-            style={{ width: xs(250), height: ys(200), borderWidth: 1 }}
-            className="rounded-xl border-gray-300 justify-center items-center"
-          >
-            <View className="flex-col items-center justify-center gap-y-2">
-              <EvilIcons name="camera" size={ms(32)} color="black" />
-              <Text
-                style={{ fontSize: ms(12), fontWeight: "inter" }}
-                className="text-gray-400 font-semibold"
-              >
-                Take a Photo
-              </Text>
-            </View>
-          </View>
-        </Pressable>
-      </ScrollView>
-    </View>
+      </View>
+    </ScrollView>
   );
 };
 

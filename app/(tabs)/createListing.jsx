@@ -6,6 +6,7 @@ import {
   Pressable,
   Alert,
   FlatList,
+  StyleSheet,
 } from "react-native";
 import React, { useEffect, useState, useRef } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -31,7 +32,9 @@ import Constants from "expo-constants";
 
 import sizes from "../../constants/sizes";
 import CustomButton from "../../components/customButton";
+import ListingType from "../../components/createListing/listingType";
 
+const { paddingSides, paddingTop, subtitle, title } = sizes;
 const CreateListing = () => {
   const { EXPO_API_URL } = Constants.expoConfig.extra;
   const { sm, md } = sizes;
@@ -73,15 +76,18 @@ const CreateListing = () => {
   // console.log("ezx a user", user);
 
   const [listingDetails, setListingDetails] = useState({
-    price: null,
+    price: "much",
     title: "fdfd",
-    desc: null,
-    image: null,
-    category: null,
+    desc: "fdfd",
+    image: "",
+    category: "fdfd",
+    tier: "fdfd",
     owner: user._id,
     amount: selectedAvailableAmount,
     location: user.location,
   });
+
+  console.log("Initial listingDetailssss        ", listingDetails);
 
   useEffect(() => {
     setListingDetails((prevDetails) => ({
@@ -98,6 +104,7 @@ const CreateListing = () => {
     }
   }, [listingDetails.category]);
 
+  //Function to update the listing details with key value pairs
   const updateListingDetails = (key, value) => {
     setListingDetails((prevDetails) => ({
       ...prevDetails,
@@ -116,18 +123,13 @@ const CreateListing = () => {
     );
   };
 
-  console.log("listingDetails", listingDetails);
-
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "" }}>
       <StatusBar hidden={false} />
       <View
+        className="flex-row justify-center items-center"
         style={{
-          flexDirection: "row",
-          justifyContent: "center",
-          alignItems: "center",
-          backgroundColor: "white",
-          height: ys(30),
+          height: ys(paddingTop * 3),
         }}
       >
         <Pressable
@@ -137,47 +139,65 @@ const CreateListing = () => {
           <Feather name="arrow-left" size={ms(24)} color="black" />
         </Pressable>
         <Text className=" font-semibold" style={{ fontSize: ms(md) }}>
-          Post what you got
+          Create a listing
         </Text>
       </View>
+
       <Divider customStyle={{ marginTop: ys(2), paddingHorizontal: 16 }} />
-      <View className="flex-1 ">
+      <View
+        className="flex-1  "
+        style={{ paddingHorizontal: xs(paddingSides) }}
+      >
         <ScrollView
-          // contentContainerStyle={{ flex: 1 }}
-          className="bg-white"
+          showsVerticalScrollIndicator={false}
+          className=""
           ref={scrollViewRef}
         >
           {/* <View
           style={{ paddingLeft: ms(14), paddingTop: ys(8) }}
           className="flex-row items-center"
         ></View> */}
-          <View className="items-center" style={{ paddingTop: ys(md) }}>
+          <View className="" style={{ paddingTop: ys(paddingTop * 2) }}>
+            <Text style={styles.subTitle}>Photos</Text>
             <ImageUpload
               listingDetails={listingDetails}
-              updateListingDetails={updateListingDetails}
               user={user}
+              updateListingDetails={updateListingDetails}
             />
           </View>
-          <ChooseListingCategory
-            listingDetails={listingDetails}
-            updateListingDetails={updateListingDetails}
-          />
-          {/* {listingDetails.category && ( */}
-          <DropdownComponent
-            // onOpen={handleDropdownOpen}
-            // onClose={handleDropdownClose}
-            data={dropdownData}
-            updateListingDetails={updateListingDetails}
-            listingDetails={listingDetails}
-          />
-          {/* )} */}
-          <View style={{ paddingHorizontal: xs(sm) }}>
+          <View className="" style={{ paddingTop: ys(paddingTop * 2) }}>
+            <Text style={styles.subTitle}>Category</Text>
+            <ChooseListingCategory
+              listingDetails={listingDetails}
+              updateListingDetails={updateListingDetails}
+              setListingDetails={setListingDetails}
+            />
+          </View>
+
+          <View className="" style={{ paddingTop: ys(paddingTop * 2) }}>
+            <Text style={styles.subTitle}>Item</Text>
+            <DropdownComponent
+              // onOpen={handleDropdownOpen}
+              // onClose={handleDropdownClose}
+              data={dropdownData}
+              updateListingDetails={updateListingDetails}
+              listingDetails={listingDetails}
+            />
+          </View>
+          {/* <View style={{}}>
             <AddListingDetails
               listingDetails={listingDetails}
               updateListingDetails={updateListingDetails}
             />
+          </View> */}
+          <View className="" style={{ paddingTop: ys(paddingTop * 2) }}>
+            <Text style={styles.subTitle}>Type</Text>
+            <ListingType
+              listingDetails={listingDetails}
+              updateListingDetails={updateListingDetails}
+            />
           </View>
-          <View
+          {/* <View
             style={{
               marginHorizontal: xs(sm),
               height: ys(100),
@@ -198,7 +218,7 @@ const CreateListing = () => {
             }}
           >
             {/* <Text className="text-gray-500">How many do you have?</Text> */}
-            <Picker
+          {/* <Picker
               selectedValue={selectedAvailableAmount}
               onValueChange={(itemValue, itemIndex) =>
                 setSelectedAvailableAmount(itemValue)
@@ -216,7 +236,7 @@ const CreateListing = () => {
               <Picker.Item label="50" value="50" />
               <Picker.Item label="50 <" value="More than 50" />
             </Picker>
-          </View>
+          </View> */}
 
           <CustomButton
             submit={handleSubmit}
@@ -229,3 +249,11 @@ const CreateListing = () => {
 };
 
 export default CreateListing;
+
+const styles = StyleSheet.create({
+  subTitle: {
+    textColor: "#020202",
+    fontFamily: "jakartaSemibold",
+    fontSize: ms(subtitle),
+  },
+});

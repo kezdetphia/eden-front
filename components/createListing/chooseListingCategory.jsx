@@ -1,4 +1,11 @@
-import { View, Text, FlatList, Pressable } from "react-native";
+import {
+  View,
+  Text,
+  FlatList,
+  Pressable,
+  Dimensions,
+  StyleSheet,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import {
   scale as xs,
@@ -8,8 +15,14 @@ import {
 import sizes from "../../constants/sizes";
 import { categories } from "../../utils/corpsStuff";
 
-const ChooseListingCategory = ({ listingDetails, updateListingDetails }) => {
-  const { xsm, sm, md, lg, xl, xxl } = sizes;
+const ChooseListingCategory = ({
+  listingDetails,
+  updateListingDetails,
+  setListingDetails,
+}) => {
+  const { paddingTop, paddingSides, subtitle } = sizes;
+  const screenWidth = Dimensions.get("window").width;
+  const itemWidth = screenWidth / 2 - xs(paddingSides * 1.7);
 
   useEffect(() => {
     if (listingDetails.category) {
@@ -28,40 +41,62 @@ const ChooseListingCategory = ({ listingDetails, updateListingDetails }) => {
 
   return (
     <View
-      className="w-full "
       style={{
-        marginTop: ys(md),
-        paddingHorizontal: xs(sm),
+        marginTop: ys(paddingTop * 0.75),
       }}
     >
-      <Text
-        className="text-black font-inter font-bold"
-        style={{ fontSize: ms(md) }}
-      >
-        Category
-      </Text>
       <FlatList
         data={categories}
         renderItem={({ item }) => (
           <Pressable onPress={() => handleCategorySelect(item)}>
             <View
               className={`${
-                selectedCategory === item ? "bg-green-200 " : "bg-gray-200"
-              } rounded-full`}
+                selectedCategory === item ? "border border-g400 " : "b-200"
+              } rounded-lg bg-white  `}
               style={{
-                paddingVertical: ys(xsm),
-                paddingHorizontal: xs(xxl),
-                marginTop: xs(md),
+                paddingVertical: ys(paddingTop),
+                // paddingHorizontal: xs(paddingSides * 5),
+                width: itemWidth,
               }}
             >
-              <Text
-                style={{ fontFamily: "poppins", fontSize: ms(sm) }}
-                className={` ${
-                  selectedCategory === item ? "text-gray-700 " : "text-gray-400"
-                }`}
-              >
-                {item}
-              </Text>
+              <View className="flex flex-row justify-around ">
+                <Text
+                  style={styles.text}
+                  className={`${
+                    selectedCategory === item ? "text-g400" : "text-b200"
+                  }`}
+                >
+                  {item.charAt(0).toUpperCase() + item.slice(1)}
+                </Text>
+
+                <View
+                  className={`${
+                    selectedCategory === item
+                      ? "border border-g400"
+                      : "border border-gray"
+                  }`}
+                  style={{
+                    height: ms(16),
+                    width: ms(16),
+                    borderRadius: ms(8),
+                    borderWidth: 2,
+                    alignItems: "center",
+                    justifyContent: "center",
+                    borderColor: selectedCategory === item ? "#4A9837" : "gray",
+                  }}
+                >
+                  {selectedCategory === item && (
+                    <View
+                      className="bg-g400"
+                      style={{
+                        height: ms(8),
+                        width: ms(8),
+                        borderRadius: ms(4),
+                      }}
+                    />
+                  )}
+                </View>
+              </View>
             </View>
           </Pressable>
         )}
@@ -69,9 +104,9 @@ const ChooseListingCategory = ({ listingDetails, updateListingDetails }) => {
         keyExtractor={(item) => item}
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={{
-          paddingHorizontal: xs(sm),
+          // paddingHorizontal: xs(paddingSides),
           justifyContent: "center",
-          gap: xs(xxl),
+          gap: xs(paddingTop),
           width: "100%",
         }}
       />
@@ -80,3 +115,11 @@ const ChooseListingCategory = ({ listingDetails, updateListingDetails }) => {
 };
 
 export default ChooseListingCategory;
+
+const styles = StyleSheet.create({
+  text: {
+    fontFamily: "jakarta",
+    letterSpacing: 0.3,
+    // color: "#2D2D2D",
+  },
+});
