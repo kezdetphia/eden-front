@@ -10,6 +10,7 @@ import sizes from "../../constants/sizes";
 import { Entypo, Feather } from "@expo/vector-icons";
 import { EvilIcons } from "@expo/vector-icons";
 import { useAuth } from "@/context/authContext";
+import CustomText from "../customText";
 
 export default function CustomHeader({ searchBarValue, setSearchBarValue }) {
   const { sm, paddingSides } = sizes;
@@ -29,21 +30,27 @@ export default function CustomHeader({ searchBarValue, setSearchBarValue }) {
         >
           <View>
             <View className="flex flex-row ">
-              <Text
+              <CustomText xl> Hi</CustomText>
+              {/* <Text
                 className="text-b300"
                 style={{ fontFamily: "jakarta", fontSize: "20px" }}
               >
                 Hi
-              </Text>
+              </Text> */}
 
-              <Text
+              {/* <Text
                 className="text-b300"
                 style={{ fontFamily: "jakartaBold", fontSize: "20px" }}
               >
                 ,{" "}
                 {user?.username?.charAt(0).toUpperCase() +
                   user.username.slice(1)}
-              </Text>
+              </Text> */}
+              <CustomText bold xl b200>
+                {" "}
+                {user?.username?.charAt(0).toUpperCase() +
+                  user.username.slice(1)}
+              </CustomText>
             </View>
             <View
               className="flex-row items-center   "
