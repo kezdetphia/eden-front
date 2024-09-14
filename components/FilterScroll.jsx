@@ -6,6 +6,7 @@ import {
   moderateScale as ms,
 } from "react-native-size-matters";
 import sizes from "../constants/sizes";
+import CustomText from "./customText";
 
 const FilterScroll = ({ filterOptions, selectedFilter, setSelectedFilter }) => {
   const { paddingSides, xsm, sm, md, lg, xl, xxl } = sizes;
@@ -40,16 +41,16 @@ const FilterScroll = ({ filterOptions, selectedFilter, setSelectedFilter }) => {
                   borderColor: "white",
                 }}
               >
-                <Text
+                <CustomText
                   style={{
-                    fontFamily: "jakarta",
                     paddingHorizontal: xs(20),
                     textAlign: "center",
-                    color: selectedFilter === item ? "white" : "#4A4A4A",
                   }}
+                  white={selectedFilter === item}
+                  selectButtonGreen={selectedFilter !== item}
                 >
                   {item}
-                </Text>
+                </CustomText>
               </View>
             </Pressable>
           </View>

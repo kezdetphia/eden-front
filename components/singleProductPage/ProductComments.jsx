@@ -12,6 +12,7 @@ import { Image } from "expo-image";
 import { format, parseISO } from "date-fns";
 import { useRouter } from "expo-router";
 import Constants from "expo-constants";
+import CustomText from "../customText";
 
 const { EXPO_API_URL } = Constants.expoConfig.extra;
 const { md } = sizes;
@@ -95,15 +96,9 @@ const ProductComments = ({ product }) => {
 
   return (
     <View>
-      <Text
-        style={{
-          fontSize: ms(subtitle),
-          fontFamily: "jakartaBold",
-          letterSpacing: 0.3,
-        }}
-      >
+      <CustomText subtitle bold>
         Comments ({product?.comments.length})
-      </Text>
+      </CustomText>
 
       <View style={{ paddingTop: ys(paddingTop) }}>
         <View className="bg-grayb rounded-lg" style={{ position: "relative" }}>
@@ -184,43 +179,28 @@ const ProductComments = ({ product }) => {
                             })
                           }
                         >
-                          <Text
-                            className="text-b300"
-                            style={{
-                              fontSize: ms(15),
-                              fontFamily: "jakartaBold",
-                              letterSpacing: 0.3,
-                            }}
-                          >
+                          <CustomText b300 md bold>
                             {comment?.user?.username}
-                          </Text>
+                          </CustomText>
                         </Pressable>
-                        <Text
-                          className="text-b75"
-                          style={{
-                            fontSize: ms(10),
-                            fontFamily: "jakarta",
-                            letterSpacing: 0.3,
-                          }}
-                        >
+                        <CustomText b75 xxs>
                           {format(
                             parseISO(comment?.createdAt),
                             "h:mma  M/d/yy"
                           )}
-                        </Text>
+                        </CustomText>
                       </View>
 
-                      <Text
-                        className="text-b100"
+                      <CustomText
+                        b100
+                        xsm
                         style={{
-                          fontFamily: "jakarta",
                           paddingTop: ys(7),
-                          letterSpacing: 0.3,
                           paddingRight: xs(xsm),
                         }}
                       >
                         {comment?.text}
-                      </Text>
+                      </CustomText>
                     </View>
                   </View>
                 </View>
@@ -232,45 +212,41 @@ const ProductComments = ({ product }) => {
                   style={{ paddingTop: ys(paddingTop * 1.5) }}
                   onPress={handleToggleComments}
                 >
-                  <Text
-                    className="text-g300 text-center"
+                  <CustomText
+                    g300
                     style={{
-                      fontFamily: "jakarta",
+                      textAlign: "center",
                       paddingTop: ys(7),
-                      letterSpacing: 0.3,
                     }}
                   >
                     {showAllComments ? "Show Less" : "Read More..."}
-                  </Text>
+                  </CustomText>
                 </Pressable>
                 // </View>
               )}
             </View>
           ) : (
             <View style={{ paddingTop: ys(paddingTop + 4) }}>
-              <Text
-                className="text-center"
+              <CustomText
+                xsm
+                b150
                 style={{
-                  fontSize: ms(12),
-                  fontFamily: "jakarta",
-                  fontStyle: "#E6E6E6",
-                  letterSpacing: 0.3,
+                  textAlign: "center",
                 }}
               >
                 No comments yet...
-              </Text>
-              <Text
-                className="text-center text-b100"
+              </CustomText>
+              <CustomText
+                b100
+                xsm
                 style={{
-                  fontSize: ms(xsm),
+                  textAlign: "center",
                   paddingHorizontal: xs(xsm),
-                  fontFamily: "jakarta",
-                  letterSpacing: 0.3,
                 }}
               >
                 Be the first to ask questions, comment about this item, or share
                 your experience
-              </Text>
+              </CustomText>
             </View>
           )}
         </View>

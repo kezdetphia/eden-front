@@ -6,12 +6,13 @@ import {
   moderateScale as ms,
 } from "react-native-size-matters";
 import sizes from "../../constants/sizes";
+import CustomText from "../../components/customText";
 
 const Notifications = () => {
   const { paddingSides, paddingTop, title, subtitle } = sizes;
   return (
     <View>
-      <Text>Notifications</Text>
+      <CustomText>Notifications</CustomText>
     </View>
   );
 };

@@ -31,21 +31,7 @@ export default function CustomHeader({ searchBarValue, setSearchBarValue }) {
           <View>
             <View className="flex flex-row ">
               <CustomText xl> Hi,</CustomText>
-              {/* <Text
-                className="text-b300"
-                style={{ fontFamily: "jakarta", fontSize: "20px" }}
-              >
-                Hi
-              </Text> */}
 
-              {/* <Text
-                className="text-b300"
-                style={{ fontFamily: "jakartaBold", fontSize: "20px" }}
-              >
-                ,{" "}
-                {user?.username?.charAt(0).toUpperCase() +
-                  user.username.slice(1)}
-              </Text> */}
               <CustomText bold xl b200>
                 {" "}
                 {user?.username?.charAt(0).toUpperCase() +

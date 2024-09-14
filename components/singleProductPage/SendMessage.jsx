@@ -18,15 +18,14 @@ const SendMessage = ({ product }) => {
         className=""
         style={{ paddingTop: ys(xsm), paddingBottom: ys(xsm) }}
       >
-        <Text
+        <CustomText
+          sm
           style={{
-            fontSize: ms(sm),
             paddingLeft: xs(xsm),
-            fontFamily: "poppins",
           }}
         >
           Send this wapper a message
-        </Text>
+        </CustomText>
       </View>
       <View
         className="flex flex-row justify-between items-end"
@@ -49,9 +48,7 @@ const SendMessage = ({ product }) => {
           className="bg-myGreen rounded-xl  self-end"
           style={{ padding: xs(6), marginLeft: xs(3) }}
         >
-          <Text className="text-white " style={{ fontFamily: "poppins" }}>
-            Send
-          </Text>
+          <CustomText white>Send</CustomText>
         </Pressable>
       </View>
     </View>

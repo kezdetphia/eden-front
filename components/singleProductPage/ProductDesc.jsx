@@ -6,30 +6,23 @@ import {
   moderateScale as ms,
 } from "react-native-size-matters";
 import sizes from "../../constants/sizes";
+import CustomText from "../customText";
 
 const ProductDesc = ({ desc }) => {
   const { paddingTop, paddingSides, sm, subtitle } = sizes;
   return (
     <View>
-      <Text
-        className="text-b300"
-        style={{
-          fontSize: ms(subtitle),
-          fontFamily: "jakartaBold",
-        }}
-      >
+      <CustomText b300 subtitle bold>
         Description
-      </Text>
-      <Text
-        className="text-b200 "
+      </CustomText>
+      <CustomText
+        b200
         style={{
-          fontFamily: "jakarta",
           paddingTop: ys(7),
-          letterSpacing: 0.3,
         }}
       >
         {desc}
-      </Text>
+      </CustomText>
     </View>
   );
 };

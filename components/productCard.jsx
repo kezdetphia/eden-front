@@ -9,6 +9,7 @@ import {
   moderateScale as ms,
 } from "react-native-size-matters";
 import sizes from "../constants/sizes";
+import CustomText from "./customText";
 
 const { xxs, xsm, sm, md, lg, xl, xxl, paddingSides } = sizes;
 
@@ -26,49 +27,37 @@ const ProductCard = ({ product, cardWidth }) => {
         />
       </View>
       <View className="flex-row justify-between items-center">
-        <Text
-          className="text-darkrey text-b300"
-          style={{ fontFamily: "jakartaSemibold" }}
-        >
+        <CustomText b300 semibold>
           {product.title}
-        </Text>
+        </CustomText>
         <View className=" rounded-md justify-center items-center">
-          <Text
-            className="text-white bg-myOrange"
+          <CustomText
+            white
+            xs
             style={{
-              fontFamily: "jakartaSemibold",
-              fontSize: 9,
               paddingHorizontal: xs(5),
               paddingVertical: ys(2),
+              backgroundColor: "#FF6B00",
             }}
           >
             {product?.tier?.toUpperCase()}
-          </Text>
+          </CustomText>
         </View>
       </View>
-      <Text
-        style={{ fontFamily: "jakarta", fontSize: 12, paddingTop: ys(3) }}
-        className="text-b100"
-      >
+      <CustomText xxs b100 style={{ paddingTop: ys(3) }}>
         {product.location}
-      </Text>
+      </CustomText>
       <View
         className="flex-row items-center justify-between"
         style={{ paddingTop: ys(10) }}
       >
-        <Text
-          className="text-g300"
-          style={{ fontFamily: "jakartaSemibold", fontSize: 12 }}
-        >
+        <CustomText g300 xsm semibold>
           {product.amount} Kg
-        </Text>
+        </CustomText>
         {product?.tier === "Buy" ? (
-          <Text
-            className="text-b300"
-            style={{ fontFamily: "jakartaBold", fontSize: 12 }}
-          >
+          <CustomText b300 xsm>
             $100
-          </Text>
+          </CustomText>
         ) : (
           ""
         )}

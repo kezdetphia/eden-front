@@ -12,6 +12,7 @@ import CategoryScroll from "../../components/homescreen/CategoryScroll";
 import { Image } from "expo-image";
 import { EvilIcons } from "@expo/vector-icons";
 import Constants from "expo-constants";
+import CustomText from "../../components/customText";
 
 const SellerProfile = () => {
   const { EXPO_API_URL } = Constants.expoConfig.extra;
@@ -71,13 +72,11 @@ const SellerProfile = () => {
             ListHeaderComponent={
               <View>
                 <View style={{ padding: ms(xsm) }}>
-                  <Text style={{ fontSize: ms(lg), fontFamily: "poppins" }}>
-                    @{sellerData?.username}
-                  </Text>
-                  <Text>{sellerData?.location}</Text>
-                  <Text style={{ fontSize: ms(xsm), fontFamily: "poppins" }}>
+                  <CustomText lg>@{sellerData?.username}</CustomText>
+                  <CustomText>{sellerData?.location}</CustomText>
+                  <CustomText xsm>
                     Member since: {sellerData?.createdAt.slice(0, 10)}
-                  </Text>
+                  </CustomText>
                 </View>
                 <View>
                   <CategoryScroll categories={sellerData?.inNeedOf} />
@@ -99,19 +98,9 @@ const SellerProfile = () => {
                     source={item.image}
                     style={{ width: imageWidth, height: imageHeight }}
                   />
-                  <Text
-                    style={{ fontSize: ms(md), fontFamily: "poppins" }}
-                    className="text-darkgrey "
-                  >
-                    {item.title}
-                  </Text>
+                  <CustomText md>{item.title}</CustomText>
 
-                  <Text
-                    style={{ fontSize: ms(xsm), fontFamily: "poppins" }}
-                    className="text-midgrey"
-                  >
-                    {item.updatedAt.slice(0, 10)}
-                  </Text>
+                  <CustomText xsm>{item.updatedAt.slice(0, 10)}</CustomText>
                 </Pressable>
               </View>
             )}
