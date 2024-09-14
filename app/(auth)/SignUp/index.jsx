@@ -12,6 +12,7 @@ import {
 import sizes from "../../../constants/sizes";
 import LottieView from "lottie-react-native";
 import Constants from "expo-constants";
+import CustomText from "../../../components/customText";
 
 const SignUp = () => {
   const { EXPO_API_URL } = Constants.expoConfig.extra;
@@ -163,28 +164,26 @@ const SignUp = () => {
           loop
           onError={(error) => console.log("Lottie error:", error)} // Add error logging
         />
-        <Text
-          className="text-b300"
+        <CustomText
+          bold
+          b300
           style={{
             fontSize: title * 1.5,
-            fontFamily: "jakartaBold",
-            letterSpacing: 0.3,
-            // paddingTop: ys(paddingTop),
+            paddingTop: ys(paddingTop),
           }}
         >
           Hey Swapper!
-        </Text>
-        <Text
-          className="text-b300"
+        </CustomText>
+        <CustomText
+          bold
+          b300
           style={{
             fontSize: subtitle * 1.5,
-            fontFamily: "jakartaBold",
-            letterSpacing: 0.3,
             paddingTop: ys(paddingTop),
           }}
         >
           Sign Up
-        </Text>
+        </CustomText>
         <TextInput
           value={formData.username}
           onChangeText={(text) => handleInputChange("username", text)}
@@ -243,38 +242,31 @@ const SignUp = () => {
             }}
             disabled={!isFormValid}
           >
-            <Text
-              style={{
-                color: "#FFFFFF",
-                fontSize: ms(14),
-                fontFamily: "jakartaSemibold",
-                letterSpacing: 0.3,
-              }}
-            >
+            <CustomText semibold white sm>
               {isLoading ? "Signing up.." : "Sign Up"}
-            </Text>
+            </CustomText>
           </Pressable>
         </View>
         <Pressable onPress={() => router.push("SignIn")}>
-          <Text
-            className="text-b100"
+          <CustomText
+            b100
+            sm
             style={{
               paddingTop: ys(paddingTop),
-              fontFamily: "jakarta",
-              letterSpacing: 0.3,
             }}
           >
-            Dont't have an account yet?{"  "}
-            <Text
+            Don't have an account yet?{"  "}
+            <CustomText
+              semibold
+              sm
+              g300
               style={{
-                fontFamily: "jakartaSemibold",
                 letterSpacing: 0.3,
               }}
-              className="text-g300"
             >
               Sign In!
-            </Text>
-          </Text>
+            </CustomText>
+          </CustomText>
         </Pressable>
       </View>
       {/* --------- */}
