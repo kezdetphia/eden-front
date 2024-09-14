@@ -9,6 +9,7 @@ const sizes = {
   marginxl: 18,
   marginxxl: 20,
   marginxxxl: 22,
+  xxxs: 8,
   xxs: 10,
   xsm: 12,
   sm: 14,

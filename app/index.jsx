@@ -12,6 +12,7 @@ import LottieView from "lottie-react-native";
 import * as Google from "expo-auth-session/providers/google";
 import * as WebBrowser from "expo-web-browser";
 import * as SecureStore from "expo-secure-store";
+import CustomText from "../components/customText";
 
 const Index = () => {
   const { isAuthenticated } = useAuth();
@@ -77,7 +78,17 @@ const Index = () => {
       >
         <StatusBar hidden={true} />
 
-        <View className="items-center">
+        <View className="items-center ">
+          {/* <CustomText
+            bold
+            g300
+            style={{
+              fontSize: ms(title * 1.5),
+            }}
+          >
+            Eden
+          </CustomText> */}
+
           <Text
             className="text-g300"
             style={{
@@ -111,16 +122,9 @@ const Index = () => {
               flexDirection: "row",
             }}
           >
-            <Text
-              style={{
-                color: "#FFFFFF",
-                fontSize: ms(14),
-                fontFamily: "jakartaSemibold",
-                letterSpacing: 0.3,
-              }}
-            >
+            <CustomText semibold white>
               Continue with Apple
-            </Text>
+            </CustomText>
           </Pressable>
           <Pressable
             onPress={() => promptAsync()}
@@ -137,16 +141,9 @@ const Index = () => {
               borderWidth: 1,
             }}
           >
-            <Text
-              style={{
-                color: "black",
-                fontSize: ms(14),
-                fontFamily: "jakartaSemibold",
-                letterSpacing: 0.3,
-              }}
-            >
+            <CustomText semibold black>
               Sign In with Google
-            </Text>
+            </CustomText>
           </Pressable>
           <Pressable
             // onPress={handleSignIn}
@@ -163,28 +160,17 @@ const Index = () => {
               borderWidth: 1,
             }}
           >
-            <Text
-              style={{
-                color: "black",
-                fontSize: ms(14),
-                fontFamily: "jakartaSemibold",
-                letterSpacing: 0.3,
-              }}
-            >
+            <CustomText semibold black>
               Sign In with Google
-            </Text>
+            </CustomText>
           </Pressable>
-          <Text
-            style={{
-              fontSize: ms(12),
-              fontFamily: "jakarta",
-              letterSpacing: 0.3,
-              paddingTop: ys(paddingTop),
-            }}
-            className="text-center text-b200"
+          <CustomText
+            sm
+            b200
+            style={{ paddingTop: ys(paddingTop), textAlign: "center" }}
           >
             or
-          </Text>
+          </CustomText>
 
           <Pressable
             onPress={() => router.push("SignUp")}
@@ -199,60 +185,34 @@ const Index = () => {
               flexDirection: "row",
             }}
           >
-            <Text
-              style={{
-                color: "#FFFFFF",
-                fontSize: ms(14),
-                fontFamily: "jakartaSemibold",
-                letterSpacing: 0.3,
-              }}
-            >
+            <CustomText semibold white>
               Sign up with email
-            </Text>
+            </CustomText>
           </Pressable>
+
           <Pressable onPress={() => router.push("SignIn")}>
-            <Text
-              className="text-b100 text-center"
-              style={{
-                paddingTop: ys(paddingTop * 0.7),
-                fontFamily: "jakarta",
-                letterSpacing: 0.3,
-              }}
+            <CustomText
+              sm
+              b100
+              style={{ paddingTop: ys(paddingTop * 0.7), textAlign: "center" }}
             >
+              {" "}
               Already have an account?{"  "}
-              <Text
-                style={{
-                  fontFamily: "jakartaSemibold",
-                  letterSpacing: 0.3,
-                }}
-                className="text-g300"
-              >
+              <CustomText sm g300 semibold>
                 Sign In!
-              </Text>
-            </Text>
+              </CustomText>
+            </CustomText>
           </Pressable>
           <View
             className="items-center"
             style={{ paddingTop: ys(paddingTop * 2) }}
           >
-            <Text
-              className="text-b100"
-              style={{
-                fontFamily: "jakarta",
-                fontSize: ms(8),
-              }}
-            >
+            <CustomText xxxs b100>
               By continuing you agree to our Terms of Condition.
-            </Text>
-            <Text
-              className="text-b100"
-              style={{
-                fontFamily: "jakarta",
-                fontSize: ms(8),
-              }}
-            >
-              Greenz services are subject to our Privacy Policy
-            </Text>
+            </CustomText>
+            <CustomText xxxs b100>
+              Eden services are subject to our Privacy Policy.
+            </CustomText>
           </View>
         </View>
       </View>

@@ -30,7 +30,7 @@ export default function CustomHeader({ searchBarValue, setSearchBarValue }) {
         >
           <View>
             <View className="flex flex-row ">
-              <CustomText xl> Hi</CustomText>
+              <CustomText xl> Hi,</CustomText>
               {/* <Text
                 className="text-b300"
                 style={{ fontFamily: "jakarta", fontSize: "20px" }}
