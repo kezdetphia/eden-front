@@ -9,6 +9,8 @@ import sizes from "../constants/sizes";
 
 // Define the size mapping
 const sizeMapping = {
+  xxxs: { fontSize: ms(sizes.xxxs), lineHeight: ms(sizes.xxxs * 1.25) },
+  xs: { fontSize: ms(sizes.xs), lineHeight: ms(sizes.xs * 1.25) },
   xxs: { fontSize: ms(sizes.xxs), lineHeight: ms(sizes.xxs * 1.25) },
   xsm: { fontSize: ms(sizes.xsm), lineHeight: ms(sizes.xsm * 1.25) },
   sm: { fontSize: ms(sizes.sm), lineHeight: ms(sizes.sm * 1.25) },
@@ -25,6 +27,9 @@ const sizeMapping = {
 
 // Define the color mapping
 const colorMapping = {
+  black: "#020202",
+  white: "#FFFFFF",
+  orange: "#FF6B00",
   b50: "#E6E6E6",
   b75: "#979797",
   b100: "#6C6C6C",
@@ -35,6 +40,7 @@ const colorMapping = {
   g200: "#83DF6C",
   g300: "#69D94E",
   g400: "#4A9837",
+  selectButtonGreen: "#4A4A4A",
 };
 
 const CustomText = ({ style, semibold, bold, children, ...props }) => {

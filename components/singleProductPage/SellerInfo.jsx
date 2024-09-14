@@ -9,6 +9,7 @@ import sizes from "../../constants/sizes";
 import { useRouter } from "expo-router";
 import { Image } from "expo-image";
 import SecondaryPill from "../SecondaryPill";
+import CustomText from "../customText";
 
 const SellerInfo = ({ owner }) => {
   const router = useRouter();
@@ -16,16 +17,9 @@ const SellerInfo = ({ owner }) => {
   const { md, subtitle } = sizes;
   return (
     <View className="">
-      <Text
-        className="text-b300"
-        style={{
-          fontSize: ms(subtitle),
-          fontFamily: "jakartaBold",
-          letterSpacing: 0.3,
-        }}
-      >
+      <CustomText b300 subtitle bold>
         Seller Information
-      </Text>
+      </CustomText>
       <View className="flex-row" style={{ paddingTop: ys(10) }}>
         <View>
           <Image
@@ -36,16 +30,9 @@ const SellerInfo = ({ owner }) => {
 
         <View className="flex-1 " style={{ paddingLeft: xs(md) }}>
           <View className="flex-row justify-between ">
-            <Text
-              className="text-b300"
-              style={{
-                fontSize: ms(15),
-                fontFamily: "jakartaBold",
-                letterSpacing: 0.3,
-              }}
-            >
+            <CustomText b300 md bold>
               {owner?.username}
-            </Text>
+            </CustomText>
             <Pressable
               onPress={() =>
                 router.push({
@@ -57,21 +44,14 @@ const SellerInfo = ({ owner }) => {
               <SecondaryPill props={"View Profile"} />
             </Pressable>
           </View>
-          <Text
-            style={{
-              letterSpacing: 0.3,
-              fontFamily: "jakarta",
-              fontSize: ms(12),
-            }}
-            className="text-b100"
-          >
+          <CustomText xsm b100>
             Joined{" "}
             {new Date(owner?.createdAt).toLocaleDateString("en-US", {
               month: "short",
               day: "2-digit",
               year: "numeric",
             })}
-          </Text>
+          </CustomText>
         </View>
       </View>
     </View>

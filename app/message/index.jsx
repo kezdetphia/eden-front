@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import {
   View,
-  Text,
   FlatList,
   Pressable,
   Image,
@@ -21,6 +20,7 @@ import {
 } from "react-native-size-matters";
 import sizes from "../../constants/sizes";
 import defaultAvatar from "../../assets/images/avatar.png";
+import CustomText from "../../components/customText";
 
 const { EXPO_API_URL } = Constants.expoConfig.extra;
 
@@ -218,18 +218,22 @@ const Messages = () => {
               }}
             />
             <View className="flex-col">
-              <Text className="text-b200" style={styles.text}>
+              <CustomText b200 style={{ paddingTop: ys(2) }}>
                 {item.toUsername}
-              </Text>
+              </CustomText>
+
               <View className={`flex-row items-center  `}>
-                <Text className="text-b200" style={styles.text}>
+                <CustomText b200 style={{ paddingTop: ys(2) }}>
                   {item.message.length > 25
                     ? item.message.substring(0, 28) + "..."
                     : item.message}
-                </Text>
-                <Text className="text-b200 pl-3 " style={styles.text}>
+                </CustomText>
+                <CustomText
+                  b200
+                  style={{ paddingTop: ys(2), paddingLeft: xs(3) }}
+                >
                   {formatDate(item.timestamp)}
-                </Text>
+                </CustomText>
               </View>
             </View>
           </View>
@@ -253,13 +257,5 @@ const Messages = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  text: {
-    fontFamily: "jakarta",
-    paddingTop: ys(2),
-    letterSpacing: 0.3,
-  },
-});
 
 export default Messages;

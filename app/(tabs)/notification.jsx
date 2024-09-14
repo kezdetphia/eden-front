@@ -9,6 +9,7 @@ import sizes from "../../constants/sizes";
 import Messages from "../message";
 import Notifications from "../notifications/notifications";
 import { useLocalSearchParams, useRouter } from "expo-router";
+import CustomText from "../../components/customText";
 
 const NotificationScreen = () => {
   const { paddingSides, paddingTop, xsm, sm, md, lg, xl, xxl } = sizes;
@@ -30,24 +31,20 @@ const NotificationScreen = () => {
         style={{ paddingTop: ys(paddingTop), paddingBottom: ys(paddingTop) }}
       >
         <Pressable onPress={() => setActiveWindow("messages")}>
-          <Text
-            style={styles.text}
-            className={`${
-              activeWindow === "messages" ? "text-g200 " : "text-b300"
-            }`}
+          <CustomText
+            g200={activeWindow === "messages"}
+            b300={activeWindow !== "messages"}
           >
             Messages
-          </Text>
+          </CustomText>
         </Pressable>
         <Pressable onPress={() => setActiveWindow("notifications")}>
-          <Text
-            style={styles.text}
-            className={`${
-              activeWindow === "notifications" ? "text-g200" : "text-b300"
-            }`}
+          <CustomText
+            g200={activeWindow === "notifications"}
+            b300={activeWindow !== "notifications"}
           >
             Notifications
-          </Text>
+          </CustomText>
         </Pressable>
       </View>
 
@@ -59,10 +56,3 @@ const NotificationScreen = () => {
 };
 
 export default NotificationScreen;
-
-const styles = StyleSheet.create({
-  text: {
-    fontFamily: "jakarta",
-    letterSpacing: 0.3,
-  },
-});

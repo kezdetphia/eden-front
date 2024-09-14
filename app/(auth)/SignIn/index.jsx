@@ -1,11 +1,4 @@
-import {
-  Text,
-  TextInput,
-  Pressable,
-  View,
-  Platform,
-  Animated,
-} from "react-native";
+import { TextInput, Pressable, View, Platform, Animated } from "react-native";
 import React, { useState } from "react";
 import Toast from "react-native-toast-message";
 import { useRouter } from "expo-router";
@@ -20,6 +13,7 @@ import {
 import sizes from "../../../constants/sizes";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import Constants from "expo-constants";
+import CustomText from "../../../components/customText";
 
 const SignIn = () => {
   const { EXPO_API_URL } = Constants.expoConfig.extra;
@@ -108,7 +102,14 @@ const SignIn = () => {
           loop
           onError={(error) => console.log("Lottie error:", error)} // Add error logging
         />
-        <Text
+        <CustomText
+          bold
+          b300
+          style={{ fontSize: title * 1.5, paddingTop: ys(paddingTop) }}
+        >
+          Hey Swapper!
+        </CustomText>
+        {/* <Text
           className="text-b300"
           style={{
             fontSize: title * 1.5,
@@ -118,18 +119,17 @@ const SignIn = () => {
           }}
         >
           Hey Swapper!
-        </Text>
-        <Text
-          className="text-b300"
+        </Text> */}
+        <CustomText
+          bold
+          b300
           style={{
             fontSize: subtitle * 1.5,
-            fontFamily: "jakartaBold",
-            letterSpacing: 0.3,
             paddingTop: ys(paddingTop),
           }}
         >
           Sign In
-        </Text>
+        </CustomText>
         <TextInput
           value={formData.email}
           onChangeText={(text) => handleInputChange("email", text)}
@@ -168,38 +168,24 @@ const SignIn = () => {
             }}
             disabled={!isFormValid}
           >
-            <Text
-              style={{
-                color: "#FFFFFF",
-                fontSize: ms(14),
-                fontFamily: "jakartaSemibold",
-                letterSpacing: 0.3,
-              }}
-            >
+            <CustomText semibold white sm>
               {isLoading ? "Signing in.." : "Sign In"}
-            </Text>
+            </CustomText>
           </Pressable>
         </View>
         <Pressable onPress={() => router.push("SignUp")}>
-          <Text
-            className="text-b100"
+          <CustomText
+            sm
+            b100
             style={{
               paddingTop: ys(paddingTop),
-              fontFamily: "jakarta",
-              letterSpacing: 0.3,
             }}
           >
-            Dont't have an account yet?{"  "}
-            <Text
-              style={{
-                fontFamily: "jakartaSemibold",
-                letterSpacing: 0.3,
-              }}
-              className="text-g300"
-            >
+            Don't have an account yet?{"  "}
+            <CustomText semibold g300 sm>
               Sign Up!
-            </Text>
-          </Text>
+            </CustomText>
+          </CustomText>
         </Pressable>
       </View>
     </KeyboardAwareScrollView>

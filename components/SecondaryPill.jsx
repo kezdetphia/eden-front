@@ -6,6 +6,7 @@ import {
   moderateScale as ms,
 } from "react-native-size-matters";
 import sizes from "../constants/sizes";
+import CustomText from "./customText";
 
 const { paddingSides, xsm, sm, md, lg, xl, xxl } = sizes;
 
@@ -19,16 +20,9 @@ const SecondaryPill = ({ props }) => {
         paddingVertical: ys(2),
       }}
     >
-      <Text
-        className="text-g400"
-        style={{
-          fontSize: ms(sm),
-          fontFamily: "jakarta",
-          letterSpacing: 0.3,
-        }}
-      >
+      <CustomText g400 sm className="text-g400">
         {props}
-      </Text>
+      </CustomText>
     </View>
   );
 };

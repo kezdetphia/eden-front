@@ -538,26 +538,17 @@ const ChatScreen = () => {
           { maxWidth: "60%" }, // Limit the width to 60%
         ]}
       >
-        <Text
-          style={{
-            fontFamily: "jakarta",
-            letterSpacing: 0.3,
-          }}
-        >
-          {item.message}
-        </Text>
+        <CustomText b200>{item.message}</CustomText>
         <View className="items-end" style={{ paddingTop: ys(1) }}>
-          <Text
-            className="text-b100"
+          <CustomText
+            b100
+            xxs
             style={{
-              fontFamily: "jakarta",
-              letterSpacing: 0.3,
               paddingTop: ys(3),
-              fontSize: ms(9),
             }}
           >
             {formatDate(item.timestamp)}
-          </Text>
+          </CustomText>
         </View>
       </View>
     );

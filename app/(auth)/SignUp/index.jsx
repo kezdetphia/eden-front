@@ -12,6 +12,7 @@ import {
 import sizes from "../../../constants/sizes";
 import LottieView from "lottie-react-native";
 import Constants from "expo-constants";
+import CustomText from "../../../components/customText";
 
 const SignUp = () => {
   const { EXPO_API_URL } = Constants.expoConfig.extra;
@@ -97,61 +98,6 @@ const SignUp = () => {
       // extraHeight={150}
       scrollEventThrottle={ms(16)}
     >
-      {/* <View className="flex-1 items-center justify-center bg-gray-100 p-4">
-        <Text className="text-2xl font-bold mb-6 text-gray-800">Sign Up</Text>
-        <TextInput
-          value={formData.username}
-          onChangeText={(text) => handleInputChange("username", text)}
-          className="w-full p-3 mb-4 bg-white rounded-lg border border-gray-300"
-          placeholder="Username"
-          placeholderTextColor="#9CA3AF"
-        />
-        <TextInput
-          value={formData.email}
-          onChangeText={(text) => handleInputChange("email", text)}
-          className="w-full p-3 mb-4 bg-white rounded-lg border border-gray-300"
-          placeholder="Email"
-          placeholderTextColor="#9CA3AF"
-          keyboardType="email-address"
-          autoCapitalize="none"
-        />
-        <TextInput
-          value={formData.password}
-          onChangeText={(text) => handleInputChange("password", text)}
-          className="w-full p-3 mb-6 bg-white rounded-lg border border-gray-300"
-          placeholder="Password"
-          placeholderTextColor="#9CA3AF"
-          secureTextEntry
-          autoCapitalize="none"
-        />
-        <TextInput
-          value={formData.passwordRepeat}
-          onChangeText={(text) => handleInputChange("passwordRepeat", text)}
-          className="w-full p-3 mb-6 bg-white rounded-lg border border-gray-300"
-          placeholder="Password"
-          placeholderTextColor="#9CA3AF"
-          secureTextEntry
-          autoCapitalize="none"
-        />
-        <Pressable
-          className={`w-full p-3 rounded-lg ${
-            // isLoading || !isFormValid ? "bg-blue-500" : "bg-blue-600"
-            "bg-blue-500"
-          }`}
-          onPress={handleSignUp}
-          disabled={!isFormValid}
-          style={{ opacity: isLoading || !isFormValid ? 0.7 : 1 }}
-        >
-          <Text className="text-center text-white font-semibold">
-            {isLoading ? "Signing up.." : "Sign Up"}
-          </Text>
-        </Pressable>
-        <Text>Have an account already? </Text>
-        <Pressable onPress={() => router.push("SignIn")}>
-          <Text>Sign In</Text>
-        </Pressable>
-      </View> */}
-      {/* --------- */}
       <View
         className="flex-1 items-center bg-white "
         style={{ paddingHorizontal: xs(paddingSides * 1.5) }}
@@ -163,28 +109,26 @@ const SignUp = () => {
           loop
           onError={(error) => console.log("Lottie error:", error)} // Add error logging
         />
-        <Text
-          className="text-b300"
+        <CustomText
+          bold
+          b300
           style={{
             fontSize: title * 1.5,
-            fontFamily: "jakartaBold",
-            letterSpacing: 0.3,
-            // paddingTop: ys(paddingTop),
+            paddingTop: ys(paddingTop),
           }}
         >
           Hey Swapper!
-        </Text>
-        <Text
-          className="text-b300"
+        </CustomText>
+        <CustomText
+          bold
+          b300
           style={{
             fontSize: subtitle * 1.5,
-            fontFamily: "jakartaBold",
-            letterSpacing: 0.3,
             paddingTop: ys(paddingTop),
           }}
         >
           Sign Up
-        </Text>
+        </CustomText>
         <TextInput
           value={formData.username}
           onChangeText={(text) => handleInputChange("username", text)}
@@ -243,38 +187,31 @@ const SignUp = () => {
             }}
             disabled={!isFormValid}
           >
-            <Text
-              style={{
-                color: "#FFFFFF",
-                fontSize: ms(14),
-                fontFamily: "jakartaSemibold",
-                letterSpacing: 0.3,
-              }}
-            >
+            <CustomText semibold white sm>
               {isLoading ? "Signing up.." : "Sign Up"}
-            </Text>
+            </CustomText>
           </Pressable>
         </View>
         <Pressable onPress={() => router.push("SignIn")}>
-          <Text
-            className="text-b100"
+          <CustomText
+            b100
+            sm
             style={{
               paddingTop: ys(paddingTop),
-              fontFamily: "jakarta",
-              letterSpacing: 0.3,
             }}
           >
-            Dont't have an account yet?{"  "}
-            <Text
+            Don't have an account yet?{"  "}
+            <CustomText
+              semibold
+              sm
+              g300
               style={{
-                fontFamily: "jakartaSemibold",
                 letterSpacing: 0.3,
               }}
-              className="text-g300"
             >
               Sign In!
-            </Text>
-          </Text>
+            </CustomText>
+          </CustomText>
         </Pressable>
       </View>
       {/* --------- */}

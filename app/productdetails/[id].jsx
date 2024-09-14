@@ -26,6 +26,7 @@ import CustomButton from "../../components/customButton";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useAuth } from "../../context/authContext";
 import Constants from "expo-constants";
+import CustomText from "../../components/customText";
 const { EXPO_API_URL } = Constants.expoConfig.extra;
 
 //TODO: make the main image carousel for more images
@@ -202,16 +203,10 @@ const ProductDetail = () => {
             }}
           >
             <View className="flex-row justify-between">
-              <Text
-                className="text-b300"
-                style={{
-                  fontSize: ms(title),
-                  fontFamily: "jakartaBold",
-                  letterSpacing: 0.3,
-                }}
-              >
+              <CustomText b300 title bold>
+                {" "}
                 {product?.title}
-              </Text>
+              </CustomText>
 
               <View
                 className="rounded-full justify-center  "
@@ -219,17 +214,19 @@ const ProductDetail = () => {
                 // style={{ paddingHorizontal: xs(paddingSides) }}
               >
                 <View className="bg-myOrange rounded-md">
-                  <Text
-                    className="text-white"
+                  <CustomText
+                    b300
+                    title
+                    white
+                    semibold
+                    xxs
                     style={{
-                      fontFamily: "jakartaSemibold",
-                      fontSize: ms(11),
                       paddingHorizontal: xs(8),
                       paddingVertical: ys(2),
                     }}
                   >
                     {product?.tier?.toUpperCase()}
-                  </Text>
+                  </CustomText>
                 </View>
               </View>
             </View>
@@ -243,17 +240,15 @@ const ProductDetail = () => {
                 size={ms(18)}
                 color="#69D94E"
               />
-              <Text
-                className="text-b200"
+              <CustomText
+                b200
+                sm
                 style={{
-                  fontFamily: "jakarta",
-                  fontSize: ms(xsm),
                   paddingRight: ms(xsm),
-                  letterSpacing: 0.3,
                 }}
               >
                 {product?.location}
-              </Text>
+              </CustomText>
             </View>
           </View>
           <View

@@ -6,6 +6,7 @@ import {
   moderateScale as ms,
 } from "react-native-size-matters";
 import sizes from "../../constants/sizes";
+import CustomText from "../customText";
 
 const PriceQuantityCard = ({ quantity, price, tier }) => {
   const { sm } = sizes;
@@ -15,18 +16,12 @@ const PriceQuantityCard = ({ quantity, price, tier }) => {
         className="bg-g300  rounded-lg items-center  justify-center "
         style={{ paddingHorizontal: xs(55), paddingVertical: ys(12) }}
       >
-        <Text
-          style={{ fontSize: ms(sm), fontFamily: "jakartaBold" }}
-          className="text-white"
-        >
-          {quantity} lb
-        </Text>
-        <Text
-          style={{ fontSize: ms(10), fontFamily: "jakarta" }}
-          className="text-white"
-        >
+        <CustomText sm white bold>
+          {quantity}
+        </CustomText>
+        <CustomText xxs white>
           Available
-        </Text>
+        </CustomText>
       </View>
 
       <View
@@ -34,49 +29,21 @@ const PriceQuantityCard = ({ quantity, price, tier }) => {
         style={{ paddingHorizontal: xs(40), paddingVertical: ys(12) }}
       >
         {tier === "Exchange" ? (
-          <Text
-            style={{
-              fontSize: ms(sm),
-              fontFamily: "jakartaBold",
-              letterSpacing: 0.3,
-            }}
-            className="text-white"
-          >
+          <CustomText sm white bold>
             Offer Me!
-          </Text>
+          </CustomText>
         ) : tier === "Free" ? (
-          <Text
-            style={{
-              fontSize: ms(sm),
-              fontFamily: "jakartaBold",
-              letterSpacing: 0.3,
-            }}
-            className="text-white"
-          >
+          <CustomText sm white bold>
             Yay, Its free!
-          </Text>
+          </CustomText>
         ) : (
           <View className=" items-center  justify-center ">
-            <Text
-              style={{
-                fontSize: ms(sm),
-                fontFamily: "jakartaBold",
-                letterSpacing: 0.3,
-              }}
-              className="text-white"
-            >
-              ${price}/lb
-            </Text>
-            <Text
-              style={{
-                fontSize: ms(10),
-                fontFamily: "jakarta",
-                letterSpacing: 0.3,
-              }}
-              className="text-white"
-            >
+            <CustomText sm white bold>
+              ${price}/ {}
+            </CustomText>
+            <CustomText xxs white>
               Price
-            </Text>
+            </CustomText>
           </View>
         )}
       </View>

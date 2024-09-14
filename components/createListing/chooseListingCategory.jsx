@@ -13,6 +13,7 @@ import {
 } from "react-native-size-matters";
 import sizes from "../../constants/sizes";
 import { categories } from "../../utils/corpsStuff";
+import CustomText from "../customText";
 
 const ChooseListingCategory = ({ listingDetails, updateListingDetails }) => {
   const { paddingTop, paddingSides } = sizes;
@@ -41,14 +42,12 @@ const ChooseListingCategory = ({ listingDetails, updateListingDetails }) => {
               }}
             >
               <View className="flex flex-row justify-around ">
-                <Text
-                  style={styles.text}
-                  className={`${
-                    listingDetails.category ? "text-g400" : "text-b200"
-                  }`}
+                <CustomText
+                  g400={listingDetails.category === item}
+                  b200={listingDetails.category !== item}
                 >
                   {item.charAt(0).toUpperCase() + item.slice(1)}
-                </Text>
+                </CustomText>
 
                 <View
                   className={`${
@@ -96,11 +95,3 @@ const ChooseListingCategory = ({ listingDetails, updateListingDetails }) => {
 };
 
 export default ChooseListingCategory;
-
-const styles = StyleSheet.create({
-  text: {
-    fontFamily: "jakarta",
-    letterSpacing: 0.3,
-    // color: "#2D2D2D",
-  },
-});
