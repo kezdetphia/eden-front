@@ -20,7 +20,7 @@ const ProductCard = ({ product, cardWidth }) => {
     >
       <View className="items-center">
         <Image
-          source={{ uri: product?.image }}
+          source={{ uri: product?.image[0] }}
           style={styles.image}
           onError={(error) => console.log("Image Load Error: ", error)}
         />

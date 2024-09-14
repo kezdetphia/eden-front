@@ -6,7 +6,6 @@ import {
   Dimensions,
   StyleSheet,
 } from "react-native";
-import React, { useEffect, useState } from "react";
 import {
   scale as xs,
   verticalScale as ys,
@@ -15,29 +14,10 @@ import {
 import sizes from "../../constants/sizes";
 import { categories } from "../../utils/corpsStuff";
 
-const ChooseListingCategory = ({
-  listingDetails,
-  updateListingDetails,
-  setListingDetails,
-}) => {
-  const { paddingTop, paddingSides, subtitle } = sizes;
+const ChooseListingCategory = ({ listingDetails, updateListingDetails }) => {
+  const { paddingTop, paddingSides } = sizes;
   const screenWidth = Dimensions.get("window").width;
   const itemWidth = screenWidth / 2 - xs(paddingSides * 1.7);
-
-  useEffect(() => {
-    if (listingDetails.category) {
-      setSelectedCategory(listingDetails.category);
-    }
-  }, [listingDetails.category]);
-
-  const [selectedCategory, setSelectedCategory] = useState(
-    listingDetails.category
-  );
-
-  const handleCategorySelect = (item) => {
-    setSelectedCategory(item);
-    updateListingDetails("category", item);
-  };
 
   return (
     <View
@@ -48,14 +28,15 @@ const ChooseListingCategory = ({
       <FlatList
         data={categories}
         renderItem={({ item }) => (
-          <Pressable onPress={() => handleCategorySelect(item)}>
+          <Pressable onPress={() => updateListingDetails("category", item)}>
             <View
               className={`${
-                selectedCategory === item ? "border border-g400 " : "b-200"
+                listingDetails.category === item
+                  ? "border border-g400 "
+                  : "b-200"
               } rounded-lg bg-white  `}
               style={{
                 paddingVertical: ys(paddingTop),
-                // paddingHorizontal: xs(paddingSides * 5),
                 width: itemWidth,
               }}
             >
@@ -63,7 +44,7 @@ const ChooseListingCategory = ({
                 <Text
                   style={styles.text}
                   className={`${
-                    selectedCategory === item ? "text-g400" : "text-b200"
+                    listingDetails.category ? "text-g400" : "text-b200"
                   }`}
                 >
                   {item.charAt(0).toUpperCase() + item.slice(1)}
@@ -71,7 +52,7 @@ const ChooseListingCategory = ({
 
                 <View
                   className={`${
-                    selectedCategory === item
+                    listingDetails.category === item
                       ? "border border-g400"
                       : "border border-gray"
                   }`}
@@ -82,10 +63,11 @@ const ChooseListingCategory = ({
                     borderWidth: 2,
                     alignItems: "center",
                     justifyContent: "center",
-                    borderColor: selectedCategory === item ? "#4A9837" : "gray",
+                    borderColor:
+                      listingDetails.category === item ? "#4A9837" : "gray",
                   }}
                 >
-                  {selectedCategory === item && (
+                  {listingDetails.category === item && (
                     <View
                       className="bg-g400"
                       style={{
@@ -104,7 +86,6 @@ const ChooseListingCategory = ({
         keyExtractor={(item) => item}
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={{
-          // paddingHorizontal: xs(paddingSides),
           justifyContent: "center",
           gap: xs(paddingTop),
           width: "100%",

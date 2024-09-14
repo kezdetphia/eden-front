@@ -5,7 +5,6 @@ import {
   StatusBar,
   Pressable,
   Alert,
-  FlatList,
   StyleSheet,
 } from "react-native";
 import React, { useEffect, useState, useRef } from "react";
@@ -33,6 +32,8 @@ import Constants from "expo-constants";
 import sizes from "../../constants/sizes";
 import CustomButton from "../../components/customButton";
 import ListingType from "../../components/createListing/listingType";
+import Quantity from "../../components/createListing/quantity";
+import Description from "../../components/createListing/description";
 
 const { paddingSides, paddingTop, subtitle, title } = sizes;
 const CreateListing = () => {
@@ -49,6 +50,7 @@ const CreateListing = () => {
     setIsSubmitting(true);
     const token = await SecureStore.getItemAsync("authToken");
     try {
+      console.log("Submitting listing details:", listingDetails); // Log the payload
       // const res = await fetch("http://localhost:3000/createcorp", {
       const res = await fetch(`${EXPO_API_URL}/createcorp`, {
         method: "POST",
@@ -60,8 +62,12 @@ const CreateListing = () => {
       });
 
       if (!res.ok) {
+        const errorData = await res.json();
+        console.error("Server error response:", errorData);
         setIsSubmitting(false);
-        throw new Error("Failed to create listing");
+        throw new Error(
+          `Failed to create listing: ${errorData.error || res.statusText}`
+        );
       }
 
       const data = await res.json();
@@ -76,14 +82,14 @@ const CreateListing = () => {
   // console.log("ezx a user", user);
 
   const [listingDetails, setListingDetails] = useState({
-    price: "much",
-    title: "fdfd",
-    desc: "fdfd",
-    image: "",
-    category: "fdfd",
-    tier: "fdfd",
+    price: "",
+    title: "",
+    desc: "",
+    image: [],
+    category: "",
+    tier: "",
     owner: user._id,
-    amount: selectedAvailableAmount,
+    amount: "",
     location: user.location,
   });
 
@@ -106,10 +112,18 @@ const CreateListing = () => {
 
   //Function to update the listing details with key value pairs
   const updateListingDetails = (key, value) => {
-    setListingDetails((prevDetails) => ({
-      ...prevDetails,
-      [key]: value,
-    }));
+    setListingDetails((prevDetails) => {
+      if (key === "image") {
+        return {
+          ...prevDetails,
+          [key]: [...prevDetails[key], value], // Append the new URL to the existing array
+        };
+      }
+      return {
+        ...prevDetails,
+        [key]: value,
+      };
+    });
   };
 
   const handleBack = () => {
@@ -117,7 +131,22 @@ const CreateListing = () => {
       "Discard listing?",
       "Are you sure you want to discard your listing?",
       [
-        { text: "Discard", onPress: () => router.back() },
+        {
+          text: "Discard",
+          onPress: () => {
+            setListingDetails({
+              title: "",
+              desc: "",
+              image: [],
+              category: "",
+              tier: "",
+              owner: user._id,
+              amount: "",
+              location: user.location,
+            });
+            router.back();
+          },
+        },
         { text: "Cancel", onPress: () => {} },
       ]
     );
@@ -153,11 +182,8 @@ const CreateListing = () => {
           className=""
           ref={scrollViewRef}
         >
-          {/* <View
-          style={{ paddingLeft: ms(14), paddingTop: ys(8) }}
-          className="flex-row items-center"
-        ></View> */}
-          <View className="" style={{ paddingTop: ys(paddingTop * 2) }}>
+          {/* Photos */}
+          <View className="" style={{ paddingTop: ys(paddingTop * 3) }}>
             <Text style={styles.subTitle}>Photos</Text>
             <ImageUpload
               listingDetails={listingDetails}
@@ -165,15 +191,16 @@ const CreateListing = () => {
               updateListingDetails={updateListingDetails}
             />
           </View>
+          {/* Category */}
           <View className="" style={{ paddingTop: ys(paddingTop * 2) }}>
             <Text style={styles.subTitle}>Category</Text>
             <ChooseListingCategory
               listingDetails={listingDetails}
               updateListingDetails={updateListingDetails}
-              setListingDetails={setListingDetails}
             />
           </View>
 
+          {/* Item */}
           <View className="" style={{ paddingTop: ys(paddingTop * 2) }}>
             <Text style={styles.subTitle}>Item</Text>
             <DropdownComponent
@@ -184,15 +211,27 @@ const CreateListing = () => {
               listingDetails={listingDetails}
             />
           </View>
-          {/* <View style={{}}>
-            <AddListingDetails
-              listingDetails={listingDetails}
-              updateListingDetails={updateListingDetails}
-            />
-          </View> */}
+
+          {/* Type */}
           <View className="" style={{ paddingTop: ys(paddingTop * 2) }}>
             <Text style={styles.subTitle}>Type</Text>
             <ListingType
+              listingDetails={listingDetails}
+              updateListingDetails={updateListingDetails}
+            />
+          </View>
+          {/* Quantity */}
+          <View className="" style={{ paddingTop: ys(paddingTop * 2) }}>
+            <Text style={styles.subTitle}>Quantity</Text>
+            <Quantity
+              listingDetails={listingDetails}
+              updateListingDetails={updateListingDetails}
+            />
+          </View>
+          {/* Description */}
+          <View className="" style={{ paddingTop: ys(paddingTop * 2) }}>
+            <Text style={styles.subTitle}>Description</Text>
+            <Description
               listingDetails={listingDetails}
               updateListingDetails={updateListingDetails}
             />

@@ -6,8 +6,13 @@ import {
   moderateScale as ms,
 } from "react-native-size-matters";
 import sizes from "../../constants/sizes";
-import { categories } from "../../utils/corpsStuff";
+// import { categories } from "../../utils/corpsStuff";
 import CustomText from "../customText";
+
+//TODO: Need extra field if user chooses paid, they need to add their price for either quantity or weight
+//if user picks echhange i need a dropdown of their wanted item
+//if they choose paid i still need to display exhcange items they might want to exhcange too not just sell
+//if they choose exchnage i dont need to display price
 
 const ListingType = ({ listingDetails, updateListingDetails }) => {
   const { paddingSizes, paddingTop } = sizes;

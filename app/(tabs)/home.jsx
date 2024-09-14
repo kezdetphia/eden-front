@@ -17,6 +17,7 @@ import Constants from "expo-constants";
 const { EXPO_API_URL } = Constants.expoConfig.extra;
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCorps } from "../../store/dataSlice";
+import CustomText from "../../components/customText";
 
 //TODO: -change back the headercomponent or find a solution to a sticky search bar
 
@@ -94,12 +95,15 @@ const HomeScreen = () => {
             }}
           >
             <View style={{ paddingTop: ys(10) }}>
-              <Text
+              <CustomText md semibold>
+                Discover Fresh, Seasonal Fruits and Vegetables
+              </CustomText>
+              {/* <Text
                 className="text-b200 text-xl"
                 style={{ fontFamily: "jakartaSemibold", letterSpacing: 0.3 }}
               >
                 Discover Fresh, Seasonal Fruits and Vegetables
-              </Text>
+              </Text> */}
             </View>
 
             <View style={{ paddingTop: ys(paddingSides + 4) }}>
