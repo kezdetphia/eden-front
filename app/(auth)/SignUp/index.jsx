@@ -98,61 +98,6 @@ const SignUp = () => {
       // extraHeight={150}
       scrollEventThrottle={ms(16)}
     >
-      {/* <View className="flex-1 items-center justify-center bg-gray-100 p-4">
-        <Text className="text-2xl font-bold mb-6 text-gray-800">Sign Up</Text>
-        <TextInput
-          value={formData.username}
-          onChangeText={(text) => handleInputChange("username", text)}
-          className="w-full p-3 mb-4 bg-white rounded-lg border border-gray-300"
-          placeholder="Username"
-          placeholderTextColor="#9CA3AF"
-        />
-        <TextInput
-          value={formData.email}
-          onChangeText={(text) => handleInputChange("email", text)}
-          className="w-full p-3 mb-4 bg-white rounded-lg border border-gray-300"
-          placeholder="Email"
-          placeholderTextColor="#9CA3AF"
-          keyboardType="email-address"
-          autoCapitalize="none"
-        />
-        <TextInput
-          value={formData.password}
-          onChangeText={(text) => handleInputChange("password", text)}
-          className="w-full p-3 mb-6 bg-white rounded-lg border border-gray-300"
-          placeholder="Password"
-          placeholderTextColor="#9CA3AF"
-          secureTextEntry
-          autoCapitalize="none"
-        />
-        <TextInput
-          value={formData.passwordRepeat}
-          onChangeText={(text) => handleInputChange("passwordRepeat", text)}
-          className="w-full p-3 mb-6 bg-white rounded-lg border border-gray-300"
-          placeholder="Password"
-          placeholderTextColor="#9CA3AF"
-          secureTextEntry
-          autoCapitalize="none"
-        />
-        <Pressable
-          className={`w-full p-3 rounded-lg ${
-            // isLoading || !isFormValid ? "bg-blue-500" : "bg-blue-600"
-            "bg-blue-500"
-          }`}
-          onPress={handleSignUp}
-          disabled={!isFormValid}
-          style={{ opacity: isLoading || !isFormValid ? 0.7 : 1 }}
-        >
-          <Text className="text-center text-white font-semibold">
-            {isLoading ? "Signing up.." : "Sign Up"}
-          </Text>
-        </Pressable>
-        <Text>Have an account already? </Text>
-        <Pressable onPress={() => router.push("SignIn")}>
-          <Text>Sign In</Text>
-        </Pressable>
-      </View> */}
-      {/* --------- */}
       <View
         className="flex-1 items-center bg-white "
         style={{ paddingHorizontal: xs(paddingSides * 1.5) }}

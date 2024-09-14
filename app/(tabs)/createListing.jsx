@@ -1,12 +1,4 @@
-import {
-  View,
-  Text,
-  ScrollView,
-  StatusBar,
-  Pressable,
-  Alert,
-  StyleSheet,
-} from "react-native";
+import { View, ScrollView, StatusBar, Pressable, Alert } from "react-native";
 import React, { useEffect, useState, useRef } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Feather from "@expo/vector-icons/Feather";
@@ -34,6 +26,7 @@ import CustomButton from "../../components/customButton";
 import ListingType from "../../components/createListing/listingType";
 import Quantity from "../../components/createListing/quantity";
 import Description from "../../components/createListing/description";
+import CustomText from "../../components/customText";
 
 const { paddingSides, paddingTop, subtitle, title } = sizes;
 const CreateListing = () => {
@@ -167,9 +160,9 @@ const CreateListing = () => {
         >
           <Feather name="arrow-left" size={ms(24)} color="black" />
         </Pressable>
-        <Text className=" font-semibold" style={{ fontSize: ms(md) }}>
-          Create a listing
-        </Text>
+        <CustomText semibold md>
+          Create listing
+        </CustomText>
       </View>
 
       <Divider customStyle={{ marginTop: ys(2), paddingHorizontal: 16 }} />
@@ -183,8 +176,10 @@ const CreateListing = () => {
           ref={scrollViewRef}
         >
           {/* Photos */}
-          <View className="" style={{ paddingTop: ys(paddingTop * 3) }}>
-            <Text style={styles.subTitle}>Photos</Text>
+          <View className="" style={{ paddingTop: ys(paddingTop * 1.5) }}>
+            <CustomText semibold md title black>
+              Photos
+            </CustomText>
             <ImageUpload
               listingDetails={listingDetails}
               user={user}
@@ -193,7 +188,10 @@ const CreateListing = () => {
           </View>
           {/* Category */}
           <View className="" style={{ paddingTop: ys(paddingTop * 2) }}>
-            <Text style={styles.subTitle}>Category</Text>
+            <CustomText semibold md title black>
+              Category
+            </CustomText>
+
             <ChooseListingCategory
               listingDetails={listingDetails}
               updateListingDetails={updateListingDetails}
@@ -202,7 +200,9 @@ const CreateListing = () => {
 
           {/* Item */}
           <View className="" style={{ paddingTop: ys(paddingTop * 2) }}>
-            <Text style={styles.subTitle}>Item</Text>
+            <CustomText semibold md title black>
+              Item
+            </CustomText>
             <DropdownComponent
               // onOpen={handleDropdownOpen}
               // onClose={handleDropdownClose}
@@ -214,7 +214,9 @@ const CreateListing = () => {
 
           {/* Type */}
           <View className="" style={{ paddingTop: ys(paddingTop * 2) }}>
-            <Text style={styles.subTitle}>Type</Text>
+            <CustomText semibold md title black>
+              Type
+            </CustomText>
             <ListingType
               listingDetails={listingDetails}
               updateListingDetails={updateListingDetails}
@@ -222,7 +224,9 @@ const CreateListing = () => {
           </View>
           {/* Quantity */}
           <View className="" style={{ paddingTop: ys(paddingTop * 2) }}>
-            <Text style={styles.subTitle}>Quantity</Text>
+            <CustomText semibold md title black>
+              Quantity
+            </CustomText>
             <Quantity
               listingDetails={listingDetails}
               updateListingDetails={updateListingDetails}
@@ -230,7 +234,9 @@ const CreateListing = () => {
           </View>
           {/* Description */}
           <View className="" style={{ paddingTop: ys(paddingTop * 2) }}>
-            <Text style={styles.subTitle}>Description</Text>
+            <CustomText semibold md title black>
+              Description
+            </CustomText>
             <Description
               listingDetails={listingDetails}
               updateListingDetails={updateListingDetails}
@@ -288,11 +294,3 @@ const CreateListing = () => {
 };
 
 export default CreateListing;
-
-const styles = StyleSheet.create({
-  subTitle: {
-    textColor: "#020202",
-    fontFamily: "jakartaSemibold",
-    fontSize: ms(subtitle),
-  },
-});

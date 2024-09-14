@@ -1,11 +1,4 @@
-import {
-  TextInput,
-  Pressable,
-  View,
-  Platform,
-  Animated,
-  Text,
-} from "react-native";
+import { TextInput, Pressable, View, Platform, Animated } from "react-native";
 import React, { useState } from "react";
 import Toast from "react-native-toast-message";
 import { useRouter } from "expo-router";

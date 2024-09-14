@@ -62,9 +62,7 @@ export default function CustomHeader({ searchBarValue, setSearchBarValue }) {
                 size={ms(16)}
                 color="#69D94E"
               />
-              <Text style={{ fontFamily: "jakarta" }} className="text-b100">
-                {user?.location}
-              </Text>
+              <CustomText b100>{user?.location}</CustomText>
             </View>
           </View>
 
