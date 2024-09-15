@@ -48,7 +48,7 @@ export const fruits = [
   // { name: "Banana", icon: banana },
 ];
 
-export const veggies = [
+export const vegetable = [
   "Asparagus",
   "Artichoke",
   "Broccoli",

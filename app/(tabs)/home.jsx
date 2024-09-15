@@ -96,13 +96,13 @@ const HomeScreen = () => {
           >
             <View style={{ paddingTop: ys(10) }}>
               <CustomText md semibold>
-                Discover Fresh, Seasonal Fruits and Vegetables
+                Discover Fresh, Seasonal Fruits and vegetable
               </CustomText>
               {/* <Text
                 className="text-b200 text-xl"
                 style={{ fontFamily: "jakartaSemibold", letterSpacing: 0.3 }}
               >
-                Discover Fresh, Seasonal Fruits and Vegetables
+                Discover Fresh, Seasonal Fruits and vegetable
               </Text> */}
             </View>
 

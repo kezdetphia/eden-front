@@ -8,16 +8,14 @@ import {
   verticalScale as ys,
   moderateScale as ms,
 } from "react-native-size-matters";
-import { AntDesign } from "@expo/vector-icons";
 import Divider from "../../components/Divider";
 import ImageUpload from "../../components/createListing/imageUpload";
 import { Dropdown } from "react-native-element-dropdown";
 import ChooseListingCategory from "../../components/createListing/chooseListingCategory";
-import AddListingDetails from "../../components/createListing/addListingDetails";
 import * as SecureStore from "expo-secure-store";
 import { useAuth } from "../../context/authContext";
 import DropdownComponent from "../../components/createListing/dropDown";
-import { categories, fruits, veggies } from "../../utils/corpsStuff";
+import { categories, fruits, vegetable } from "../../utils/corpsStuff";
 import { Picker } from "@react-native-picker/picker";
 import Constants from "expo-constants";
 
@@ -27,6 +25,7 @@ import ListingType from "../../components/createListing/listingType";
 import Quantity from "../../components/createListing/quantity";
 import Description from "../../components/createListing/description";
 import CustomText from "../../components/customText";
+import ListingTypePaid from "../../components/createListing/listingType-Paid";
 
 const { paddingSides, paddingTop, subtitle, title } = sizes;
 const CreateListing = () => {
@@ -98,8 +97,8 @@ const CreateListing = () => {
   useEffect(() => {
     if (listingDetails.category === "fruit") {
       setDropdownData(fruits);
-    } else if (listingDetails.category === "veggie") {
-      setDropdownData(veggies);
+    } else if (listingDetails.category === "vegetable") {
+      setDropdownData(vegetable);
     }
   }, [listingDetails.category]);
 
@@ -176,7 +175,7 @@ const CreateListing = () => {
           ref={scrollViewRef}
         >
           {/* Photos */}
-          <View className="" style={{ paddingTop: ys(paddingTop * 1.5) }}>
+          <View style={{ paddingTop: ys(paddingTop * 1.5) }}>
             <CustomText semibold md title black>
               Photos
             </CustomText>
@@ -187,7 +186,7 @@ const CreateListing = () => {
             />
           </View>
           {/* Category */}
-          <View className="" style={{ paddingTop: ys(paddingTop * 2) }}>
+          <View style={{ paddingTop: ys(paddingTop * 2) }}>
             <CustomText semibold md title black>
               Category
             </CustomText>
@@ -199,7 +198,7 @@ const CreateListing = () => {
           </View>
 
           {/* Item */}
-          <View className="" style={{ paddingTop: ys(paddingTop * 2) }}>
+          <View style={{ paddingTop: ys(paddingTop * 2) }}>
             <CustomText semibold md title black>
               Item
             </CustomText>
@@ -213,7 +212,7 @@ const CreateListing = () => {
           </View>
 
           {/* Type */}
-          <View className="" style={{ paddingTop: ys(paddingTop * 2) }}>
+          <View style={{ paddingTop: ys(paddingTop * 2) }}>
             <CustomText semibold md title black>
               Type
             </CustomText>
@@ -222,10 +221,22 @@ const CreateListing = () => {
               updateListingDetails={updateListingDetails}
             />
           </View>
+          {/* Type - paid */}
+          {listingDetails.tier === "sell" && (
+            <View style={{ paddingTop: ys(paddingTop * 2) }}>
+              <CustomText semibold md title black>
+                Price
+              </CustomText>
+              <ListingTypePaid
+                listingDetails={listingDetails}
+                updateListingDetails={updateListingDetails}
+              />
+            </View>
+          )}
           {/* Quantity */}
-          <View className="" style={{ paddingTop: ys(paddingTop * 2) }}>
+          <View style={{ paddingTop: ys(paddingTop * 2) }}>
             <CustomText semibold md title black>
-              Quantity
+              Quantity Available
             </CustomText>
             <Quantity
               listingDetails={listingDetails}
@@ -233,7 +244,7 @@ const CreateListing = () => {
             />
           </View>
           {/* Description */}
-          <View className="" style={{ paddingTop: ys(paddingTop * 2) }}>
+          <View style={{ paddingTop: ys(paddingTop * 2) }}>
             <CustomText semibold md title black>
               Description
             </CustomText>

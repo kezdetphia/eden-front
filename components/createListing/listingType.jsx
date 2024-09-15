@@ -31,14 +31,19 @@ const ListingType = ({ listingDetails, updateListingDetails }) => {
   };
 
   return (
-    <View className="flex flex-row flex-wrap items-center justify-around">
+    <View
+      className="flex flex-row flex-wrap items-center gap-x-3"
+      style={{
+        marginTop: ys(paddingTop * 0.75),
+      }}
+    >
       {tiers.map((tier) => (
-        <View key={tier} className="flex-1 items-center justify-center m-2">
+        <View key={tier} className="flex-1 items-center justify-center mt-2  ">
           <Pressable onPress={() => handlePress(tier)} className="w-full">
             <View
               className={`${
                 selectedTier === tier ? "border border-g400 " : "b-200"
-              } rounded-lg bg-white  `}
+              } rounded-lg bg-white justify-center  `}
               style={{
                 paddingVertical: ys(paddingTop),
                 // paddingHorizontal: xs(pvaddingSides * 5),

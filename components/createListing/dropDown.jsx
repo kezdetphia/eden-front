@@ -27,6 +27,11 @@ const DropdownComponent = ({
     }
   }, [listingDetails.title]);
 
+  useEffect(() => {
+    // Reset the value when the category changes
+    setValue("");
+  }, [listingDetails.category]);
+
   const handleChange = (item) => {
     if (isDropdownDisabled) {
       return;

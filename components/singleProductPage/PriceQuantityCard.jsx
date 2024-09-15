@@ -13,18 +13,6 @@ const PriceQuantityCard = ({ quantity, price, tier }) => {
   return (
     <>
       <View
-        className="bg-g300  rounded-lg items-center  justify-center "
-        style={{ paddingHorizontal: xs(55), paddingVertical: ys(12) }}
-      >
-        <CustomText sm white bold>
-          {quantity}
-        </CustomText>
-        <CustomText xxs white>
-          Available
-        </CustomText>
-      </View>
-
-      <View
         className="bg-g300  rounded-lg items-center  justify-center  "
         style={{ paddingHorizontal: xs(40), paddingVertical: ys(12) }}
       >
@@ -39,13 +27,24 @@ const PriceQuantityCard = ({ quantity, price, tier }) => {
         ) : (
           <View className=" items-center  justify-center ">
             <CustomText sm white bold>
-              ${price}/ {}
+              ${price}
             </CustomText>
             <CustomText xxs white>
               Price
             </CustomText>
           </View>
         )}
+      </View>
+      <View
+        className="bg-g300  rounded-lg items-center  justify-center "
+        style={{ paddingHorizontal: xs(55), paddingVertical: ys(12) }}
+      >
+        <CustomText sm white bold>
+          {quantity}
+        </CustomText>
+        <CustomText xxs white>
+          Available
+        </CustomText>
       </View>
     </>
   );

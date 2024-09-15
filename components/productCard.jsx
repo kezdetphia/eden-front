@@ -52,7 +52,7 @@ const ProductCard = ({ product, cardWidth }) => {
         style={{ paddingTop: ys(10) }}
       >
         <CustomText g300 xsm semibold>
-          {product.amount} Kg
+          {product.amount}
         </CustomText>
         {product?.tier === "Buy" ? (
           <CustomText b300 xsm>
