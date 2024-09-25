@@ -6,6 +6,7 @@ import {
   Alert,
   KeyboardAvoidingView,
   Platform,
+  Text,
 } from "react-native";
 import React, { useEffect, useState, useRef } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -35,6 +36,7 @@ import CustomText from "../../components/customText";
 import ListingTypePaid from "../../components/createListing/listingType-Paid";
 import ListingTypeExchange from "../../components/createListing/listingType-Exchange";
 import { KeyboardAvoidingScrollView } from "react-native-keyboard-avoiding-scroll-view";
+import Toast from "react-native-root-toast";
 
 //TODO: make the keyboard avoid view work
 // https://docs.expo.dev/guides/keyboard-handling/
@@ -42,20 +44,62 @@ import { KeyboardAvoidingScrollView } from "react-native-keyboard-avoiding-scrol
 const { paddingSides, paddingTop, subtitle, title } = sizes;
 const CreateListing = () => {
   const { EXPO_API_URL } = Constants.expoConfig.extra;
-  const { sm, md } = sizes;
   const router = useRouter();
   const [dropdownData, setDropdownData] = useState([]);
   const scrollViewRef = useRef(null);
   const [selectedAvailableAmount, setSelectedAvailableAmount] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { user } = useAuth();
+  const [highlightedFields, setHighlightedFields] = useState([]);
 
+  const initialListingDetails = {
+    price: "",
+    title: "",
+    desc: "",
+    image: [],
+    category: "",
+    tier: null,
+    owner: user._id,
+    amount: "",
+    location: user.location,
+    exchangeFor: [],
+  };
+
+  const [listingDetails, setListingDetails] = useState(initialListingDetails);
+
+  const validateFields = () => {
+    const requiredFields = [
+      "title",
+      "desc",
+      "image",
+      "category",
+      "tier",
+      "amount",
+    ];
+    const emptyFields = requiredFields.filter(
+      (field) =>
+        !listingDetails[field] ||
+        (Array.isArray(listingDetails[field]) &&
+          listingDetails[field].length === 0)
+    );
+    if (emptyFields.length > 0) {
+      handleToast("Please fill in all required fields.");
+      setHighlightedFields(emptyFields);
+      return false;
+    }
+    setHighlightedFields([]);
+    return true;
+  };
+
+  //Submit the listing to the backend
   const handleSubmit = async () => {
+    if (!validateFields()) {
+      return;
+    }
     setIsSubmitting(true);
     const token = await SecureStore.getItemAsync("authToken");
     try {
       console.log("Submitting listing details:", listingDetails); // Log the payload
-      // const res = await fetch("http://localhost:3000/createcorp", {
       const res = await fetch(`${EXPO_API_URL}/createcorp`, {
         method: "POST",
         headers: {
@@ -69,6 +113,7 @@ const CreateListing = () => {
         const errorData = await res.json();
         console.error("Server error response:", errorData);
         setIsSubmitting(false);
+        handleToast("Failed to create listing", "error");
         throw new Error(
           `Failed to create listing: ${errorData.error || res.statusText}`
         );
@@ -76,27 +121,15 @@ const CreateListing = () => {
 
       const data = await res.json();
       console.log("Listing created successfully:", data);
+      handleToast("Listing created successfully", "success");
     } catch (error) {
       console.error("Error creating listing:", error);
+      handleToast("Failed to create listing", "error");
     } finally {
       setIsSubmitting(false);
+      setListingDetails(initialListingDetails);
     }
   };
-
-  // console.log("ezx a user", user);
-
-  const [listingDetails, setListingDetails] = useState({
-    price: "",
-    title: "",
-    desc: "",
-    image: [],
-    category: "",
-    tier: "",
-    owner: user._id,
-    amount: "",
-    location: user.location,
-    exchangeFor: [],
-  });
 
   console.log("Initial listingDetailssss        ", listingDetails);
 
@@ -139,22 +172,19 @@ const CreateListing = () => {
         {
           text: "Discard",
           onPress: () => {
-            setListingDetails({
-              title: "",
-              desc: "",
-              image: [],
-              category: "",
-              tier: "",
-              owner: user._id,
-              amount: "",
-              location: user.location,
-            });
+            setListingDetails(initialListingDetails);
             router.back();
           },
         },
         { text: "Cancel", onPress: () => {} },
       ]
     );
+  };
+
+  const handleToast = (message) => {
+    Toast.show(message, {
+      duration: Toast.durations.LONG,
+    });
   };
 
   return (
@@ -200,6 +230,7 @@ const CreateListing = () => {
                 listingDetails={listingDetails}
                 user={user}
                 updateListingDetails={updateListingDetails}
+                highlight={highlightedFields.includes("image")}
               />
             </View>
             {/* Category */}
@@ -211,6 +242,7 @@ const CreateListing = () => {
               <ChooseListingCategory
                 listingDetails={listingDetails}
                 updateListingDetails={updateListingDetails}
+                highlight={highlightedFields.includes("category")}
               />
             </View>
 
@@ -220,11 +252,10 @@ const CreateListing = () => {
                 Item
               </CustomText>
               <DropdownComponent
-                // onOpen={handleDropdownOpen}
-                // onClose={handleDropdownClose}
                 data={dropdownData}
                 updateListingDetails={updateListingDetails}
                 listingDetails={listingDetails}
+                highlight={highlightedFields.includes("tier")}
               />
             </View>
 
@@ -236,10 +267,11 @@ const CreateListing = () => {
               <ListingType
                 listingDetails={listingDetails}
                 updateListingDetails={updateListingDetails}
+                highlight={highlightedFields.includes("tier")}
               />
             </View>
             {/* Type - paid */}
-            {listingDetails.tier === "sell" && (
+            {listingDetails.tier === "Sell" && (
               <View style={{ paddingTop: ys(paddingTop * 2) }}>
                 <CustomText semibold md title black>
                   Price
@@ -247,11 +279,12 @@ const CreateListing = () => {
                 <ListingTypePaid
                   listingDetails={listingDetails}
                   updateListingDetails={updateListingDetails}
+                  highlight={highlightedFields.includes("price")}
                 />
               </View>
             )}
             {/* Type - exchange */}
-            {listingDetails.tier === "exchange" && (
+            {listingDetails.tier === "Exchange" && (
               <View style={{ paddingTop: ys(paddingTop * 2) }}>
                 <CustomText semibold md title black>
                   I need
@@ -260,6 +293,7 @@ const CreateListing = () => {
                   data={dropdownData}
                   updateListingDetails={updateListingDetails}
                   listingDetails={listingDetails}
+                  highlight={highlightedFields.includes("exchangeFor")}
                 />
               </View>
             )}
@@ -271,6 +305,7 @@ const CreateListing = () => {
               <Quantity
                 listingDetails={listingDetails}
                 updateListingDetails={updateListingDetails}
+                highlight={highlightedFields.includes("amount")}
               />
             </View>
             {/* Description */}
@@ -281,6 +316,7 @@ const CreateListing = () => {
               <Description
                 listingDetails={listingDetails}
                 updateListingDetails={updateListingDetails}
+                highlight={highlightedFields.includes("desc")}
               />
             </View>
             <CustomButton

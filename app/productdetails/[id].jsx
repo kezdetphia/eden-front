@@ -262,7 +262,7 @@ const ProductDetail = () => {
             />
           </View>
           <View>
-            {product?.tier === "exchange" && (
+            {product?.tier === "Exchange" && (
               <View
                 style={{
                   paddingTop: ys(paddingSides + paddingSides + paddingTop - 5),

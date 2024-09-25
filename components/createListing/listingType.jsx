@@ -1,22 +1,25 @@
 import { View, StyleSheet, Pressable, Text } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   scale as xs,
   verticalScale as ys,
   moderateScale as ms,
 } from "react-native-size-matters";
 import sizes from "../../constants/sizes";
-// import { categories } from "../../utils/corpsStuff";
 import CustomText from "../customText";
 
 //TODO: Need extra field if user chooses paid, they need to add their price for either quantity or weight
-//if user picks echhange i need a dropdown of their wanted item
-//if they choose paid i still need to display exhcange items they might want to exhcange too not just sell
-//if they choose exchnage i dont need to display price
+//if user picks exchange i need a dropdown of their wanted item
+//if they choose paid i still need to display exchange items they might want to exchange too not just sell
+//if they choose exchange i don't need to display price
 
-const ListingType = ({ listingDetails, updateListingDetails }) => {
+const ListingType = ({ listingDetails, updateListingDetails, highlight }) => {
   const { paddingSizes, paddingTop } = sizes;
   const [selectedTier, setSelectedTier] = useState(listingDetails.tier);
+
+  useEffect(() => {
+    setSelectedTier(listingDetails.tier);
+  }, [listingDetails.tier]);
 
   const tiers = ["Free", "Exchange", "Sell"];
 

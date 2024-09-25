@@ -6,6 +6,7 @@ import "react-native-reanimated";
 import { Slot } from "expo-router";
 import { Provider } from "react-redux";
 import { store } from "../store/store";
+import { RootSiblingParent } from "react-native-root-siblings";
 
 // Import your global CSS file
 import "../global.css";
@@ -53,7 +54,9 @@ export default function RootLayout() {
     <>
       <AuthContextProvider>
         <Provider store={store}>
-          <MainLayout />
+          <RootSiblingParent>
+            <MainLayout />
+          </RootSiblingParent>
         </Provider>
       </AuthContextProvider>
     </>

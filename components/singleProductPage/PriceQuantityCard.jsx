@@ -24,13 +24,13 @@ const PriceQuantityCard = ({ quantity, price, tier }) => {
         className="bg-g300  rounded-lg items-center  justify-center  "
         style={{ paddingHorizontal: xs(40), paddingVertical: ys(12) }}
       >
-        {tier === "exchange" ? (
+        {tier === "Exchange" ? (
           <CustomText sm white bold>
-            Offer Me!
+            Let's Swap!
           </CustomText>
-        ) : tier === "free" ? (
+        ) : tier === "Free" ? (
           <CustomText sm white bold>
-            Yay, It's free!
+            It's free!
           </CustomText>
         ) : (
           <View className=" items-center  justify-center ">
