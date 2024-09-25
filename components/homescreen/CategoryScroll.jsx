@@ -7,7 +7,7 @@ import {
 
 import SecondaryPill from "../SecondaryPill";
 
-const CategoryScroll = ({ categories }) => {
+const CategoryScroll = ({ categories, ownerNeedsForThisProduct }) => {
   return (
     <View
       style={{
@@ -20,7 +20,7 @@ const CategoryScroll = ({ categories }) => {
         initialScrollToIndex={0}
         horizontal={true}
         contentContainerStyle={null}
-        data={categories}
+        data={ownerNeedsForThisProduct}
         keyExtractor={(item) => item}
         showsHorizontalScrollIndicator={false}
         renderItem={({ item }) => (

@@ -1,4 +1,12 @@
-import { View, ScrollView, StatusBar, Pressable, Alert } from "react-native";
+import {
+  View,
+  ScrollView,
+  StatusBar,
+  Pressable,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
 import React, { useEffect, useState, useRef } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Feather from "@expo/vector-icons/Feather";
@@ -15,8 +23,7 @@ import ChooseListingCategory from "../../components/createListing/chooseListingC
 import * as SecureStore from "expo-secure-store";
 import { useAuth } from "../../context/authContext";
 import DropdownComponent from "../../components/createListing/dropDown";
-import { categories, fruits, vegetable } from "../../utils/corpsStuff";
-import { Picker } from "@react-native-picker/picker";
+import { fruits, vegetable } from "../../utils/corpsStuff";
 import Constants from "expo-constants";
 
 import sizes from "../../constants/sizes";
@@ -26,6 +33,11 @@ import Quantity from "../../components/createListing/quantity";
 import Description from "../../components/createListing/description";
 import CustomText from "../../components/customText";
 import ListingTypePaid from "../../components/createListing/listingType-Paid";
+import ListingTypeExchange from "../../components/createListing/listingType-Exchange";
+import { KeyboardAvoidingScrollView } from "react-native-keyboard-avoiding-scroll-view";
+
+//TODO: make the keyboard avoid view work
+// https://docs.expo.dev/guides/keyboard-handling/
 
 const { paddingSides, paddingTop, subtitle, title } = sizes;
 const CreateListing = () => {
@@ -83,6 +95,7 @@ const CreateListing = () => {
     owner: user._id,
     amount: "",
     location: user.location,
+    exchangeFor: [],
   });
 
   console.log("Initial listingDetailssss        ", listingDetails);
@@ -146,160 +159,137 @@ const CreateListing = () => {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "" }}>
-      <StatusBar hidden={false} />
-      <View
-        className="flex-row justify-center items-center"
-        style={{
-          height: ys(paddingTop * 3),
-        }}
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
+        style={{ flex: 1 }}
       >
-        <Pressable
-          onPress={handleBack}
-          style={{ position: "absolute", left: 10 }}
+        <StatusBar hidden={false} />
+        <View
+          className="flex-row justify-center items-center"
+          style={{
+            height: ys(paddingTop * 3),
+          }}
         >
-          <Feather name="arrow-left" size={ms(24)} color="black" />
-        </Pressable>
-        <CustomText semibold md>
-          Create listing
-        </CustomText>
-      </View>
+          <Pressable
+            onPress={handleBack}
+            style={{ position: "absolute", left: 10 }}
+          >
+            <Feather name="arrow-left" size={ms(24)} color="black" />
+          </Pressable>
+          <CustomText semibold md>
+            Create listing
+          </CustomText>
+        </View>
 
-      <Divider customStyle={{ marginTop: ys(2), paddingHorizontal: 16 }} />
-      <View
-        className="flex-1  "
-        style={{ paddingHorizontal: xs(paddingSides) }}
-      >
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          className=""
-          ref={scrollViewRef}
+        <Divider customStyle={{ marginTop: ys(2), paddingHorizontal: 16 }} />
+        <View
+          className="flex-1  "
+          style={{ paddingHorizontal: xs(paddingSides) }}
         >
-          {/* Photos */}
-          <View style={{ paddingTop: ys(paddingTop * 1.5) }}>
-            <CustomText semibold md title black>
-              Photos
-            </CustomText>
-            <ImageUpload
-              listingDetails={listingDetails}
-              user={user}
-              updateListingDetails={updateListingDetails}
-            />
-          </View>
-          {/* Category */}
-          <View style={{ paddingTop: ys(paddingTop * 2) }}>
-            <CustomText semibold md title black>
-              Category
-            </CustomText>
-
-            <ChooseListingCategory
-              listingDetails={listingDetails}
-              updateListingDetails={updateListingDetails}
-            />
-          </View>
-
-          {/* Item */}
-          <View style={{ paddingTop: ys(paddingTop * 2) }}>
-            <CustomText semibold md title black>
-              Item
-            </CustomText>
-            <DropdownComponent
-              // onOpen={handleDropdownOpen}
-              // onClose={handleDropdownClose}
-              data={dropdownData}
-              updateListingDetails={updateListingDetails}
-              listingDetails={listingDetails}
-            />
-          </View>
-
-          {/* Type */}
-          <View style={{ paddingTop: ys(paddingTop * 2) }}>
-            <CustomText semibold md title black>
-              Type
-            </CustomText>
-            <ListingType
-              listingDetails={listingDetails}
-              updateListingDetails={updateListingDetails}
-            />
-          </View>
-          {/* Type - paid */}
-          {listingDetails.tier === "sell" && (
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            className=""
+            ref={scrollViewRef}
+          >
+            {/* Photos */}
+            <View style={{ paddingTop: ys(paddingTop * 1.5) }}>
+              <CustomText semibold md title black>
+                Photos
+              </CustomText>
+              <ImageUpload
+                listingDetails={listingDetails}
+                user={user}
+                updateListingDetails={updateListingDetails}
+              />
+            </View>
+            {/* Category */}
             <View style={{ paddingTop: ys(paddingTop * 2) }}>
               <CustomText semibold md title black>
-                Price
+                Category
               </CustomText>
-              <ListingTypePaid
+
+              <ChooseListingCategory
                 listingDetails={listingDetails}
                 updateListingDetails={updateListingDetails}
               />
             </View>
-          )}
-          {/* Quantity */}
-          <View style={{ paddingTop: ys(paddingTop * 2) }}>
-            <CustomText semibold md title black>
-              Quantity Available
-            </CustomText>
-            <Quantity
-              listingDetails={listingDetails}
-              updateListingDetails={updateListingDetails}
-            />
-          </View>
-          {/* Description */}
-          <View style={{ paddingTop: ys(paddingTop * 2) }}>
-            <CustomText semibold md title black>
-              Description
-            </CustomText>
-            <Description
-              listingDetails={listingDetails}
-              updateListingDetails={updateListingDetails}
-            />
-          </View>
-          {/* <View
-            style={{
-              marginHorizontal: xs(sm),
-              height: ys(100),
-              backgroundColor: "white",
-              borderRadius: ms(12),
-              padding: ms(12),
-              shadowColor: "#000",
-              shadowOffset: {
-                width: 0,
-                height: 1,
-              },
-              shadowOpacity: 0.2,
-              shadowRadius: 1.41,
-              elevation: 2,
-              justifyContent: "center",
-              marginBottom: ys(10),
-              marginTop: ys(30),
-            }}
-          >
-            {/* <Text className="text-gray-500">How many do you have?</Text> */}
-          {/* <Picker
-              selectedValue={selectedAvailableAmount}
-              onValueChange={(itemValue, itemIndex) =>
-                setSelectedAvailableAmount(itemValue)
-              }
-              style={{
-                width: "100%",
-                height: ys(160),
-              }}
-              mode="dropdown" // Change mode to dropdown to prevent automatic scrolling back
-            >
-              <Picker.Item label="< 10" value="Less than 10" />
-              <Picker.Item label="10" value="10" />
-              <Picker.Item label="20" value="20" />
-              <Picker.Item label="30" value="30" />
-              <Picker.Item label="50" value="50" />
-              <Picker.Item label="50 <" value="More than 50" />
-            </Picker>
-          </View> */}
 
-          <CustomButton
-            submit={handleSubmit}
-            text={isSubmitting ? "Publishing..." : "Publish"}
-          />
-        </ScrollView>
-      </View>
+            {/* Item */}
+            <View style={{ paddingTop: ys(paddingTop * 2) }}>
+              <CustomText semibold md title black>
+                Item
+              </CustomText>
+              <DropdownComponent
+                // onOpen={handleDropdownOpen}
+                // onClose={handleDropdownClose}
+                data={dropdownData}
+                updateListingDetails={updateListingDetails}
+                listingDetails={listingDetails}
+              />
+            </View>
+
+            {/* Type */}
+            <View style={{ paddingTop: ys(paddingTop * 2) }}>
+              <CustomText semibold md title black>
+                Type
+              </CustomText>
+              <ListingType
+                listingDetails={listingDetails}
+                updateListingDetails={updateListingDetails}
+              />
+            </View>
+            {/* Type - paid */}
+            {listingDetails.tier === "sell" && (
+              <View style={{ paddingTop: ys(paddingTop * 2) }}>
+                <CustomText semibold md title black>
+                  Price
+                </CustomText>
+                <ListingTypePaid
+                  listingDetails={listingDetails}
+                  updateListingDetails={updateListingDetails}
+                />
+              </View>
+            )}
+            {/* Type - exchange */}
+            {listingDetails.tier === "exchange" && (
+              <View style={{ paddingTop: ys(paddingTop * 2) }}>
+                <CustomText semibold md title black>
+                  I need
+                </CustomText>
+                <ListingTypeExchange
+                  data={dropdownData}
+                  updateListingDetails={updateListingDetails}
+                  listingDetails={listingDetails}
+                />
+              </View>
+            )}
+            {/* Quantity */}
+            <View style={{ paddingTop: ys(paddingTop * 2) }}>
+              <CustomText semibold md title black>
+                Quantity Available
+              </CustomText>
+              <Quantity
+                listingDetails={listingDetails}
+                updateListingDetails={updateListingDetails}
+              />
+            </View>
+            {/* Description */}
+            <View style={{ paddingTop: ys(paddingTop * 2) }}>
+              <CustomText semibold md title black>
+                Description
+              </CustomText>
+              <Description
+                listingDetails={listingDetails}
+                updateListingDetails={updateListingDetails}
+              />
+            </View>
+            <CustomButton
+              submit={handleSubmit}
+              text={isSubmitting ? "Publishing..." : "Publish"}
+            />
+          </ScrollView>
+        </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };

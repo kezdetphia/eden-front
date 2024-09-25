@@ -61,7 +61,7 @@ const HomeScreen = () => {
   const filteredData = data
     .filter((item) => {
       const categoryMatch = selectedCategory
-        ? item.category.toLowerCase() === selectedCategory.toLowerCase()
+        ? item.category === selectedCategory
         : true;
       const filterMatch = selectedFilter
         ? selectedFilter === "All"
@@ -69,7 +69,7 @@ const HomeScreen = () => {
           : item.tier && item.tier === selectedFilter
         : true;
       const titleMatch = searchBarValue
-        ? item.title.toLowerCase().includes(searchBarValue.toLowerCase())
+        ? item.title.includes(searchBarValue)
         : true;
       return categoryMatch && filterMatch && titleMatch;
     })

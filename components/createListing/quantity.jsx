@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { TextInput, View, StyleSheet } from "react-native";
-import { Picker } from "@react-native-picker/picker";
-import AntDesign from "@expo/vector-icons/AntDesign";
-
+import { TextInput, View, StyleSheet, TouchableOpacity } from "react-native";
+import Collapsible from "react-native-collapsible";
+import CustomText from "../customText"; // Ensure this is imported correctly
+import SelectDropDown from "../selectDropDown";
 //TODO: Fix style, picker is dead and the placeholder ainy nice, input field size is not good
 
 const Quantity = ({ listingDetails, updateListingDetails }) => {
-  const [selectedUnit, setSelectedUnit] = useState("lb");
+  const [selectedUnit, setSelectedUnit] = useState("");
+  const [isCollapsed, setIsCollapsed] = useState(true);
 
   useEffect(() => {
     if (listingDetails.amount) {
@@ -33,24 +34,13 @@ const Quantity = ({ listingDetails, updateListingDetails }) => {
         style={styles.input}
         placeholder="Quantity"
         placeholderTextColor="#9CA3AF"
+        keyboardType="numeric"
       />
-      <View style={styles.pickerWrapper}>
-        <Picker
-          selectedValue={selectedUnit}
-          onValueChange={handleUnitChange}
-          style={styles.picker}
-          dropdownIconColor="white"
-        >
-          <Picker.Item label="lb" value="lb" />
-          <Picker.Item label="pc" value="pc" />
-        </Picker>
-        <AntDesign
-          name="caretdown"
-          size={16}
-          color="white"
-          style={styles.icon}
-        />
-      </View>
+
+      <SelectDropDown
+        units={["lb", "pc"]}
+        handleUnitChange={handleUnitChange}
+      />
     </View>
   );
 };
@@ -59,8 +49,6 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "center",
-    // borderWidth: 1,
-    // borderColor: "#83DF6C",
     borderRadius: 8,
     backgroundColor: "white",
     paddingVertical: 10,
@@ -73,24 +61,24 @@ const styles = StyleSheet.create({
     height: "100%",
     color: "#2D2D2D",
   },
-  pickerWrapper: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#83DF6C",
+  accordionContainer: {
+    marginTop: 2,
+  },
+  accordionHeader: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#2D2D2D",
+  },
+  accordionContent: {
+    padding: 10,
+    backgroundColor: "#f9f9f9",
     borderRadius: 8,
-    overflow: "hidden",
-    height: "100%",
-    width: 100,
-    justifyContent: "center",
   },
-  picker: {
-    flex: 1,
-    color: "white",
-    backgroundColor: "#83DF6C",
-  },
-  icon: {
-    position: "absolute",
-    right: 10,
+  unitOption: {
+    paddingVertical: 5,
+    paddingHorizontal: 5,
+    fontSize: 16,
+    color: "#2D2D2D",
   },
 });
 

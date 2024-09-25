@@ -1,6 +1,6 @@
 import {
   View,
-  Text,
+  StyleSheet,
   Pressable,
   Animated,
   StatusBar,
@@ -32,6 +32,7 @@ const { EXPO_API_URL } = Constants.expoConfig.extra;
 //TODO: make the main image carousel for more images
 // might add a modal to open images in its true ratio size
 // Swapper look out for only appear if the 'seller' is looking for something in exchange so if its free dont show it
+const { xsm, title, paddingSides, paddingTop } = sizes;
 
 const ProductDetail = () => {
   const { id: productId } = useLocalSearchParams();
@@ -40,7 +41,6 @@ const ProductDetail = () => {
   const scrollY = useRef(new Animated.Value(0)).current;
   const [imageHeight, setImageHeight] = useState(ys(300));
   const [error, setError] = useState(null);
-  const { xsm, title, paddingSides, paddingTop } = sizes;
   const params = useLocalSearchParams();
   console.log("singlepage params", params);
 
@@ -262,36 +262,27 @@ const ProductDetail = () => {
             />
           </View>
           <View>
-            <View
-              style={{
-                paddingTop: ys(paddingSides + paddingSides + paddingTop - 5),
-              }}
-            >
-              <WapperNeeds
-                productOwner={product?.owner}
-                wantUnderLine={false}
-              />
-            </View>
+            {product?.tier === "exchange" && (
+              <View
+                style={{
+                  paddingTop: ys(paddingSides + paddingSides + paddingTop - 5),
+                }}
+              >
+                <WapperNeeds
+                  // productOwner={product?.owner}
+                  exchangingFor={product?.exchangeFor}
+                  wantUnderLine={false}
+                />
+              </View>
+            )}
             {/* <SendMessage product={product} style={{ marginBottom: ys(xl) }} /> */}
-            <View
-              style={{
-                paddingTop: ys(paddingSides + paddingSides + paddingTop - 5),
-              }}
-            >
+            <View style={styles.sectionContainer}>
               <ProductDesc desc={product?.desc} />
             </View>
-            <View
-              style={{
-                paddingTop: ys(paddingSides + paddingSides + paddingTop - 5),
-              }}
-            >
+            <View style={styles.sectionContainer}>
               <SellerInfo owner={product?.owner} />
             </View>
-            <View
-              style={{
-                paddingTop: ys(paddingSides + paddingSides + paddingTop - 5),
-              }}
-            >
+            <View style={styles.sectionContainer}>
               <ProductComments product={product} />
             </View>
             <View
@@ -331,3 +322,9 @@ const ProductDetail = () => {
 };
 
 export default ProductDetail;
+
+const styles = StyleSheet.create({
+  sectionContainer: {
+    paddingTop: ys(paddingSides + paddingSides + paddingTop - 5),
+  },
+});

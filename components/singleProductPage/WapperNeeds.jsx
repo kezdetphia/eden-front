@@ -5,16 +5,21 @@ import CategoryScroll from "../homescreen/CategoryScroll";
 import sizes from "../../constants/sizes";
 import CustomText from "../customText";
 
-const WapperNeeds = ({ productOwner }) => {
+const WapperNeeds = ({ exchangingFor }) => {
   const { paddingTop } = sizes;
   return (
     <View className="DESIRE-CONTAINER flex flex-col  ">
       <CustomText b300 subtitle bold>
-        Swapper in lookout for: 👀
+        Swapper is looking for: 👀
       </CustomText>
-      <View style={{ paddingTop: ys(paddingTop) }}>
-        <CategoryScroll categories={productOwner?.inNeedOf} />
-      </View>
+      {exchangingFor && (
+        <View style={{ paddingTop: ys(paddingTop) }}>
+          <CategoryScroll
+            // categories={productOwner?.inNeedOf}
+            ownerNeedsForThisProduct={exchangingFor}
+          />
+        </View>
+      )}
     </View>
   );
 };

@@ -9,25 +9,33 @@ import sizes from "../../constants/sizes";
 import CustomText from "../customText";
 
 const PriceQuantityCard = ({ quantity, price, tier }) => {
-  const { sm } = sizes;
+  // const { sm } = sizes;
+
+  let fee = "";
+  let unit = "";
+
+  if (price && typeof price === "string" && price.includes(" ")) {
+    [fee, unit] = price.split(/\s+/); // Split on one or more spaces
+  }
+
   return (
     <>
       <View
         className="bg-g300  rounded-lg items-center  justify-center  "
         style={{ paddingHorizontal: xs(40), paddingVertical: ys(12) }}
       >
-        {tier === "Exchange" ? (
+        {tier === "exchange" ? (
           <CustomText sm white bold>
             Offer Me!
           </CustomText>
-        ) : tier === "Free" ? (
+        ) : tier === "free" ? (
           <CustomText sm white bold>
-            Yay, Its free!
+            Yay, It's free!
           </CustomText>
         ) : (
           <View className=" items-center  justify-center ">
             <CustomText sm white bold>
-              ${price}
+              $ {fee}/ {unit}
             </CustomText>
             <CustomText xxs white>
               Price

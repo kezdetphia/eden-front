@@ -6,8 +6,8 @@ import {
 } from "react-native-size-matters";
 import sizes from "../../constants/sizes";
 import CustomText from "../customText";
-import { Picker } from "@react-native-picker/picker";
 import { useEffect, useState } from "react";
+import SelectDropDown from "../selectDropDown";
 
 const ListingTypePaid = ({ listingDetails, updateListingDetails }) => {
   const [selectedUnit, setSelectedUnit] = useState("");
@@ -27,32 +27,27 @@ const ListingTypePaid = ({ listingDetails, updateListingDetails }) => {
     const price = listingDetails.price
       ? listingDetails.price.split(" ")[0]
       : "";
-    updateListingDetails("price", `${price}  ${itemValue}`);
+    updateListingDetails("price", `${price} ${itemValue}`);
   };
 
   return (
     <View style={styles.container}>
+      <CustomText>$ </CustomText>
       <TextInput
         $
-        onChangeText={(text) => updateListingDetails("price", text)}
-        value={listingDetails.price}
+        onChangeText={(text) =>
+          updateListingDetails("price", text + " " + selectedUnit)
+        }
+        value={listingDetails.price ? listingDetails.price.split(" ")[0] : ""}
         style={styles.input}
         placeholder="Price"
         placeholderTextColor="#9CA3AF"
         keyboardType="numeric"
       />
-
-      <View style={styles.pickerWrapper}>
-        <Picker
-          selectedValue={selectedUnit}
-          onValueChange={handleUnitChange}
-          style={styles.picker}
-          dropdownIconColor="white"
-        >
-          <Picker.Item label="lb" value="lb" />
-          <Picker.Item label="pc" value="pc" />
-        </Picker>
-      </View>
+      <SelectDropDown
+        units={["lb", "pc"]}
+        handleUnitChange={handleUnitChange}
+      />
     </View>
   );
 };
@@ -74,20 +69,5 @@ const styles = StyleSheet.create({
     flex: 1,
     height: "100%",
     color: "#2D2D2D",
-  },
-  pickerWrapper: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#83DF6C",
-    borderRadius: 8,
-    overflow: "hidden",
-    height: "100%",
-    width: 100,
-    justifyContent: "center",
-  },
-  picker: {
-    flex: 1,
-    color: "white",
-    backgroundColor: "#83DF6C",
   },
 });

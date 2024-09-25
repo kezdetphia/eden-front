@@ -12,7 +12,7 @@
       "eas": {
         "projectId": "5be4c9ea-a9f7-4fbb-b0e9-a59e18463765"
       },
-      "EXPO_API_URL": "http://eden-back.vercel.app"
+      "EXPO_API_URL": "http://localhost:3000"
     },
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",

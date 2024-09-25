@@ -18,7 +18,7 @@ const ListingType = ({ listingDetails, updateListingDetails }) => {
   const { paddingSizes, paddingTop } = sizes;
   const [selectedTier, setSelectedTier] = useState(listingDetails.tier);
 
-  const tiers = ["free", "exchange", "sell"];
+  const tiers = ["Free", "Exchange", "Sell"];
 
   const handlePress = (tier) => {
     setSelectedTier(tier);

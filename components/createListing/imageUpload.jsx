@@ -128,7 +128,7 @@ const ImageUpload = ({ user, updateListingDetails }) => {
       "Choose an option",
       "Where do you want to upload the image from?",
       [
-        { text: "Pick from library", onPress: () => pickImage("library") },
+        { text: "Select from library", onPress: () => pickImage("library") },
         { text: "Take a photo", onPress: () => pickImage("camera") },
       ]
     );

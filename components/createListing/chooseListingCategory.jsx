@@ -1,11 +1,4 @@
-import {
-  View,
-  Text,
-  FlatList,
-  Pressable,
-  Dimensions,
-  StyleSheet,
-} from "react-native";
+import { View, FlatList, Pressable, Dimensions } from "react-native";
 import {
   scale as xs,
   verticalScale as ys,
