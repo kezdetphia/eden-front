@@ -19,7 +19,6 @@ import {
 } from "react-native-size-matters";
 import Divider from "../../components/Divider";
 import ImageUpload from "../../components/createListing/imageUpload";
-import { Dropdown } from "react-native-element-dropdown";
 import ChooseListingCategory from "../../components/createListing/chooseListingCategory";
 import * as SecureStore from "expo-secure-store";
 import { useAuth } from "../../context/authContext";

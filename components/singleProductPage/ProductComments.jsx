@@ -17,10 +17,7 @@ import CustomText from "../customText";
 const { EXPO_API_URL } = Constants.expoConfig.extra;
 const { md } = sizes;
 
-// TODO: - DONE- implement adding comments to the owner's product
-//       - DONE - display comments conditionally if there is or isnt
-//       - message user buttin direct user to the owners message window to send message
-//       - Refresh comments when new comment added by the user
+//TODO:       - Refresh comments when new comment added by the user
 
 const ProductComments = ({ product }) => {
   const { xsm, xl, xxl, subtitle, paddingTop } = sizes;

@@ -2,7 +2,6 @@ import React, { useState, useCallback, useEffect } from "react";
 import { TextInput, View, StyleSheet } from "react-native";
 import _ from "lodash";
 
-//TODO: Fix the style of the textarea like color text color and spacing
 const Description = ({ listingDetails, updateListingDetails, highlight }) => {
   const [text, setText] = useState(listingDetails.desc);
 

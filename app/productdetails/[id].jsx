@@ -31,11 +31,12 @@ const { EXPO_API_URL } = Constants.expoConfig.extra;
 
 //TODO: make the main image carousel for more images
 // might add a modal to open images in its true ratio size
-// Swapper look out for only appear if the 'seller' is looking for something in exchange so if its free dont show it
+
 const { xsm, title, paddingSides, paddingTop } = sizes;
 
 const ProductDetail = () => {
   const { id: productId } = useLocalSearchParams();
+  console.log("ProductDetail id", productId);
   const router = useRouter();
   const [product, setProduct] = useState(null);
   const scrollY = useRef(new Animated.Value(0)).current;

@@ -1,13 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { TextInput, View, StyleSheet, TouchableOpacity } from "react-native";
-import Collapsible from "react-native-collapsible";
-import CustomText from "../customText"; // Ensure this is imported correctly
+import { TextInput, View, StyleSheet } from "react-native";
 import SelectDropDown from "../selectDropDown";
-//TODO: Fix style, picker is dead and the placeholder ainy nice, input field size is not good
 
 const Quantity = ({ listingDetails, updateListingDetails }) => {
   const [selectedUnit, setSelectedUnit] = useState("");
-  const [isCollapsed, setIsCollapsed] = useState(true);
 
   useEffect(() => {
     if (listingDetails.amount) {

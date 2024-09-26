@@ -91,12 +91,13 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="test"
+        name="profile"
         options={{
-          title: "Test",
+          headerShown: false,
+          title: "Profile",
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
-              name={focused ? "code-slash" : "code-slash-outline"}
+              name={focused ? "person-outline" : "person-outline"}
               color={color}
             />
           ),

@@ -12,7 +12,10 @@ import { EvilIcons } from "@expo/vector-icons";
 import { useAuth } from "@/context/authContext";
 import CustomText from "../customText";
 
-export default function CustomHeader({ searchBarValue, setSearchBarValue }) {
+export default function HomeCustomHeader({
+  searchBarValue,
+  setSearchBarValue,
+}) {
   const { sm, paddingSides } = sizes;
   const { user } = useAuth();
 

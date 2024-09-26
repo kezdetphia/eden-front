@@ -151,9 +151,9 @@ const ImageUpload = ({ user, updateListingDetails, listingDetails }) => {
     setIsModalOpen(false);
   };
 
-  console.log("Selected ImageIndex:", selectedImageIndex);
-  console.log("Selected Images:", selectedImages);
-  console.log("Selected Image:", selectedImage);
+  // console.log("Selected ImageIndex:", selectedImageIndex);
+  // console.log("Selected Images:", selectedImages);
+  // console.log("Selected Image:", selectedImage);
 
   return (
     <ScrollView>
