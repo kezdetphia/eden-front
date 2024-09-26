@@ -66,8 +66,8 @@ const ProductComments = ({ product }) => {
   const submitComment = async () => {
     try {
       const res = await fetch(
-        // `http://localhost:3000/addcropcomment/${product?._id}`,
-        `${EXPO_API_URL}/addcropcomment/${product?._id}`,
+        // `http://localhost:3000/addproductcomment/${product?._id}`,
+        `${EXPO_API_URL}/addproductcomment/${product?._id}`,
         {
           method: "POST",
           headers: {

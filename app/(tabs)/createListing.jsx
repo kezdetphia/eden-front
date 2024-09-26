@@ -99,7 +99,7 @@ const CreateListing = () => {
     const token = await SecureStore.getItemAsync("authToken");
     try {
       console.log("Submitting listing details:", listingDetails); // Log the payload
-      const res = await fetch(`${EXPO_API_URL}/createcorp`, {
+      const res = await fetch(`${EXPO_API_URL}/createproduct`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

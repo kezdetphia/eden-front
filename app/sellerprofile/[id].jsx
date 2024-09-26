@@ -34,8 +34,8 @@ const SellerProfile = () => {
   const getSellerData = async () => {
     try {
       const response = await fetch(
-        `${EXPO_API_URL}/api/users/getuserwithcorps/${id}`
-        // `http://localhost:3000/api/users/getuserwithcorps/${id}`
+        `${EXPO_API_URL}/api/users/getuserwithproducts/${id}`
+        // `http://localhost:3000/api/users/getuserwithproducts/${id}`
       );
       // const response = await fetch(`${API_URL}/user/${id}`);
       if (response.ok) {

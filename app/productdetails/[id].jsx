@@ -50,8 +50,8 @@ const ProductDetail = () => {
       const token = await SecureStore.getItemAsync("authToken");
       try {
         const response = await fetch(
-          // `http://localhost:3000/getcorp/${productId}`,
-          `${EXPO_API_URL}/getcorp/${productId}`,
+          // `http://localhost:3000/getproduct/${productId}`,
+          `${EXPO_API_URL}/getproduct/${productId}`,
           {
             method: "GET",
             headers: {

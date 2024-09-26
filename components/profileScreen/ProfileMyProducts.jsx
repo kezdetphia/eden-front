@@ -20,7 +20,7 @@ const ProfileMyProducts = ({ user }) => {
     const getMyProducts = async () => {
       try {
         const res = await fetch(
-          `${EXPO_API_URL}/api/users/getuserwithcorps/${user?._id}`
+          `${EXPO_API_URL}/api/users/getuserwithproducts/${user?._id}`
         );
         if (!res.ok) {
           throw new Error(`HTTP error! status: ${res.status}`);
