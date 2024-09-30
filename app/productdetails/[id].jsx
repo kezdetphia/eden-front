@@ -162,7 +162,7 @@ const ProductDetail = () => {
                   backgroundColor: "rgba(0, 0, 0, 0.5)", // Blackish transparent background
                   borderRadius: ms(24), // Make the background fully rounded
                   width: ms(30), // Set width to make it a circle
-                  height: ms(30), // // Set height to make it a circle
+                  height: ms(30), // Set height to make it a circle
                   justifyContent: "center", // Center the icon vertically
                   alignItems: "center", // Center the icon horizontally
                 }}
@@ -211,9 +211,7 @@ const ProductDetail = () => {
                             : "rgba(0, 0, 0, 0.5)",
                       },
                     ]}
-                  >
-                    {currentIndex === index && <View style={styles.innerDot} />}
-                  </View>
+                  />
                 ))}
               </View>
             </View>
@@ -382,18 +380,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   dot: {
-    height: ms(12),
-    width: ms(12),
+    height: ms(10),
+    width: ms(10),
     borderRadius: ms(40),
     backgroundColor: "rgba(0, 0, 0, 0.5)",
     marginHorizontal: ms(4),
-    justifyContent: "center", // Center the inner dot vertically
-    alignItems: "center", // Center the inner dot horizontally
-  },
-  innerDot: {
-    height: ms(4),
-    width: ms(4),
-    borderRadius: ms(2),
-    backgroundColor: "#4A9837",
   },
 });

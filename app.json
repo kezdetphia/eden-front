@@ -1,9 +1,8 @@
 {
   "expo": {
-    "name": "corps-wap",
+    "name": "Eden",
     "slug": "eden",
     "version": "1.0.0",
-
     "extra": {
       "googleClientId": "./apps.googleusercontent.json",
       "router": {
@@ -29,7 +28,8 @@
         "usesNonExemptEncryption": false
       },
       "infoPlist": {
-        "NSCameraUsageDescription": "This app uses the camera to upload images to their listings."
+        "NSCameraUsageDescription": "This app uses the camera to upload images to their listings.",
+        "NSPhotoLibraryUsageDescription": "This app needs access to your photo library to upload images."
       },
       "bundleIdentifier": "com.kezdetphia.eden"
     },
@@ -40,7 +40,8 @@
       },
       "permissions": [
         "android.permission.CAMERA",
-        "android.permission.RECORD_AUDIO"
+        "android.permission.RECORD_AUDIO",
+        "android.permission.READ_EXTERNAL_STORAGE"
       ],
       "package": "com.kezdetphia.eden"
     },

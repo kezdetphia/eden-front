@@ -6,7 +6,7 @@ import {
   Pressable,
   ScrollView,
   Alert,
-  Button,
+  Linking,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { AntDesign, EvilIcons } from "@expo/vector-icons";
@@ -38,27 +38,43 @@ const ImageUpload = ({ user, updateListingDetails, listingDetails }) => {
   // Function to request permissions for accessing the camera and media library
   const requestPermissions = async () => {
     try {
+      // Check and request camera permissions
       const cameraPermission = await ImagePicker.getCameraPermissionsAsync();
-      const mediaLibraryPermission =
-        await ImagePicker.getMediaLibraryPermissionsAsync();
-
+      console.log("Camera Permission:", cameraPermission);
       if (cameraPermission.status !== "granted") {
         const { status } = await ImagePicker.requestCameraPermissionsAsync();
+        console.log("Requested Camera Permission Status:", status);
         if (status !== "granted") {
           Alert.alert("Camera permission is required to take photos.");
           return false;
         }
       }
 
+      // Check and request media library permissions
+      const mediaLibraryPermission =
+        await ImagePicker.getMediaLibraryPermissionsAsync();
+      console.log("Media Library Permission:", mediaLibraryPermission);
       if (mediaLibraryPermission.status !== "granted") {
         const { status } =
           await ImagePicker.requestMediaLibraryPermissionsAsync();
+        console.log("Requested Media Library Permission Status:", status);
         if (status !== "granted") {
-          Alert.alert("Media library permission is required to select photos.");
+          Alert.alert(
+            "Media library permission is required to select photos.",
+            "Please go to Settings and enable the permission.",
+            [
+              { text: "Cancel", style: "cancel" },
+              {
+                text: "Open Settings",
+                onPress: () => Linking.openURL("app-settings:"),
+              },
+            ]
+          );
           return false;
         }
       }
 
+      // Return true if both permissions are granted
       return true;
     } catch (error) {
       console.error("Error requesting permissions: ", error);
