@@ -24,7 +24,7 @@ import PriceQuantityCard from "../../components/singleProductPage/PriceQuantityC
 import * as SecureStore from "expo-secure-store";
 import CustomButton from "../../components/customButton";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { useAuth } from "../../context/authContext";
+// import { useAuth } from "../../context/authContext";
 import Constants from "expo-constants";
 import CustomText from "../../components/customText";
 const { EXPO_API_URL } = Constants.expoConfig.extra;
@@ -32,18 +32,18 @@ const { EXPO_API_URL } = Constants.expoConfig.extra;
 //TODO: make the main image carousel for more images
 // might add a modal to open images in its true ratio size
 
-const { xsm, title, paddingSides, paddingTop } = sizes;
+const { xsm, paddingSides, paddingTop } = sizes;
 
 const ProductDetail = () => {
   const { id: productId } = useLocalSearchParams();
-  console.log("ProductDetail id", productId);
+  // console.log("ProductDetail iddsdsdsdsds", productId);
   const router = useRouter();
   const [product, setProduct] = useState(null);
   const scrollY = useRef(new Animated.Value(0)).current;
   const [imageHeight, setImageHeight] = useState(ys(300));
   const [error, setError] = useState(null);
   const params = useLocalSearchParams();
-  console.log("singlepage params", params);
+  // console.log("singlepage params", params);
 
   useEffect(() => {
     const fetchProductDetails = async () => {
@@ -64,7 +64,7 @@ const ProductDetail = () => {
           throw new Error("Network response was not ok");
         }
         const data = await response.json();
-        setProduct(data.corp);
+        setProduct(data.product);
         // console.log("SINGLEPRODUCT data", data);
       } catch (error) {
         console.error("Failed to fetch product details:", error);
@@ -76,6 +76,8 @@ const ProductDetail = () => {
 
     fetchProductDetails();
   }, [productId]);
+
+  console.log("product", product);
 
   const backgroundColor = scrollY.interpolate({
     inputRange: [ys(100), imageHeight - ys(20)],

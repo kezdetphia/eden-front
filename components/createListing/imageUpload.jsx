@@ -38,24 +38,22 @@ const ImageUpload = ({ user, updateListingDetails, listingDetails }) => {
   // Function to request permissions for accessing the camera and media library
   const requestPermissions = async () => {
     try {
-      const { status: cameraStatus } =
-        await ImagePicker.getCameraPermissionsAsync();
-      const { status: mediaLibraryStatus } =
+      const cameraPermission = await ImagePicker.getCameraPermissionsAsync();
+      const mediaLibraryPermission =
         await ImagePicker.getMediaLibraryPermissionsAsync();
 
-      if (cameraStatus !== "granted") {
-        const { status: newCameraStatus } =
-          await ImagePicker.requestCameraPermissionsAsync();
-        if (newCameraStatus !== "granted") {
+      if (cameraPermission.status !== "granted") {
+        const { status } = await ImagePicker.requestCameraPermissionsAsync();
+        if (status !== "granted") {
           Alert.alert("Camera permission is required to take photos.");
           return false;
         }
       }
 
-      if (mediaLibraryStatus !== "granted") {
-        const { status: newMediaLibraryStatus } =
+      if (mediaLibraryPermission.status !== "granted") {
+        const { status } =
           await ImagePicker.requestMediaLibraryPermissionsAsync();
-        if (newMediaLibraryStatus !== "granted") {
+        if (status !== "granted") {
           Alert.alert("Media library permission is required to select photos.");
           return false;
         }
