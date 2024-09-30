@@ -7,6 +7,7 @@ import {
   Platform,
   FlatList,
   Dimensions,
+  Text,
 } from "react-native";
 import { Image } from "expo-image";
 import React, { useEffect, useState, useRef } from "react";
@@ -45,6 +46,7 @@ const ProductDetail = () => {
   const scrollY = useRef(new Animated.Value(0)).current;
   const [imageHeight, setImageHeight] = useState(ys(300));
   const [error, setError] = useState(null);
+  const [currentIndex, setCurrentIndex] = useState(0); // Track the current index
   const params = useLocalSearchParams();
   // console.log("singlepage params", params);
 
@@ -106,6 +108,13 @@ const ProductDetail = () => {
       }}
     />
   );
+
+  const handleScroll = (event) => {
+    const index = Math.floor(
+      event.nativeEvent.contentOffset.x / Dimensions.get("window").width
+    );
+    setCurrentIndex(index);
+  };
 
   return (
     <View className="flex-1 bg-grayb ">
@@ -175,17 +184,39 @@ const ProductDetail = () => {
       >
         <View>
           {product?.image && (
-            <FlatList
-              data={product.image}
-              renderItem={renderItem}
-              horizontal
-              pagingEnabled
-              keyExtractor={(item, index) => index.toString()}
-              onLayout={(event) => {
-                const { height } = event.nativeEvent.layout;
-                setImageHeight(height);
-              }}
-            />
+            <View>
+              <FlatList
+                data={product.image}
+                renderItem={renderItem}
+                horizontal
+                pagingEnabled
+                keyExtractor={(item, index) => index.toString()}
+                onScroll={handleScroll}
+                onLayout={(event) => {
+                  const { height } = event.nativeEvent.layout;
+                  setImageHeight(height);
+                }}
+              />
+              <View style={styles.dotContainer}>
+                {product.image.map((_, index) => (
+                  <View
+                    key={index}
+                    style={[
+                      styles.dot,
+                      {
+                        opacity: currentIndex === index ? 1 : 0.6,
+                        backgroundColor:
+                          currentIndex === index
+                            ? "black"
+                            : "rgba(0, 0, 0, 0.5)",
+                      },
+                    ]}
+                  >
+                    {currentIndex === index && <View style={styles.innerDot} />}
+                  </View>
+                ))}
+              </View>
+            </View>
           )}
         </View>
 
@@ -340,5 +371,29 @@ export default ProductDetail;
 const styles = StyleSheet.create({
   sectionContainer: {
     paddingTop: ys(paddingSides + paddingSides + paddingTop - 5),
+  },
+  dotContainer: {
+    position: "absolute",
+    bottom: ys(30), // Adjust this value to position the dots higher on the image
+    left: 0,
+    right: 0,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  dot: {
+    height: ms(12),
+    width: ms(12),
+    borderRadius: ms(40),
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    marginHorizontal: ms(4),
+    justifyContent: "center", // Center the inner dot vertically
+    alignItems: "center", // Center the inner dot horizontally
+  },
+  innerDot: {
+    height: ms(4),
+    width: ms(4),
+    borderRadius: ms(2),
+    backgroundColor: "#4A9837",
   },
 });
