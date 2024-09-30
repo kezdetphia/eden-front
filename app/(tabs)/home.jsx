@@ -16,14 +16,14 @@ import * as SecureStore from "expo-secure-store";
 import Constants from "expo-constants";
 const { EXPO_API_URL } = Constants.expoConfig.extra;
 import { useDispatch, useSelector } from "react-redux";
-import { fetchCorps } from "../../store/dataSlice";
+import { fetchProducts } from "../../store/dataSlice";
 import CustomText from "../../components/customText";
 
 //TODO: -change back the headercomponent or find a solution to a sticky search bar
 
 const HomeScreen = () => {
   const { paddingSides, marginxxs } = sizes;
-  const categories = ["Fruit", "Vegetable"];
+  const categories = ["fruit", "vegetable"];
   const filterOptions = ["All", "Exchange", "Free", "Buy"];
 
   const dispatch = useDispatch();
@@ -40,6 +40,11 @@ const HomeScreen = () => {
   const numColumns = screenWidth > 1200 ? 4 : screenWidth > 800 ? 3 : 2;
   const cardWidth = screenWidth / numColumns - 10; // Adjust for margin
 
+  console.log("home filteredData", filteredData);
+  console.log("home selectedCategory", selectedCategory);
+  console.log("home selectedFilter", selectedFilter);
+  console.log("home searchBarValue", searchBarValue);
+
   useEffect(() => {
     if (user === "undefined" || !isAuthenticated) {
       router.replace("/");
@@ -54,7 +59,7 @@ const HomeScreen = () => {
 
   useEffect(() => {
     if (dataStatus === "idle") {
-      dispatch(fetchCorps());
+      dispatch(fetchProducts());
     }
   }, [dataStatus, dispatch]);
 
@@ -75,6 +80,7 @@ const HomeScreen = () => {
     })
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // Sort by newest first
 
+  console.log("home filteredData", filteredData);
   return (
     <View className="flex-1 bg-grayb">
       <HomeCustomHeader

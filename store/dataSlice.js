@@ -4,28 +4,31 @@ import Constants from "expo-constants";
 
 const { EXPO_API_URL } = Constants.expoConfig.extra;
 
-export const fetchCorps = createAsyncThunk("data/fetchCorps", async () => {
-  const token = await SecureStore.getItemAsync("authToken");
-  const response = await fetch(`${EXPO_API_URL}/getproducts`, {
-    // const response = await fetch(`http://localhost:3000/getproducts`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  if (!response.ok) {
-    throw new Error("Network response was not ok");
+export const fetchProducts = createAsyncThunk(
+  "data/fetchProducts",
+  async () => {
+    const token = await SecureStore.getItemAsync("authToken");
+    const response = await fetch(`${EXPO_API_URL}/getproducts`, {
+      // const response = await fetch(`http://localhost:3000/getproducts`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    const data = await response.json();
+    if (!Array.isArray(data.products)) {
+      throw new Error("Data is not an array");
+    }
+    return data.products;
   }
-  const data = await response.json();
-  if (!Array.isArray(data.corps)) {
-    throw new Error("Data is not an array");
-  }
-  return data.corps;
-});
+);
 
 const dataSlice = createSlice({
-  name: "data",
+  name: "products",
   initialState: {
     data: [],
     status: "idle",
@@ -34,14 +37,14 @@ const dataSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchCorps.pending, (state) => {
+      .addCase(fetchProducts.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(fetchCorps.fulfilled, (state, action) => {
+      .addCase(fetchProducts.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.data = action.payload;
       })
-      .addCase(fetchCorps.rejected, (state, action) => {
+      .addCase(fetchProducts.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });

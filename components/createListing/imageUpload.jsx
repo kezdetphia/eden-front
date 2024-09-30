@@ -39,16 +39,28 @@ const ImageUpload = ({ user, updateListingDetails, listingDetails }) => {
   const requestPermissions = async () => {
     try {
       const { status: cameraStatus } =
-        await ImagePicker.requestCameraPermissionsAsync();
+        await ImagePicker.getCameraPermissionsAsync();
       const { status: mediaLibraryStatus } =
-        await ImagePicker.requestMediaLibraryPermissionsAsync();
+        await ImagePicker.getMediaLibraryPermissionsAsync();
 
-      if (cameraStatus !== "granted" || mediaLibraryStatus !== "granted") {
-        Alert.alert(
-          "Permissions are required to access the camera and media library."
-        );
-        return false;
+      if (cameraStatus !== "granted") {
+        const { status: newCameraStatus } =
+          await ImagePicker.requestCameraPermissionsAsync();
+        if (newCameraStatus !== "granted") {
+          Alert.alert("Camera permission is required to take photos.");
+          return false;
+        }
       }
+
+      if (mediaLibraryStatus !== "granted") {
+        const { status: newMediaLibraryStatus } =
+          await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (newMediaLibraryStatus !== "granted") {
+          Alert.alert("Media library permission is required to select photos.");
+          return false;
+        }
+      }
+
       return true;
     } catch (error) {
       console.error("Error requesting permissions: ", error);
