@@ -5,6 +5,8 @@ import {
   Animated,
   StatusBar,
   Platform,
+  FlatList,
+  Dimensions,
 } from "react-native";
 import { Image } from "expo-image";
 import React, { useEffect, useState, useRef } from "react";
@@ -27,6 +29,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 // import { useAuth } from "../../context/authContext";
 import Constants from "expo-constants";
 import CustomText from "../../components/customText";
+
 const { EXPO_API_URL } = Constants.expoConfig.extra;
 
 //TODO: make the main image carousel for more images
@@ -92,6 +95,17 @@ const ProductDetail = () => {
       router.back();
     }
   };
+
+  const renderItem = ({ item }) => (
+    <Image
+      source={{ uri: item }}
+      style={{
+        width: Dimensions.get("window").width,
+        height: ys(400),
+        overflow: "hidden",
+      }}
+    />
+  );
 
   return (
     <View className="flex-1 bg-grayb ">
@@ -160,22 +174,19 @@ const ProductDetail = () => {
         scrollEventThrottle={16}
       >
         <View>
-          <Image
-            source={{
-              uri: product?.image[0],
-            }}
-            onLayout={(event) => {
-              const { height } = event.nativeEvent.layout;
-              setImageHeight(height);
-            }}
-            style={{
-              width: "100%",
-              height: ys(400),
-              overflow: "hidden",
-              // borderBottomLeftRadius: -20, // Adjust the radius as needed
-              // borderBottomRightRadius: 20,
-            }}
-          />
+          {product?.image && (
+            <FlatList
+              data={product.image}
+              renderItem={renderItem}
+              horizontal
+              pagingEnabled
+              keyExtractor={(item, index) => index.toString()}
+              onLayout={(event) => {
+                const { height } = event.nativeEvent.layout;
+                setImageHeight(height);
+              }}
+            />
+          )}
         </View>
 
         <KeyboardAwareScrollView
