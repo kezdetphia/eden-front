@@ -40,10 +40,10 @@ const HomeScreen = () => {
   const numColumns = screenWidth > 1200 ? 4 : screenWidth > 800 ? 3 : 2;
   const cardWidth = screenWidth / numColumns - 10; // Adjust for margin
 
-  console.log("home filteredData", filteredData);
-  console.log("home selectedCategory", selectedCategory);
-  console.log("home selectedFilter", selectedFilter);
-  console.log("home searchBarValue", searchBarValue);
+  // console.log("home filteredData", filteredData);
+  // console.log("home selectedCategory", selectedCategory);
+  // console.log("home selectedFilter", selectedFilter);
+  // console.log("home searchBarValue", searchBarValue);
 
   useEffect(() => {
     if (user === "undefined" || !isAuthenticated) {
@@ -79,8 +79,6 @@ const HomeScreen = () => {
       return categoryMatch && filterMatch && titleMatch;
     })
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // Sort by newest first
-
-  console.log("home filteredData", filteredData);
 
   return (
     <View className="flex-1 bg-grayb">

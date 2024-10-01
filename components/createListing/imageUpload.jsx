@@ -10,7 +10,13 @@ import {
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { AntDesign, EvilIcons } from "@expo/vector-icons";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import {
+  getStorage,
+  ref,
+  uploadBytes,
+  getDownloadURL,
+  deleteObject,
+} from "firebase/storage";
 import { storage } from "../../config/firebaseConfig"; // Adjust the path as needed
 import * as ImageManipulator from "expo-image-manipulator";
 import sizes from "../../constants/sizes";
@@ -24,16 +30,111 @@ import Modal from "./deleteImageModal";
 //TODO: fix delete image based on id
 
 const ImageUpload = ({ user, updateListingDetails, listingDetails }) => {
-  const { xsm, sm, md, lg, xl, xxl } = sizes;
   const [selectedImage, setSelectedImage] = useState(null);
   const [selectedImages, setSelectedImages] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedImageIndex, setSelectedImageIndex] = useState(null);
+  // const [selectedImageIndex, setSelectedImageIndex] = useState(null);
+  // const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Update local state when listingDetails.image changes
   useEffect(() => {
     setSelectedImages(listingDetails.image || []);
   }, [listingDetails.image]);
+
+  // Function to pick an image from camera or library
+  const pickImage = async (source) => {
+    const hasPermission = await requestPermissions();
+    if (!hasPermission) {
+      return;
+    }
+
+    try {
+      let result;
+      if (source === "camera") {
+        result = await ImagePicker.launchCameraAsync({
+          allowsEditing: true,
+          aspect: [4, 3],
+          quality: 1,
+        });
+      } else if (source === "library") {
+        result = await ImagePicker.launchImageLibraryAsync({
+          allowsEditing: true,
+          aspect: [4, 3],
+          quality: 1,
+        });
+      }
+
+      if (!result.canceled && result.assets && result.assets.length > 0) {
+        const imageUri = result.assets[0].uri;
+        const resizedImageUri = await resizeImage(imageUri); // Resize the image before uploading
+        setSelectedImage(resizedImageUri);
+        console.log("selectedImage in pickimage", selectedImage);
+        setSelectedImages((prevImages) => [...prevImages, resizedImageUri]);
+        console.log("selectedImages in pickimage", selectedImages);
+        await uploadImage(resizedImageUri);
+      }
+    } catch (error) {
+      console.error("Error picking image: ", error);
+      Alert.alert("Error picking image", error.message);
+    }
+  };
+
+  // Function to upload the image to Firebase storage
+  const uploadImage = async (uri) => {
+    try {
+      console.log("Starting image upload...");
+
+      const response = await fetch(uri); // Fetch the image from the URI
+      const blob = await response.blob(); // Convert the image to a blob
+
+      const storageRef = ref(storage, `images/${Date.now()}`); // Create a storage reference
+      await uploadBytes(storageRef, blob); // Upload the blob to storage
+
+      const downloadURL = await getDownloadURL(storageRef); // Get the download URL for the image
+      console.log("Image uploaded, download URL in uploadImage:", downloadURL);
+
+      updateListingDetails("image", downloadURL); // Update the listing details with the image URL
+      console.log("listingDetails in uploadImage", listingDetails?.image);
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      Alert.alert("Error uploading image", error.message);
+    }
+  };
+  console.log("listingDetails after uploadImage", listingDetails?.image);
+  // console.log("selectedImage Index", selectedImageIndex);
+
+  // Function to delete the image from Firebase storage
+  const deleteImageFromStorage = async (url) => {
+    try {
+      const storageRef = ref(storage, url);
+      await deleteObject(storageRef);
+      console.log("Image deleted from Firebase Storage:", url);
+    } catch (error) {
+      console.error("Error deleting image from Firebase Storage:", error);
+      Alert.alert("Error deleting image from Firebase Storage", error.message);
+    }
+  };
+
+  const handleDeleteButtonPress = (index) => {
+    const imageUrlToDelete = selectedImages[index];
+    deleteImageFromStorage(imageUrlToDelete); // Delete the image from Firebase Storage
+
+    setSelectedImages((prevImages) => prevImages.filter((_, i) => i !== index));
+    listingDetails.image = listingDetails.image.filter((_, i) => i !== index);
+  };
+
+  //UTILITY FUNCTIONS
+
+  //Tap the container to choose an image upload method
+  const handleImageSelectContainerClick = () => {
+    Alert.alert(
+      "Choose an option",
+      "Where do you want to upload the image from?",
+      [
+        { text: "Select from library", onPress: () => pickImage("library") },
+        { text: "Take a photo", onPress: () => pickImage("camera") },
+      ]
+    );
+  };
 
   // Function to request permissions for accessing the camera and media library
   const requestPermissions = async () => {
@@ -83,42 +184,6 @@ const ImageUpload = ({ user, updateListingDetails, listingDetails }) => {
     }
   };
 
-  // Function to pick an image from camera or library
-  const pickImage = async (source) => {
-    const hasPermission = await requestPermissions();
-    if (!hasPermission) {
-      return;
-    }
-
-    try {
-      let result;
-      if (source === "camera") {
-        result = await ImagePicker.launchCameraAsync({
-          allowsEditing: true,
-          aspect: [4, 3],
-          quality: 1,
-        });
-      } else if (source === "library") {
-        result = await ImagePicker.launchImageLibraryAsync({
-          allowsEditing: true,
-          aspect: [4, 3],
-          quality: 1,
-        });
-      }
-
-      if (!result.canceled && result.assets && result.assets.length > 0) {
-        const imageUri = result.assets[0].uri;
-        const resizedImageUri = await resizeImage(imageUri); // Resize the image before uploading
-        setSelectedImage(resizedImageUri);
-        setSelectedImages((prevImages) => [...prevImages, resizedImageUri]);
-        await uploadImage(resizedImageUri);
-      }
-    } catch (error) {
-      console.error("Error picking image: ", error);
-      Alert.alert("Error picking image", error.message);
-    }
-  };
-
   // Function to resize the image before uploading
   const resizeImage = async (uri) => {
     try {
@@ -133,53 +198,6 @@ const ImageUpload = ({ user, updateListingDetails, listingDetails }) => {
       throw error;
     }
   };
-
-  // Function to upload the image to Firebase storage
-  const uploadImage = async (uri) => {
-    try {
-      console.log("Starting image upload...");
-
-      const response = await fetch(uri); // Fetch the image from the URI
-      const blob = await response.blob(); // Convert the image to a blob
-
-      const storageRef = ref(storage, `images/${Date.now()}`); // Create a storage reference
-      await uploadBytes(storageRef, blob); // Upload the blob to storage
-
-      const downloadURL = await getDownloadURL(storageRef); // Get the download URL for the image
-      console.log("Image uploaded, download URL:", downloadURL);
-
-      updateListingDetails("image", downloadURL); // Update the listing details with the image URL
-    } catch (error) {
-      console.error("Error uploading image:", error);
-      Alert.alert("Error uploading image", error.message);
-    }
-  };
-
-  const handleImageSelectContainerClick = () => {
-    Alert.alert(
-      "Choose an option",
-      "Where do you want to upload the image from?",
-      [
-        { text: "Select from library", onPress: () => pickImage("library") },
-        { text: "Take a photo", onPress: () => pickImage("camera") },
-      ]
-    );
-  };
-
-  const handleModalDeleteImagePress = () => {
-    setIsModalOpen(true);
-    console.log("Delete image");
-    setSelectedImages((prevImages) => {
-      const newImages = [...prevImages];
-      newImages.splice(selectedImageIndex, 1);
-      return newImages;
-    });
-    setIsModalOpen(false);
-  };
-
-  // console.log("Selected ImageIndex:", selectedImageIndex);
-  // console.log("Selected Images:", selectedImages);
-  // console.log("Selected Image:", selectedImage);
 
   return (
     <ScrollView>
@@ -201,10 +219,13 @@ const ImageUpload = ({ user, updateListingDetails, listingDetails }) => {
               <AntDesign name="upload" size={ms(30)} color="#4A9837" />
             </Pressable>
             {selectedImages.map((imageUri, index) => (
-              <Pressable
-                key={index}
-                onPress={() => setSelectedImageIndex(index)}
-              >
+              <View key={index} style={{ position: "relative" }}>
+                {/* <Pressable
+                  onPress={() => {
+                    setSelectedImageIndex(index);
+                    // setIsModalOpen(true);
+                  }}
+                > */}
                 <Image
                   source={{ uri: imageUri }}
                   style={{
@@ -215,14 +236,32 @@ const ImageUpload = ({ user, updateListingDetails, listingDetails }) => {
                     marginRight: xs(10),
                   }}
                 />
-              </Pressable>
+                {/* </Pressable> */}
+                <Pressable
+                  style={{
+                    position: "absolute",
+                    top: 5,
+                    right: 15,
+                    backgroundColor: "rgba(255, 255, 255, 0.7)",
+                    borderRadius: ms(5),
+                    padding: xs(2),
+                  }}
+                  onPress={() => {
+                    handleDeleteButtonPress(index);
+
+                    // handleModalDeleteImagePress();
+                  }}
+                >
+                  <AntDesign name="close" size={ms(20)} color="red" />
+                </Pressable>
+              </View>
             ))}
           </View>
         </ScrollView>
         <View
           style={{ flexDirection: "row", justifyContent: "space-between" }}
         ></View>
-        {selectedImage && (
+        {/* {selectedImage && (
           <View style={{ marginVertical: ys(10) }}>
             <Pressable
               style={{
@@ -231,22 +270,22 @@ const ImageUpload = ({ user, updateListingDetails, listingDetails }) => {
                 borderRadius: ms(5),
               }}
               onPress={() => {
-                setSelectedImage(null); // Reset selected image
                 updateListingDetails("image", null); // Remove image from listing details
+                setSelectedImage(null); // Reset selected image
               }}
             >
               <Text style={{ color: "white" }}>Remove Image</Text>
             </Pressable>
           </View>
-        )}
+        )} */}
       </View>
-      <Modal
+      {/* <Modal
         isOpen={isModalOpen}
         text1={"Delete Image"}
         text2={"Cancel"}
         onDeletePress={() => handleModalDeleteImagePress()}
         onCancelPress={() => setIsModalOpen(false)}
-      />
+      /> */}
     </ScrollView>
   );
 };
