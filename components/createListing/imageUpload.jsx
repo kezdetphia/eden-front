@@ -118,7 +118,7 @@ const ImageUpload = ({ user, updateListingDetails, listingDetails }) => {
   //Tap the container to choose an image upload method
   const handleImageSelectContainerClick = () => {
     Alert.alert(
-      "Choose an option",
+      "Select option",
       "Where do you want to upload the image from?",
       [
         { text: "Select from library", onPress: () => pickImage("library") },
@@ -206,7 +206,6 @@ const ImageUpload = ({ user, updateListingDetails, listingDetails }) => {
             style={{
               width: "30%",
               height: ys(80),
-              marginBottom: ys(10),
             }}
           >
             <AntDesign name="upload" size={ms(30)} color="#4A9837" />
@@ -223,18 +222,15 @@ const ImageUpload = ({ user, updateListingDetails, listingDetails }) => {
             >
               <Image
                 source={{ uri: imageUri }}
+                className="w-full rounded-xl"
                 style={{
-                  width: "100%",
                   height: ys(80),
                   resizeMode: "cover",
-                  borderRadius: ms(10),
                 }}
               />
               <Pressable
+                className="absolute top-2 right-2  rounded-md p-1 "
                 style={{
-                  position: "absolute",
-                  top: 5,
-                  right: 15,
                   backgroundColor: "rgba(255, 255, 255, 0.7)",
                   borderRadius: ms(5),
                   padding: xs(2),
@@ -243,7 +239,7 @@ const ImageUpload = ({ user, updateListingDetails, listingDetails }) => {
                   handleDeleteButtonPress(index);
                 }}
               >
-                <AntDesign name="close" size={ms(20)} color="red" />
+                <AntDesign name="close" size={ms(20)} color="black" />
               </Pressable>
             </View>
           ))}

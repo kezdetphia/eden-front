@@ -10,7 +10,7 @@ import CustomText from "../customText";
 
 //if they choose paid i still need to display exchange items they might want to exchange too not just sell
 
-const ListingType = ({ listingDetails, updateListingDetails, highlight }) => {
+const ListingType = ({ listingDetails, updateListingDetails }) => {
   const { paddingSizes, paddingTop } = sizes;
   const [selectedTier, setSelectedTier] = useState(listingDetails.tier);
 

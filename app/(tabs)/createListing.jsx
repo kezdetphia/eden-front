@@ -34,11 +34,12 @@ import Description from "../../components/createListing/description";
 import CustomText from "../../components/customText";
 import ListingTypePaid from "../../components/createListing/listingType-Paid";
 import ListingTypeExchange from "../../components/createListing/listingType-Exchange";
-import { KeyboardAvoidingScrollView } from "react-native-keyboard-avoiding-scroll-view";
 import Toast from "react-native-root-toast";
 
 //TODO: make the keyboard avoid view work
 // https://docs.expo.dev/guides/keyboard-handling/
+//Add location to pick up from just a postcode, then remove user postcode from user schema and add to product schema
+//Set the the amount to be a number and not accepting anything else
 
 const { paddingSides, paddingTop, subtitle, title } = sizes;
 const CreateListing = () => {
@@ -49,7 +50,6 @@ const CreateListing = () => {
   const [selectedAvailableAmount, setSelectedAvailableAmount] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { user } = useAuth();
-  const [highlightedFields, setHighlightedFields] = useState([]);
 
   const initialListingDetails = {
     price: "",
@@ -83,10 +83,8 @@ const CreateListing = () => {
     );
     if (emptyFields.length > 0) {
       handleToast("Please fill in all required fields.");
-      setHighlightedFields(emptyFields);
       return false;
     }
-    setHighlightedFields([]);
     return true;
   };
 
@@ -121,6 +119,7 @@ const CreateListing = () => {
       const data = await res.json();
       console.log("Listing created successfully:", data);
       handleToast("Listing created successfully", "success");
+      router.push("/");
     } catch (error) {
       console.error("Error creating listing:", error);
       handleToast("Failed to create listing", "error");
@@ -187,7 +186,7 @@ const CreateListing = () => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "" }}>
+    <SafeAreaView edges={["top"]} style={{ flex: 1 }}>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : undefined}
         style={{ flex: 1 }}
@@ -229,7 +228,6 @@ const CreateListing = () => {
                 listingDetails={listingDetails}
                 user={user}
                 updateListingDetails={updateListingDetails}
-                highlight={highlightedFields.includes("image")}
               />
             </View>
             {/* Category */}
@@ -241,7 +239,6 @@ const CreateListing = () => {
               <ChooseListingCategory
                 listingDetails={listingDetails}
                 updateListingDetails={updateListingDetails}
-                highlight={highlightedFields.includes("category")}
               />
             </View>
 
@@ -254,7 +251,6 @@ const CreateListing = () => {
                 data={dropdownData}
                 updateListingDetails={updateListingDetails}
                 listingDetails={listingDetails}
-                highlight={highlightedFields.includes("tier")}
               />
             </View>
 
@@ -266,7 +262,6 @@ const CreateListing = () => {
               <ListingType
                 listingDetails={listingDetails}
                 updateListingDetails={updateListingDetails}
-                highlight={highlightedFields.includes("tier")}
               />
             </View>
             {/* Type - paid */}
@@ -278,7 +273,6 @@ const CreateListing = () => {
                 <ListingTypePaid
                   listingDetails={listingDetails}
                   updateListingDetails={updateListingDetails}
-                  highlight={highlightedFields.includes("price")}
                 />
               </View>
             )}
@@ -292,7 +286,6 @@ const CreateListing = () => {
                   data={dropdownData}
                   updateListingDetails={updateListingDetails}
                   listingDetails={listingDetails}
-                  highlight={highlightedFields.includes("exchangeFor")}
                 />
               </View>
             )}
@@ -304,7 +297,6 @@ const CreateListing = () => {
               <Quantity
                 listingDetails={listingDetails}
                 updateListingDetails={updateListingDetails}
-                highlight={highlightedFields.includes("amount")}
               />
             </View>
             {/* Description */}
@@ -315,13 +307,14 @@ const CreateListing = () => {
               <Description
                 listingDetails={listingDetails}
                 updateListingDetails={updateListingDetails}
-                highlight={highlightedFields.includes("desc")}
               />
             </View>
-            <CustomButton
-              submit={handleSubmit}
-              text={isSubmitting ? "Publishing..." : "Publish"}
-            />
+            <View style={{ paddingVertical: ys(paddingTop) }}>
+              <CustomButton
+                submit={handleSubmit}
+                text={isSubmitting ? "Publishing..." : "Publish"}
+              />
+            </View>
           </ScrollView>
         </View>
       </KeyboardAvoidingView>

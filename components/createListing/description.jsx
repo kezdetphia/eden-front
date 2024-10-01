@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from "react";
 import { TextInput, View, StyleSheet } from "react-native";
 import _ from "lodash";
 
-const Description = ({ listingDetails, updateListingDetails, highlight }) => {
+const Description = ({ listingDetails, updateListingDetails }) => {
   const [text, setText] = useState(listingDetails.desc);
 
   // Update local state when listingDetails.desc changes
@@ -22,7 +22,7 @@ const Description = ({ listingDetails, updateListingDetails, highlight }) => {
   };
 
   return (
-    <View style={[styles.container, highlight && styles.highlight]}>
+    <View style={styles.container}>
       <TextInput
         style={styles.textArea}
         placeholder="Enter your text here"
@@ -50,9 +50,5 @@ const styles = StyleSheet.create({
     padding: 10,
     color: "#2D2D2D",
     backgroundColor: "white",
-  },
-  highlight: {
-    borderColor: "red",
-    borderWidth: 2,
   },
 });

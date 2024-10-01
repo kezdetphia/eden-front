@@ -27,6 +27,7 @@ export default function TabLayout() {
             justifyContent: "center",
             paddingTop: ys(5),
             paddingBottom: ys(20),
+            // marginBottom: ys(10),
             height: ys(60),
           },
         }}

@@ -33,7 +33,8 @@ import CustomText from "../../components/customText";
 
 const { EXPO_API_URL } = Constants.expoConfig.extra;
 
-//TODO: make the main image carousel for more images
+//TODO: see why the screen jumps when its loading, like the image takes longer to load
+//therefore the content under the image goes to the top for half a second
 // might add a modal to open images in its true ratio size
 
 const { xsm, paddingSides, paddingTop } = sizes;
@@ -186,7 +187,7 @@ const ProductDetail = () => {
           {product?.image && (
             <View>
               <FlatList
-                data={product.image}
+                data={product?.image}
                 renderItem={renderItem}
                 horizontal
                 pagingEnabled
