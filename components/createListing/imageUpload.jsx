@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
   View,
-  Text,
   Image,
   Pressable,
   ScrollView,
@@ -9,23 +8,17 @@ import {
   Linking,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
-import { AntDesign, EvilIcons } from "@expo/vector-icons";
-import {
-  getStorage,
-  ref,
-  uploadBytes,
-  getDownloadURL,
-  deleteObject,
-} from "firebase/storage";
+import { AntDesign } from "@expo/vector-icons";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "../../config/firebaseConfig"; // Adjust the path as needed
 import * as ImageManipulator from "expo-image-manipulator";
-import sizes from "../../constants/sizes";
 import {
   scale as xs,
   verticalScale as ys,
   moderateScale as ms,
 } from "react-native-size-matters";
-import Modal from "./deleteImageModal";
+// import Modal from "./deleteImageModal";
+import { deleteImageFromFirebaseStorage } from "../../utils/deleteImageFromFirebaseStorage";
 
 //TODO: fix delete image based on id
 
@@ -102,21 +95,9 @@ const ImageUpload = ({ user, updateListingDetails, listingDetails }) => {
   console.log("listingDetails after uploadImage", listingDetails?.image);
   // console.log("selectedImage Index", selectedImageIndex);
 
-  // Function to delete the image from Firebase storage
-  const deleteImageFromStorage = async (url) => {
-    try {
-      const storageRef = ref(storage, url);
-      await deleteObject(storageRef);
-      console.log("Image deleted from Firebase Storage:", url);
-    } catch (error) {
-      console.error("Error deleting image from Firebase Storage:", error);
-      Alert.alert("Error deleting image from Firebase Storage", error.message);
-    }
-  };
-
   const handleDeleteButtonPress = (index) => {
     const imageUrlToDelete = selectedImages[index];
-    deleteImageFromStorage(imageUrlToDelete); // Delete the image from Firebase Storage
+    deleteImageFromFirebaseStorage(imageUrlToDelete); // Use the imported function
 
     setSelectedImages((prevImages) => prevImages.filter((_, i) => i !== index));
     listingDetails.image = listingDetails.image.filter((_, i) => i !== index);
