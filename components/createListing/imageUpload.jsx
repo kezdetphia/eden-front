@@ -6,6 +6,9 @@ import {
   ScrollView,
   Alert,
   Linking,
+  LayoutAnimation,
+  UIManager,
+  Platform,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { AntDesign } from "@expo/vector-icons";
@@ -17,16 +20,19 @@ import {
   verticalScale as ys,
   moderateScale as ms,
 } from "react-native-size-matters";
-// import Modal from "./deleteImageModal";
 import { deleteImageFromFirebaseStorage } from "../../utils/deleteImageFromFirebaseStorage";
 
-//TODO: fix delete image based on id
+// Enable LayoutAnimation on Android
+if (
+  Platform.OS === "android" &&
+  UIManager.setLayoutAnimationEnabledExperimental
+) {
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+}
 
 const ImageUpload = ({ user, updateListingDetails, listingDetails }) => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [selectedImages, setSelectedImages] = useState([]);
-  // const [selectedImageIndex, setSelectedImageIndex] = useState(null);
-  // const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Update local state when listingDetails.image changes
   useEffect(() => {
@@ -60,9 +66,14 @@ const ImageUpload = ({ user, updateListingDetails, listingDetails }) => {
         const imageUri = result.assets[0].uri;
         const resizedImageUri = await resizeImage(imageUri); // Resize the image before uploading
         setSelectedImage(resizedImageUri);
-        console.log("selectedImage in pickimage", selectedImage);
+
+        // Animate the layout change
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+
+        // Append the new image
         setSelectedImages((prevImages) => [...prevImages, resizedImageUri]);
-        console.log("selectedImages in pickimage", selectedImages);
+
+        // Start the upload process
         await uploadImage(resizedImageUri);
       }
     } catch (error) {
@@ -83,21 +94,20 @@ const ImageUpload = ({ user, updateListingDetails, listingDetails }) => {
       await uploadBytes(storageRef, blob); // Upload the blob to storage
 
       const downloadURL = await getDownloadURL(storageRef); // Get the download URL for the image
-      console.log("Image uploaded, download URL in uploadImage:", downloadURL);
 
       updateListingDetails("image", downloadURL); // Update the listing details with the image URL
-      console.log("listingDetails in uploadImage", listingDetails?.image);
     } catch (error) {
       console.error("Error uploading image:", error);
       Alert.alert("Error uploading image", error.message);
     }
   };
-  console.log("listingDetails after uploadImage", listingDetails?.image);
-  // console.log("selectedImage Index", selectedImageIndex);
 
   const handleDeleteButtonPress = (index) => {
     const imageUrlToDelete = selectedImages[index];
     deleteImageFromFirebaseStorage(imageUrlToDelete); // Use the imported function
+
+    // Animate the layout change
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
 
     setSelectedImages((prevImages) => prevImages.filter((_, i) => i !== index));
     listingDetails.image = listingDetails.image.filter((_, i) => i !== index);
@@ -183,90 +193,65 @@ const ImageUpload = ({ user, updateListingDetails, listingDetails }) => {
   return (
     <ScrollView>
       <View>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          style={{ marginVertical: ys(10) }}
+        <View
+          style={{
+            flexDirection: "row",
+            flexWrap: "wrap",
+            marginVertical: ys(10),
+          }}
         >
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Pressable
-              onPress={() => handleImageSelectContainerClick()}
-              className="border-2 border-dashed border-g200 rounded-md justify-center items-center bg-white mr-2"
+          <Pressable
+            onPress={() => handleImageSelectContainerClick()}
+            className="border-2 border-dashed border-g200 rounded-md justify-center items-center bg-white mr-2"
+            style={{
+              width: "30%",
+              height: ys(80),
+              marginBottom: ys(10),
+            }}
+          >
+            <AntDesign name="upload" size={ms(30)} color="#4A9837" />
+          </Pressable>
+          {selectedImages.map((imageUri, index) => (
+            <View
+              key={index}
               style={{
-                width: xs(100),
-                height: ys(80),
+                position: "relative",
+                width: "30%",
+                marginRight: "3.33%",
+                marginBottom: ys(10),
               }}
             >
-              <AntDesign name="upload" size={ms(30)} color="#4A9837" />
-            </Pressable>
-            {selectedImages.map((imageUri, index) => (
-              <View key={index} style={{ position: "relative" }}>
-                {/* <Pressable
-                  onPress={() => {
-                    setSelectedImageIndex(index);
-                    // setIsModalOpen(true);
-                  }}
-                > */}
-                <Image
-                  source={{ uri: imageUri }}
-                  style={{
-                    width: xs(100),
-                    height: ys(80),
-                    resizeMode: "cover",
-                    borderRadius: ms(10),
-                    marginRight: xs(10),
-                  }}
-                />
-                {/* </Pressable> */}
-                <Pressable
-                  style={{
-                    position: "absolute",
-                    top: 5,
-                    right: 15,
-                    backgroundColor: "rgba(255, 255, 255, 0.7)",
-                    borderRadius: ms(5),
-                    padding: xs(2),
-                  }}
-                  onPress={() => {
-                    handleDeleteButtonPress(index);
-
-                    // handleModalDeleteImagePress();
-                  }}
-                >
-                  <AntDesign name="close" size={ms(20)} color="red" />
-                </Pressable>
-              </View>
-            ))}
-          </View>
-        </ScrollView>
+              <Image
+                source={{ uri: imageUri }}
+                style={{
+                  width: "100%",
+                  height: ys(80),
+                  resizeMode: "cover",
+                  borderRadius: ms(10),
+                }}
+              />
+              <Pressable
+                style={{
+                  position: "absolute",
+                  top: 5,
+                  right: 15,
+                  backgroundColor: "rgba(255, 255, 255, 0.7)",
+                  borderRadius: ms(5),
+                  padding: xs(2),
+                }}
+                onPress={() => {
+                  handleDeleteButtonPress(index);
+                }}
+              >
+                <AntDesign name="close" size={ms(20)} color="red" />
+              </Pressable>
+            </View>
+          ))}
+        </View>
         <View
           style={{ flexDirection: "row", justifyContent: "space-between" }}
         ></View>
-        {/* {selectedImage && (
-          <View style={{ marginVertical: ys(10) }}>
-            <Pressable
-              style={{
-                backgroundColor: "red",
-                padding: xs(10),
-                borderRadius: ms(5),
-              }}
-              onPress={() => {
-                updateListingDetails("image", null); // Remove image from listing details
-                setSelectedImage(null); // Reset selected image
-              }}
-            >
-              <Text style={{ color: "white" }}>Remove Image</Text>
-            </Pressable>
-          </View>
-        )} */}
       </View>
-      {/* <Modal
-        isOpen={isModalOpen}
-        text1={"Delete Image"}
-        text2={"Cancel"}
-        onDeletePress={() => handleModalDeleteImagePress()}
-        onCancelPress={() => setIsModalOpen(false)}
-      /> */}
     </ScrollView>
   );
 };
