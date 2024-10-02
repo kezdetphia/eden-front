@@ -35,11 +35,13 @@ import CustomText from "../../components/customText";
 import ListingTypePaid from "../../components/createListing/listingType-Paid";
 import ListingTypeExchange from "../../components/createListing/listingType-Exchange";
 import Toast from "react-native-root-toast";
+import Location from "../../components/createListing/location";
+import ListingTitle from "../../components/createListing/title";
 
 //TODO: make the keyboard avoid view work
 // https://docs.expo.dev/guides/keyboard-handling/
 //Add location to pick up from just a postcode, then remove user postcode from user schema and add to product schema
-//Set the the amount to be a number and not accepting anything else
+//Set the the availableQuantity to be a number and not accepting anything else
 
 const { paddingSides, paddingTop, subtitle, title } = sizes;
 const CreateListing = () => {
@@ -47,7 +49,7 @@ const CreateListing = () => {
   const router = useRouter();
   const [dropdownData, setDropdownData] = useState([]);
   const scrollViewRef = useRef(null);
-  const [selectedAvailableAmount, setSelectedAvailableAmount] = useState(0);
+  // const [selectedAvailableAmount, setSelectedAvailableAmount] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { user } = useAuth();
 
@@ -59,9 +61,9 @@ const CreateListing = () => {
     category: "",
     tier: null,
     owner: user._id,
-    amount: "",
-    location: user.location,
+    availableQuantity: "",
     exchangeFor: [],
+    location: "",
   };
 
   const [listingDetails, setListingDetails] = useState(initialListingDetails);
@@ -73,7 +75,8 @@ const CreateListing = () => {
       "image",
       "category",
       "tier",
-      "amount",
+      "availableQuantity",
+      "location",
     ];
     const emptyFields = requiredFields.filter(
       (field) =>
@@ -82,11 +85,13 @@ const CreateListing = () => {
           listingDetails[field].length === 0)
     );
     if (emptyFields.length > 0) {
-      handleToast("Please fill in all required fields.");
+      handleToast("Please fill in all fields!");
       return false;
     }
     return true;
   };
+
+  //availableQuantity
 
   //Submit the listing to the backend
   const handleSubmit = async () => {
@@ -131,20 +136,20 @@ const CreateListing = () => {
 
   console.log("Initial listingDetailssss        ", listingDetails);
 
-  useEffect(() => {
-    setListingDetails((prevDetails) => ({
-      ...prevDetails,
-      amount: selectedAvailableAmount,
-    }));
-  }, [selectedAvailableAmount]);
+  // useEffect(() => {
+  //   setListingDetails((prevDetails) => ({
+  //     ...prevDetails,
+  //     availableQuantity: selectedAvailableAmount,
+  //   }));
+  // }, [selectedAvailableAmount]);
 
-  useEffect(() => {
-    if (listingDetails.category === "fruit") {
-      setDropdownData(fruits);
-    } else if (listingDetails.category === "vegetable") {
-      setDropdownData(vegetable);
-    }
-  }, [listingDetails.category]);
+  // useEffect(() => {
+  //   if (listingDetails.category === "fruit") {
+  //     setDropdownData(fruits);
+  //   } else if (listingDetails.category === "vegetable") {
+  //     setDropdownData(vegetable);
+  //   }
+  // }, [listingDetails.category]);
 
   //Function to update the listing details with key value pairs
   const updateListingDetails = (key, value) => {
@@ -247,10 +252,11 @@ const CreateListing = () => {
               <CustomText semibold md title black>
                 Item
               </CustomText>
-              <DropdownComponent
-                data={dropdownData}
-                updateListingDetails={updateListingDetails}
+              <ListingTitle
                 listingDetails={listingDetails}
+                updateListingDetails={updateListingDetails}
+                selectedCategory={listingDetails?.category}
+                handleToast={handleToast}
               />
             </View>
 
@@ -276,8 +282,8 @@ const CreateListing = () => {
                 />
               </View>
             )}
-            {/* Type - exchange */}
-            {listingDetails.tier === "Exchange" && (
+            {/* Type - Trade */}
+            {listingDetails.tier === "Trade" && (
               <View style={{ paddingTop: ys(paddingTop * 2) }}>
                 <CustomText semibold md title black>
                   I need
@@ -295,6 +301,17 @@ const CreateListing = () => {
                 Quantity Available
               </CustomText>
               <Quantity
+                listingDetails={listingDetails}
+                updateListingDetails={updateListingDetails}
+              />
+            </View>
+            <View style={{ paddingTop: ys(paddingTop * 2) }}>
+              <CustomText semibold md title black>
+                Zip Code
+              </CustomText>
+
+              <Location
+                handleToast={handleToast}
                 listingDetails={listingDetails}
                 updateListingDetails={updateListingDetails}
               />

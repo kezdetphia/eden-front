@@ -1,19 +1,10 @@
-import { View, TextInput, Dimensions, StyleSheet, Text } from "react-native";
-import {
-  scale as xs,
-  verticalScale as ys,
-  moderateScale as ms,
-} from "react-native-size-matters";
-import sizes from "../../constants/sizes";
+import { View, TextInput, StyleSheet } from "react-native";
 import CustomText from "../customText";
 import { useEffect, useState } from "react";
 import SelectDropDown from "../selectDropDown";
 
 const ListingTypePaid = ({ listingDetails, updateListingDetails }) => {
   const [selectedUnit, setSelectedUnit] = useState("");
-
-  const { paddingTop, paddingSides } = sizes;
-  const screenWidth = Dimensions.get("window").width;
 
   useEffect(() => {
     if (listingDetails.price) {
@@ -30,14 +21,17 @@ const ListingTypePaid = ({ listingDetails, updateListingDetails }) => {
     updateListingDetails("price", `${price} ${itemValue}`);
   };
 
+  const handleChangeText = (text) => {
+    // Remove any non-numeric characters except for the decimal point
+    const numericText = text.replace(/[^0-9.]/g, "");
+    updateListingDetails("price", `${numericText} ${selectedUnit}`);
+  };
+
   return (
     <View style={styles.container}>
       <CustomText>$ </CustomText>
       <TextInput
-        $
-        onChangeText={(text) =>
-          updateListingDetails("price", text + " " + selectedUnit)
-        }
+        onChangeText={handleChangeText}
         value={listingDetails.price ? listingDetails.price.split(" ")[0] : ""}
         style={styles.input}
         placeholder="Price"

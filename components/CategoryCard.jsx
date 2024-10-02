@@ -9,12 +9,20 @@ const CategoryCard = ({
   selectedCategory,
   categories,
 }) => {
+  const handleCategoryPress = (category) => {
+    if (selectedCategory === category) {
+      setSelectedCategory(null); // Deselect the category if it's already selected
+    } else {
+      setSelectedCategory(category); // Select the category
+    }
+  };
+
   return (
     <View style={{ flexDirection: "row", gap: xs(20) }}>
       {categories.map((category, index) => (
         <FruitCatCard
           key={index}
-          onPress={() => setSelectedCategory(category)}
+          onPress={() => handleCategoryPress(category)}
           colors={index === 0 ? ["#FDE98A", "#FFF1B1"] : ["#BBFDA4", "#DDFFD1"]}
           text={category}
           imageSource={

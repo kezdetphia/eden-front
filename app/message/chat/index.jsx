@@ -27,6 +27,9 @@ import { format, isToday, isThisWeek, parseISO } from "date-fns";
 import Constants from "expo-constants";
 import CustomText from "../../../components/customText";
 
+//TODO: when messages are sent when the user is not in the chat screen, the message is not displayed. need to fix
+//Messages display in the right order when in the chat screen but when leave and come back the messages are grouped based on the sender
+
 const ChatScreen = () => {
   const { EXPO_API_URL } = Constants.expoConfig.extra;
   const { paddingTop, xl, xxl } = sizes;
@@ -62,7 +65,8 @@ const ChatScreen = () => {
   useEffect(() => {
     if (user && user._id && !socket.current) {
       console.log("url", EXPO_API_URL);
-      socket.current = io("http://192.168.0.182:3000", {
+      socket.current = io(EXPO_API_URL, {
+        // socket.current = io("http://192.168.0.182:3000", {
         query: { userId: user._id },
       });
 

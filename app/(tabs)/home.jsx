@@ -1,4 +1,11 @@
-import { View, FlatList, Dimensions, Pressable, Text } from "react-native";
+import {
+  View,
+  FlatList,
+  Dimensions,
+  Pressable,
+  Text,
+  RefreshControl,
+} from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { useAuth } from "../../context/authContext";
 import { useRouter } from "expo-router";
@@ -20,11 +27,12 @@ import { fetchProducts } from "../../store/dataSlice";
 import CustomText from "../../components/customText";
 
 //TODO: -change back the headercomponent or find a solution to a sticky search bar
+// - Implement a pull down to refresh function
 
 const HomeScreen = () => {
   const { paddingSides, marginxxs } = sizes;
   const categories = ["fruit", "vegetable"];
-  const filterOptions = ["All", "Exchange", "Free", "Buy"];
+  const filterOptions = ["All", "Trade", "Free", "Buy"];
 
   const dispatch = useDispatch();
   const data = useSelector((state) => state.data.data);
@@ -33,8 +41,9 @@ const HomeScreen = () => {
   const router = useRouter();
 
   const [selectedCategory, setSelectedCategory] = useState(null);
-  const [selectedFilter, setSelectedFilter] = useState(null);
+  const [selectedFilter, setSelectedFilter] = useState("All");
   const [searchBarValue, setSearchBarValue] = useState(null);
+  const [refreshing, setRefreshing] = useState(false); // State for refreshing
 
   const screenWidth = Dimensions.get("window").width;
   const numColumns = screenWidth > 1200 ? 4 : screenWidth > 800 ? 3 : 2;
@@ -62,6 +71,12 @@ const HomeScreen = () => {
       dispatch(fetchProducts());
     }
   }, [dataStatus, dispatch]);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await dispatch(fetchProducts());
+    setRefreshing(false);
+  };
 
   const filteredData = data
     .filter((item) => {
@@ -143,6 +158,9 @@ const HomeScreen = () => {
         contentContainerStyle={{
           justifyContent: "center",
         }}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
       />
     </View>
   );

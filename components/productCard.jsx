@@ -1,17 +1,12 @@
-import { View, Text, StyleSheet, Dimensions } from "react-native";
+import { View, StyleSheet, Dimensions } from "react-native";
 import React from "react";
 import { Image } from "expo-image";
-import { FontAwesome } from "@expo/vector-icons";
-import { MaterialIcons } from "@expo/vector-icons";
 import {
   scale as xs,
   verticalScale as ys,
   moderateScale as ms,
 } from "react-native-size-matters";
-import sizes from "../constants/sizes";
 import CustomText from "./customText";
-
-const { xxs, xsm, sm, md, lg, xl, xxl, paddingSides } = sizes;
 
 const ProductCard = ({ product, cardWidth }) => {
   return (
@@ -52,7 +47,7 @@ const ProductCard = ({ product, cardWidth }) => {
         style={{ paddingTop: ys(10) }}
       >
         <CustomText g300 xsm semibold>
-          {product.amount}
+          {product?.availableQuantity}
         </CustomText>
         {product?.tier === "Buy" ? (
           <CustomText b300 xsm>

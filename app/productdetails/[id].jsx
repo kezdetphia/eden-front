@@ -300,13 +300,13 @@ const ProductDetail = () => {
             style={{ paddingTop: ys(paddingTop) }}
           >
             <PriceQuantityCard
-              quantity={product?.amount}
+              quantity={product?.availableQuantity}
               price={product?.price}
               tier={product?.tier}
             />
           </View>
           <View>
-            {product?.tier === "Exchange" && (
+            {product?.tier === "Trade" && (
               <View
                 style={{
                   paddingTop: ys(paddingSides + paddingSides + paddingTop - 5),

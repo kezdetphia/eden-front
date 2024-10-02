@@ -18,7 +18,7 @@ const ListingType = ({ listingDetails, updateListingDetails }) => {
     setSelectedTier(listingDetails.tier);
   }, [listingDetails.tier]);
 
-  const tiers = ["Free", "Exchange", "Sell"];
+  const tiers = ["Free", "Trade", "Sell"];
 
   const handlePress = (tier) => {
     setSelectedTier(tier);

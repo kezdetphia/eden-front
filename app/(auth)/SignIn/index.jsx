@@ -47,8 +47,8 @@ const SignIn = () => {
     setIsLoading(true);
     try {
       // const authHeader = req.headers["authorization"];
-      const res = await fetch("http://localhost:3000/api/users/signin", {
-        // const res = await fetch(`${EXPO_API_URL}/api/users/signin`, {
+      // const res = await fetch("http://localhost:3000/api/users/signin", {
+      const res = await fetch(`${EXPO_API_URL}/api/users/signin`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

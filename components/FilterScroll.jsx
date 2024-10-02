@@ -1,4 +1,4 @@
-import { View, Text, FlatList, Pressable } from "react-native";
+import { View, FlatList, Pressable } from "react-native";
 import React from "react";
 import {
   scale as xs,
@@ -9,7 +9,6 @@ import sizes from "../constants/sizes";
 import CustomText from "./customText";
 
 const FilterScroll = ({ filterOptions, selectedFilter, setSelectedFilter }) => {
-  const { paddingSides, xsm, sm, md, lg, xl, xxl } = sizes;
   return (
     <View
       style={{
