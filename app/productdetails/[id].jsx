@@ -7,7 +7,6 @@ import {
   Platform,
   FlatList,
   Dimensions,
-  Text,
 } from "react-native";
 import { Image } from "expo-image";
 import React, { useEffect, useState, useRef } from "react";
@@ -30,6 +29,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 // import { useAuth } from "../../context/authContext";
 import Constants from "expo-constants";
 import CustomText from "../../components/customText";
+import axios from "axios";
 
 const { EXPO_API_URL } = Constants.expoConfig.extra;
 
@@ -55,28 +55,26 @@ const ProductDetail = () => {
     const fetchProductDetails = async () => {
       const token = await SecureStore.getItemAsync("authToken");
       try {
-        const response = await fetch(
-          // `http://localhost:3000/getproduct/${productId}`,
+        const response = await axios.get(
           `${EXPO_API_URL}/getproduct/${productId}`,
           {
-            method: "GET",
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
             },
           }
         );
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        const data = await response.json();
-        setProduct(data.product);
-        // console.log("SINGLEPRODUCT data", data);
+
+        setProduct(response.data.product);
+        console.log("SINGLEPRODUCT data", response.data);
       } catch (error) {
         console.error("Failed to fetch product details:", error);
         setError(error);
-      } finally {
-        // Any cleanup code if needed
+        if (error.response) {
+          console.error("Server error response:", error.response.data);
+        } else {
+          console.error("Network error or other issues:", error.message);
+        }
       }
     };
 
@@ -118,250 +116,257 @@ const ProductDetail = () => {
   };
 
   return (
-    <View className="flex-1 bg-grayb ">
-      <StatusBar hidden={true} />
-      <Animated.View
-        className=""
-        style={{
-          position: "absolute",
-          left: 0,
-          top: 0,
-          zIndex: 10,
-          backgroundColor,
-          width: "100%",
-          height: ys(65),
-          padding: ms(10),
-        }}
-      >
-        <View
-          className="flex flex-row justify-between "
-          style={{ paddingHorizontal: xs(xsm) }}
-        >
-          <View>
-            <Pressable onPress={handleBackPress} style={{ marginTop: ys(25) }}>
-              <View
-                style={{
-                  backgroundColor: "rgba(0, 0, 0, 0.5)", // Blackish transparent background
-                  borderRadius: ms(24), // Make the background fully rounded
-                  width: ms(30), // Set width to make it a circle
-                  height: ms(30), // Set height to make it a circle
-                  justifyContent: "center", // Center the icon vertically
-                  alignItems: "center", // Center the icon horizontally
-                }}
-              >
-                <AntDesign name="arrowleft" size={ms(18)} color="white" />
-              </View>
-            </Pressable>
-          </View>
-          <View>
-            <Pressable
-              onPress={() => router.back()}
-              style={{ marginTop: ys(25) }}
-            >
-              <View
-                style={{
-                  backgroundColor: "rgba(0, 0, 0, 0.5)", // Blackish transparent background
-                  borderRadius: ms(24), // Make the background fully rounded
-                  width: ms(30), // Set width to make it a circle
-                  height: ms(30), // Set height to make it a circle
-                  justifyContent: "center", // Center the icon vertically
-                  alignItems: "center", // Center the icon horizontally
-                }}
-              >
-                <Fontisto name="share-a" size={ms(14)} color="white" />
-              </View>
-            </Pressable>
-          </View>
-        </View>
-      </Animated.View>
-      <Animated.ScrollView
-        contentContainerStyle={{ flexGrow: 1 }}
-        keyboardShouldPersistTaps="handled"
-        onScroll={Animated.event(
-          [{ nativeEvent: { contentOffset: { y: scrollY } } }],
-          { useNativeDriver: false }
-        )}
-        scrollEventThrottle={16}
-      >
-        <View>
-          {product?.image && (
-            <View>
-              <FlatList
-                data={product?.image}
-                renderItem={renderItem}
-                horizontal
-                pagingEnabled
-                keyExtractor={(item, index) => index.toString()}
-                onScroll={handleScroll}
-                onLayout={(event) => {
-                  const { height } = event.nativeEvent.layout;
-                  setImageHeight(height);
-                }}
-              />
-              <View style={styles.dotContainer}>
-                {product.image.map((_, index) => (
-                  <View
-                    key={index}
-                    style={[
-                      styles.dot,
-                      {
-                        opacity: currentIndex === index ? 1 : 0.6,
-                        backgroundColor:
-                          currentIndex === index
-                            ? "black"
-                            : "rgba(0, 0, 0, 0.5)",
-                      },
-                    ]}
-                  />
-                ))}
-              </View>
-            </View>
-          )}
-        </View>
-
-        <KeyboardAwareScrollView
-          keyboardShouldPersistTaps="handled"
-          enableOnAndroid={true}
-          extraScrollHeight={Platform.OS === "ios" ? 20 : 0}
-          extraHeight={150}
-          scrollEventThrottle={16}
-          onScroll={Animated.event(
-            [{ nativeEvent: { contentOffset: { y: scrollY } } }],
-            { useNativeDriver: false }
-          )}
-          style={{
-            paddingHorizontal: xs(paddingSides),
-            marginTop: -ys(20), // Move the view up to cover part of the image
-            // backgroundColor: "#F6F7F9",
-            backgroundColor: "#FFF",
-            borderTopLeftRadius: 30, // Apply border radius to the top corners
-            borderTopRightRadius: ms(30),
-            paddingBottom: ys(5),
-            paddingTop: ys(2),
-            gap: ys(2),
-          }}
-        >
-          <View
+    <>
+      {product?.image[0] && (
+        <View className="flex-1 bg-grayb ">
+          <StatusBar hidden={true} />
+          <Animated.View
+            className=""
             style={{
-              paddingTop: ys(paddingTop),
+              position: "absolute",
+              left: 0,
+              top: 0,
+              zIndex: 10,
+              backgroundColor,
+              width: "100%",
+              height: ys(65),
+              padding: ms(10),
             }}
           >
-            <View className="flex-row justify-between">
-              <CustomText b300 title bold>
-                {" "}
-                {product?.title}
-              </CustomText>
-
-              <View
-                className="rounded-full justify-center  "
-                // style={{ overflow: "hidden" }}
-                // style={{ paddingHorizontal: xs(paddingSides) }}
-              >
-                <View className="bg-myOrange rounded-md">
-                  <CustomText
-                    b300
-                    title
-                    white
-                    semibold
-                    xxs
+            <View
+              className="flex flex-row justify-between "
+              style={{ paddingHorizontal: xs(xsm) }}
+            >
+              <View>
+                <Pressable
+                  onPress={handleBackPress}
+                  style={{ marginTop: ys(25) }}
+                >
+                  <View
                     style={{
-                      paddingHorizontal: xs(8),
-                      paddingVertical: ys(2),
+                      backgroundColor: "rgba(0, 0, 0, 0.5)", // Blackish transparent background
+                      borderRadius: ms(24), // Make the background fully rounded
+                      width: ms(30), // Set width to make it a circle
+                      height: ms(30), // Set height to make it a circle
+                      justifyContent: "center", // Center the icon vertically
+                      alignItems: "center", // Center the icon horizontally
                     }}
                   >
-                    {product?.tier?.toUpperCase()}
-                  </CustomText>
+                    <AntDesign name="arrowleft" size={ms(18)} color="white" />
+                  </View>
+                </Pressable>
+              </View>
+              <View>
+                <Pressable
+                  onPress={() => router.back()}
+                  style={{ marginTop: ys(25) }}
+                >
+                  <View
+                    style={{
+                      backgroundColor: "rgba(0, 0, 0, 0.5)", // Blackish transparent background
+                      borderRadius: ms(24), // Make the background fully rounded
+                      width: ms(30), // Set width to make it a circle
+                      height: ms(30), // Set height to make it a circle
+                      justifyContent: "center", // Center the icon vertically
+                      alignItems: "center", // Center the icon horizontally
+                    }}
+                  >
+                    <Fontisto name="share-a" size={ms(14)} color="white" />
+                  </View>
+                </Pressable>
+              </View>
+            </View>
+          </Animated.View>
+          <Animated.ScrollView
+            contentContainerStyle={{ flexGrow: 1 }}
+            keyboardShouldPersistTaps="handled"
+            onScroll={Animated.event(
+              [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+              { useNativeDriver: false }
+            )}
+            scrollEventThrottle={16}
+          >
+            <View>
+              <View>
+                <FlatList
+                  data={product?.image}
+                  renderItem={renderItem}
+                  horizontal
+                  pagingEnabled
+                  keyExtractor={(item, index) => index.toString()}
+                  onScroll={handleScroll}
+                  onLayout={(event) => {
+                    const { height } = event.nativeEvent.layout;
+                    setImageHeight(height);
+                  }}
+                />
+                <View style={styles.dotContainer}>
+                  {product?.image?.map((_, index) => (
+                    <View
+                      key={index}
+                      style={[
+                        styles.dot,
+                        {
+                          opacity: currentIndex === index ? 1 : 0.6,
+                          backgroundColor:
+                            currentIndex === index
+                              ? "black"
+                              : "rgba(0, 0, 0, 0.5)",
+                        },
+                      ]}
+                    />
+                  ))}
                 </View>
               </View>
             </View>
-            <View
-              style={{ paddingTop: ys(paddingTop) }}
-              className="flex-row items-center"
-            >
-              <Entypo
-                className="pr-1 "
-                name="location-pin"
-                size={ms(18)}
-                color="#69D94E"
-              />
-              <CustomText
-                b200
-                sm
-                style={{
-                  paddingRight: ms(xsm),
-                }}
-              >
-                {product?.location}
-              </CustomText>
-            </View>
-          </View>
-          <View
-            className="flex-row justify-between"
-            style={{ paddingTop: ys(paddingTop) }}
-          >
-            <PriceQuantityCard
-              quantity={product?.availableQuantity}
-              price={product?.price}
-              tier={product?.tier}
-            />
-          </View>
-          <View>
-            {product?.tier === "Trade" && (
-              <View
-                style={{
-                  paddingTop: ys(paddingSides + paddingSides + paddingTop - 5),
-                }}
-              >
-                <WapperNeeds
-                  // productOwner={product?.owner}
-                  exchangingFor={product?.exchangeFor}
-                  wantUnderLine={false}
-                />
-              </View>
-            )}
-            {/* <SendMessage product={product} style={{ marginBottom: ys(xl) }} /> */}
-            <View style={styles.sectionContainer}>
-              <ProductDesc desc={product?.desc} />
-            </View>
-            <View style={styles.sectionContainer}>
-              <SellerInfo owner={product?.owner} />
-            </View>
-            <View style={styles.sectionContainer}>
-              <ProductComments product={product} />
-            </View>
-            <View
+
+            <KeyboardAwareScrollView
+              keyboardShouldPersistTaps="handled"
+              enableOnAndroid={true}
+              extraScrollHeight={Platform.OS === "ios" ? 20 : 0}
+              extraHeight={150}
+              scrollEventThrottle={16}
+              onScroll={Animated.event(
+                [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+                { useNativeDriver: false }
+              )}
               style={{
-                paddingTop: ys(paddingTop * 1.5),
-                paddingBottom: ys(paddingTop * 2),
+                paddingHorizontal: xs(paddingSides),
+                marginTop: -ys(20), // Move the view up to cover part of the image
+                // backgroundColor: "#F6F7F9",
+                backgroundColor: "#FFF",
+                borderTopLeftRadius: 30, // Apply border radius to the top corners
+                borderTopRightRadius: ms(30),
+                paddingBottom: ys(5),
+                paddingTop: ys(2),
+                gap: ys(2),
               }}
             >
-              <CustomButton
-                iconType={"Feather"}
-                icon={"message-square"}
-                text={"Send Message to Swapper"}
-                submit={() =>
-                  // TODO:  - this needs to be specified to the owner once routes and controller is done
-                  router.push({
-                    pathname: `/message/chat`,
-                    // params: { owner: JSON.stringify(product?.owner) },
-                    // params: { owner: JSON.stringify({ paramDetails }) },
-                    params: {
-                      paramDetails: JSON.stringify({
-                        ownerId: product?.owner?._id,
-                        ownerUsername: product?.owner?.username,
-                        productId,
-                        productImage: encodeURI(product?.image),
-                      }),
-                    },
-                  })
-                }
-              />
-            </View>
-          </View>
-        </KeyboardAwareScrollView>
-      </Animated.ScrollView>
-    </View>
-    // </KeyboardAwareScrollView>
+              <View
+                style={{
+                  paddingTop: ys(paddingTop),
+                }}
+              >
+                <View className="flex-row justify-between">
+                  <CustomText b300 title bold>
+                    {" "}
+                    {product?.title}
+                  </CustomText>
+
+                  <View
+                    className="rounded-full justify-center  "
+                    // style={{ overflow: "hidden" }}
+                    // style={{ paddingHorizontal: xs(paddingSides) }}
+                  >
+                    <View className="bg-myOrange rounded-md">
+                      <CustomText
+                        b300
+                        title
+                        white
+                        semibold
+                        xxs
+                        style={{
+                          paddingHorizontal: xs(8),
+                          paddingVertical: ys(2),
+                        }}
+                      >
+                        {product?.tier?.toUpperCase()}
+                      </CustomText>
+                    </View>
+                  </View>
+                </View>
+                <View
+                  style={{ paddingTop: ys(paddingTop) }}
+                  className="flex-row items-center"
+                >
+                  <Entypo
+                    className="pr-1 "
+                    name="location-pin"
+                    size={ms(18)}
+                    color="#69D94E"
+                  />
+                  <CustomText
+                    b200
+                    sm
+                    style={{
+                      paddingRight: ms(xsm),
+                    }}
+                  >
+                    {product?.location}
+                  </CustomText>
+                </View>
+              </View>
+              <View
+                className="flex-row justify-between"
+                style={{ paddingTop: ys(paddingTop) }}
+              >
+                <PriceQuantityCard
+                  quantity={product?.availableQuantity}
+                  price={product?.price}
+                  tier={product?.tier}
+                />
+              </View>
+              <View>
+                {product?.tier === "Trade" && (
+                  <View
+                    style={{
+                      paddingTop: ys(
+                        paddingSides + paddingSides + paddingTop - 5
+                      ),
+                    }}
+                  >
+                    <WapperNeeds
+                      // productOwner={product?.owner}
+                      exchangingFor={product?.exchangeFor}
+                      wantUnderLine={false}
+                    />
+                  </View>
+                )}
+                {/* <SendMessage product={product} style={{ marginBottom: ys(xl) }} /> */}
+                <View style={styles.sectionContainer}>
+                  <ProductDesc desc={product?.desc} />
+                </View>
+                <View style={styles.sectionContainer}>
+                  <SellerInfo owner={product?.owner} />
+                </View>
+                <View style={styles.sectionContainer}>
+                  <ProductComments product={product} />
+                </View>
+                <View
+                  style={{
+                    paddingTop: ys(paddingTop * 1.5),
+                    paddingBottom: ys(paddingTop * 2),
+                  }}
+                >
+                  <CustomButton
+                    iconType={"Feather"}
+                    icon={"message-square"}
+                    text={"Send Message to Swapper"}
+                    submit={() =>
+                      // TODO:  - this needs to be specified to the owner once routes and controller is done
+                      router.push({
+                        pathname: `/message/chat`,
+                        // params: { owner: JSON.stringify(product?.owner) },
+                        // params: { owner: JSON.stringify({ paramDetails }) },
+                        params: {
+                          paramDetails: JSON.stringify({
+                            ownerId: product?.owner?._id,
+                            ownerUsername: product?.owner?.username,
+                            productId,
+                            productImage: encodeURI(product?.image),
+                          }),
+                        },
+                      })
+                    }
+                  />
+                </View>
+              </View>
+            </KeyboardAwareScrollView>
+          </Animated.ScrollView>
+        </View>
+      )}
+      {/* // </KeyboardAwareScrollView> */}
+    </>
   );
 };
 

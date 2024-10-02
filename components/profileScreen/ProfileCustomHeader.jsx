@@ -31,14 +31,14 @@ export default function ProfileCustomHeader({
         },
         {
           text: "OK",
-          onPress: () => deleteToken(),
+          onPress: () => logOut(),
         },
       ],
       { cancelable: false } // Disable canceling by tapping outside the alert
     );
   };
 
-  const deleteToken = async () => {
+  const logOut = async () => {
     try {
       await SecureStore.deleteItemAsync("authToken");
       await SecureStore.deleteItemAsync("user");
@@ -103,15 +103,21 @@ export default function ProfileCustomHeader({
             transform: [{ translateX: -25 }],
           }}
         >
-          <Image
-            className="rounded-xl"
-            source={
-              user?.avatar
-                ? { uri: user.avatar }
-                : require("../../assets/images/avatar.png")
-            }
-            style={{ width: 50, height: 50 }}
-          />
+          <Pressable
+            onPress={() => {
+              console.log("pressed");
+            }}
+          >
+            <Image
+              className="rounded-xl"
+              source={
+                user?.avatar
+                  ? { uri: user.avatar }
+                  : require("../../assets/images/avatar.png")
+              }
+              style={{ width: 50, height: 50 }}
+            />
+          </Pressable>
         </View>
       </SafeAreaView>
     </>

@@ -21,7 +21,6 @@ import FilterScroll from "../../components/FilterScroll";
 import HomeCustomHeader from "../../components/homescreen/HomeCustomHeader";
 import * as SecureStore from "expo-secure-store";
 import Constants from "expo-constants";
-const { EXPO_API_URL } = Constants.expoConfig.extra;
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts } from "../../store/dataSlice";
 import CustomText from "../../components/customText";
