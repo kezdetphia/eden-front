@@ -22,8 +22,6 @@ import ImageUpload from "../../components/createListing/imageUpload";
 import ChooseListingCategory from "../../components/createListing/chooseListingCategory";
 import * as SecureStore from "expo-secure-store";
 import { useAuth } from "../../context/authContext";
-import DropdownComponent from "../../components/createListing/dropDown";
-import { fruits, vegetable } from "../../utils/corpsStuff";
 import Constants from "expo-constants";
 
 import sizes from "../../constants/sizes";
@@ -43,7 +41,7 @@ import ListingTitle from "../../components/createListing/title";
 //Add location to pick up from just a postcode, then remove user postcode from user schema and add to product schema
 //Set the the availableQuantity to be a number and not accepting anything else
 
-const { paddingSides, paddingTop, subtitle, title } = sizes;
+const { paddingSides, paddingTop } = sizes;
 const CreateListing = () => {
   const { EXPO_API_URL } = Constants.expoConfig.extra;
   const router = useRouter();

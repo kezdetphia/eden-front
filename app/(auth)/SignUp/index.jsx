@@ -1,4 +1,4 @@
-import { Text, TextInput, Pressable, View, Platform } from "react-native";
+import { TextInput, Pressable, View, Platform } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import React, { useEffect, useState } from "react";
 import Toast from "react-native-toast-message";
