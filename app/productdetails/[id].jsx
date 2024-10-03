@@ -33,8 +33,6 @@ import axios from "axios";
 
 const { EXPO_API_URL } = Constants.expoConfig.extra;
 
-//TODO: see why the screen jumps when its loading, like the image takes longer to load
-//therefore the content under the image goes to the top for half a second
 // might add a modal to open images in its true ratio size
 
 const { xsm, paddingSides, paddingTop } = sizes;

@@ -8,6 +8,8 @@ import { Provider } from "react-redux";
 import { store } from "../store/store";
 import { RootSiblingParent } from "react-native-root-siblings";
 
+// import "react-native-gesture-handler";
+
 // Import your global CSS file
 import "../global.css";
 
