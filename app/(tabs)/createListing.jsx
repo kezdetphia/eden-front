@@ -6,9 +6,8 @@ import {
   Alert,
   KeyboardAvoidingView,
   Platform,
-  Text,
 } from "react-native";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Feather from "@expo/vector-icons/Feather";
 import { useRouter } from "expo-router";
@@ -38,8 +37,6 @@ import ListingTitle from "../../components/createListing/title";
 
 //TODO: make the keyboard avoid view work
 // https://docs.expo.dev/guides/keyboard-handling/
-//Add location to pick up from just a postcode, then remove user postcode from user schema and add to product schema
-//Set the the availableQuantity to be a number and not accepting anything else
 
 const { paddingSides, paddingTop } = sizes;
 const CreateListing = () => {

@@ -75,6 +75,7 @@ const styles = StyleSheet.create({
     flex: 1,
     height: "100%",
     color: "#2D2D2D",
+    fontSize: ms(14),
   },
   accordionContainer: {
     marginTop: 2,

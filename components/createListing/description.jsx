@@ -1,6 +1,11 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { TextInput, View, StyleSheet } from "react-native";
 import _ from "lodash";
+import {
+  scale as xs,
+  verticalScale as ys,
+  moderateScale as ms,
+} from "react-native-size-matters";
 
 const Description = ({ listingDetails, updateListingDetails }) => {
   const [text, setText] = useState(listingDetails.desc);
@@ -43,6 +48,7 @@ const styles = StyleSheet.create({
     paddingTop: 20,
   },
   textArea: {
+    fontSize: ms(14),
     height: 150,
     justifyContent: "flex-start",
     textAlignVertical: "top", // Ensures text starts at the top of the TextInput

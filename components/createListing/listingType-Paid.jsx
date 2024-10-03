@@ -3,6 +3,15 @@ import CustomText from "../customText";
 import { useEffect, useState } from "react";
 import SelectDropDown from "../selectDropDown";
 
+import {
+  scale as xs,
+  verticalScale as ys,
+  moderateScale as ms,
+} from "react-native-size-matters";
+import sizes from "../../constants/sizes";
+
+const { paddingTop, paddingSides } = sizes;
+
 const ListingTypePaid = ({ listingDetails, updateListingDetails }) => {
   const [selectedUnit, setSelectedUnit] = useState("");
 
@@ -54,14 +63,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 8,
     backgroundColor: "white",
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    marginTop: 20,
-    height: 50,
+    paddingVertical: ys(paddingTop * 0.6),
+    paddingHorizontal: xs(paddingSides),
+    marginTop: ys(paddingTop * 0.75),
+
+    height: ys(40),
   },
   input: {
     flex: 1,
     height: "100%",
     color: "#2D2D2D",
+    fontSize: ms(14),
   },
 });

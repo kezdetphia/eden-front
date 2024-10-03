@@ -142,16 +142,22 @@ const HomeScreen = () => {
           </View>
         }
         renderItem={({ item }) => (
-          <Pressable
-            onPress={() =>
-              router.push({
-                pathname: `/productdetails/[id]`,
-                params: { id: item._id, previousWindow: "home" },
-              })
-            }
+          <View
+            style={{
+              paddingTop: ys(paddingSides + 4),
+            }}
           >
-            <ProductCard product={item} cardWidth={cardWidth} />
-          </Pressable>
+            <Pressable
+              onPress={() =>
+                router.push({
+                  pathname: `/productdetails/[id]`,
+                  params: { id: item._id, previousWindow: "home" },
+                })
+              }
+            >
+              <ProductCard product={item} cardWidth={cardWidth} />
+            </Pressable>
+          </View>
         )}
         numColumns={numColumns}
         contentContainerStyle={{

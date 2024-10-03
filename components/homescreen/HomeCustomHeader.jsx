@@ -16,7 +16,7 @@ export default function HomeCustomHeader({
   searchBarValue,
   setSearchBarValue,
 }) {
-  const { sm, paddingSides } = sizes;
+  const { sm, paddingSides, paddingTop } = sizes;
   const { user } = useAuth();
 
   return (
@@ -27,7 +27,7 @@ export default function HomeCustomHeader({
           className="flex flex-row justify-between "
           style={{
             // paddingHorizontal: xs(paddingSides),
-            paddingTop: ys(sm),
+            paddingTop: ys(paddingTop * 1.5),
             paddingHorizontal: xs(paddingSides),
           }}
         >
@@ -63,7 +63,7 @@ export default function HomeCustomHeader({
                   ? { uri: user.avatar }
                   : require("../../assets/images/avatar.png")
               }
-              style={{ width: 50, height: 50 }}
+              style={{ width: ms(40), height: ms(40) }}
             />
             {/* Added style for image size */}
           </View>
@@ -87,7 +87,11 @@ export default function HomeCustomHeader({
             <TextInput
               className=" flex-1 "
               placeholder="Search Apple"
-              style={{ marginLeft: 10, fontFamily: "jakarta" }}
+              style={{
+                marginLeft: 10,
+                fontFamily: "jakarta",
+                fontSize: ms(14),
+              }}
               value={searchBarValue}
               onChangeText={(text) => setSearchBarValue(text)}
             />

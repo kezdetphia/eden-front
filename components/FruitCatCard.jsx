@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text, Pressable, StyleSheet } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Image } from "expo-image";
+import CustomText from "./customText";
 import { scale as xs, verticalScale as ys } from "react-native-size-matters";
 
 const FruitCatCard = ({ onPress, colors, text, imageSource, isSelected }) => {
@@ -17,12 +18,9 @@ const FruitCatCard = ({ onPress, colors, text, imageSource, isSelected }) => {
         style={styles.gradient}
       >
         <View style={styles.content}>
-          <Text
-            className="text-b-300"
-            style={{ fontFamily: "jakartaSemibold", letterSpacing: 0.3 }}
-          >
+          <CustomText sm semibold>
             {text}
-          </Text>
+          </CustomText>
           <Image
             style={{ width: xs(37), height: ys(37) }}
             transition={1000}

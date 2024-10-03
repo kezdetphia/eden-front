@@ -69,15 +69,10 @@ const styles = StyleSheet.create({
     marginHorizontal: 5, // Add horizontal margin to create space between cards
   },
   image: {
-    width: xs(150),
-    height: 102,
+    width: "100%",
+    height: ys(72),
     borderRadius: 8,
     marginBottom: ys(8),
-  },
-
-  category: {
-    fontSize: 14,
-    color: "#555",
   },
 });
 

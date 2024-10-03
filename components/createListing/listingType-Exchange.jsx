@@ -81,7 +81,7 @@ const ListingTypeExchange = ({
   return (
     <View>
       <TextInput
-        style={[styles.input]}
+        style={styles.input}
         placeholder="Select item"
         value={value}
         onChangeText={handleSearch}
@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     justifyContent: "flex-start", // Align items to the start
     paddingHorizontal: xs(paddingSides),
-    marginTop: ys(15),
+    // marginTop: ys(15),
   },
   input: {
     backgroundColor: "white",
@@ -142,6 +142,7 @@ const styles = StyleSheet.create({
     marginTop: ys(paddingTop * 0.75),
     fontSize: ms(14),
     color: "#2D2D2D",
+    height: ys(40),
   },
   dropdown: {
     backgroundColor: "white",
