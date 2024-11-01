@@ -48,6 +48,7 @@ const ProductDetail = () => {
   const [currentIndex, setCurrentIndex] = useState(0); // Track the current index
   const params = useLocalSearchParams();
   // console.log("singlepage params", params);
+  const [productComments, setProductComments] = useState(product?.comments);
 
   useEffect(() => {
     const fetchProductDetails = async () => {
@@ -64,7 +65,8 @@ const ProductDetail = () => {
         );
 
         setProduct(response.data.product);
-        console.log("SINGLEPRODUCT data", response.data);
+        setProductComments(response.data.product.comments);
+        // console.log("SINGLEPRODUCT data", response.data);
       } catch (error) {
         console.error("Failed to fetch product details:", error);
         setError(error);
@@ -79,7 +81,7 @@ const ProductDetail = () => {
     fetchProductDetails();
   }, [productId]);
 
-  console.log("product", product);
+  // console.log("product", product);
 
   const backgroundColor = scrollY.interpolate({
     inputRange: [ys(100), imageHeight - ys(20)],
@@ -328,7 +330,11 @@ const ProductDetail = () => {
                   <SellerInfo owner={product?.owner} />
                 </View>
                 <View style={styles.sectionContainer}>
-                  <ProductComments product={product} />
+                  <ProductComments
+                    product={product}
+                    productComments={productComments}
+                    setProductComments={setProductComments}
+                  />
                 </View>
                 <View
                   style={{

@@ -1,4 +1,4 @@
-import { View, Text, TextInput, Pressable } from "react-native";
+import { View, TextInput, Pressable } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Feather } from "@expo/vector-icons";
 import {
@@ -9,7 +9,7 @@ import {
 import sizes from "../../constants/sizes";
 import { useAuth } from "../../context/authContext";
 import { Image } from "expo-image";
-import { format, parseISO } from "date-fns";
+import { format, parseISO, isValid } from "date-fns";
 import { useRouter } from "expo-router";
 import Constants from "expo-constants";
 import CustomText from "../customText";
@@ -19,43 +19,22 @@ const { md } = sizes;
 
 //TODO:       - Refresh comments when new comment added by the user
 
-const ProductComments = ({ product }) => {
+const ProductComments = ({ product, productComments, setProductComments }) => {
   const { xsm, xl, xxl, subtitle, paddingTop } = sizes;
   const { user } = useAuth();
-  const [comment, setComment] = useState();
+  const [newComment, setNewComment] = useState();
   const [showAllComments, setShowAllComments] = useState(false);
   const [sortedComments, setSortedComments] = useState([]);
 
   const router = useRouter();
 
   useEffect(() => {
-    if (product && product.comments) {
-      const comments = product.comments.map((comment) => ({
-        text: comment.text,
-        userId: comment.user._id,
-        username: comment.user.username,
-      }));
-      // console.log("productcomments, ", comments);
-    } else {
-      console.log("Product or comments are undefined");
-    }
-  }, [product]);
-
-  useEffect(() => {
     // Sort comments when component mounts or product prop changes
-    if (product?.comments) {
-      const sorted = sortComments(product.comments);
+    if (productComments) {
+      const sorted = sortComments(productComments);
       setSortedComments(sorted);
     }
-  }, [product?.comments]);
-
-  const handleToggleComments = () => {
-    setShowAllComments(!showAllComments);
-  };
-
-  const commentsToShow = showAllComments
-    ? sortedComments
-    : sortedComments.slice(0, 3);
+  }, [productComments]);
 
   const sortComments = (comments) => {
     return comments
@@ -74,15 +53,22 @@ const ProductComments = ({ product }) => {
             "Content-Type": "application/json",
             // Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ comment: { text: comment, user: user._id } }),
+          body: JSON.stringify({
+            comment: { text: newComment, user: user._id },
+          }),
         }
       );
       if (!res.ok) throw new Error("Network response was not ok");
       const data = await res.json();
-      console.log("retuirn data", data);
+      console.log("retuirn data comment", data);
+
+      // console.log("data.comment", data);
+      setProductComments([...productComments, data?.comment]);
+      setNewComment("");
+
       //TODO: not sure if directinh back to the page after submitting the commet
       // will be a good user experience but keep it for now
-      router.replace(`/productdetails/${product?._id}`);
+      // router.replace(`/productdetails/${product?._id}`);
     } catch (error) {
       console.error("Failed to submit comment:", error);
       setError(error);
@@ -91,10 +77,17 @@ const ProductComments = ({ product }) => {
     }
   };
 
+  const handleToggleComments = () => {
+    setShowAllComments(!showAllComments);
+  };
+
+  const commentsToShow = showAllComments
+    ? sortedComments
+    : sortedComments.slice(0, 3);
   return (
     <View>
       <CustomText subtitle bold>
-        Comments ({product?.comments.length})
+        Comments ({productComments?.length})
       </CustomText>
 
       <View style={{ paddingTop: ys(paddingTop) }}>
@@ -103,8 +96,8 @@ const ProductComments = ({ product }) => {
             multiline={true} // Enable multiline input
             textAlignVertical="top" // Align text to the top
             placeholder="Add your comment here"
-            value={comment} // Set the value to the comment
-            onChangeText={(text) => setComment(text)} // Update the comment state on text change
+            value={newComment} // Set the value to the comment
+            onChangeText={(text) => setNewComment(text)} // Update the comment state on text change
             style={{
               fontFamily: "jakarta",
               fontSize: ms(14),
@@ -133,11 +126,11 @@ const ProductComments = ({ product }) => {
         </View>
         {/* //TODO: maybe change this a flatlist later, but then the parent comonent needs to be changed too to a flatlist */}
         <View>
-          {product?.comments.length > 0 ? (
+          {productComments?.length > 0 ? (
             <View>
               {commentsToShow.map((comment) => (
                 <View
-                  key={comment._id}
+                  key={comment?._id}
                   className="flex-row"
                   style={{ paddingTop: ys(paddingTop) }}
                 >
@@ -181,10 +174,14 @@ const ProductComments = ({ product }) => {
                           </CustomText>
                         </Pressable>
                         <CustomText b75 xxs>
-                          {format(
-                            parseISO(comment?.createdAt),
-                            "h:mma  M/d/yy"
-                          )}
+                          {comment?.createdAt
+                            ? isValid(parseISO(comment.createdAt))
+                              ? format(
+                                  parseISO(comment.createdAt),
+                                  "h:mma  M/d/yy"
+                                )
+                              : "Invalid Date"
+                            : "Unknown Date"}
                         </CustomText>
                       </View>
 
@@ -203,7 +200,7 @@ const ProductComments = ({ product }) => {
                 </View>
               ))}
 
-              {product?.comments.length > 3 && (
+              {productComments?.length > 3 && (
                 // <View>
                 <Pressable
                   style={{ paddingTop: ys(paddingTop * 1.5) }}

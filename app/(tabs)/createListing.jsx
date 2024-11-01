@@ -193,7 +193,7 @@ const CreateListing = () => {
       >
         <StatusBar hidden={false} />
         <View
-          className="flex-row justify-center items-center"
+          className="flex-row justify-center items-center "
           style={{
             height: ys(paddingTop * 3),
           }}
@@ -216,7 +216,7 @@ const CreateListing = () => {
         >
           <ScrollView
             showsVerticalScrollIndicator={false}
-            className=""
+            className="bg-grayb"
             ref={scrollViewRef}
           >
             {/* Photos */}

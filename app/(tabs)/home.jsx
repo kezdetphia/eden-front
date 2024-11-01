@@ -3,7 +3,6 @@ import {
   FlatList,
   Dimensions,
   Pressable,
-  Text,
   RefreshControl,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
@@ -38,6 +37,8 @@ const HomeScreen = () => {
   const dataStatus = useSelector((state) => state.data.status);
   const { isAuthenticated, user } = useAuth();
   const router = useRouter();
+
+  console.log("user in home, ", user);
 
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedFilter, setSelectedFilter] = useState("All");

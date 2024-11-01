@@ -20,11 +20,12 @@ const { paddingTop, paddingSides } = sizes;
 const DropdownComponent = ({
   listingDetails = {},
   updateListingDetails = () => {},
-  selectedCategory, // Add selectedCategory as a prop
+  selectedCategory,
   handleToast,
 }) => {
   const [value, setValue] = useState(listingDetails?.title);
   const [filteredData, setFilteredData] = useState([]);
+  const [isFocused, setIsFocused] = useState(false); // New state for focus
 
   useEffect(() => {
     if (listingDetails.title) {
@@ -33,7 +34,6 @@ const DropdownComponent = ({
   }, [listingDetails.title]);
 
   useEffect(() => {
-    // Reset the value and filteredData when the category changes
     setValue("");
     setFilteredData([]);
   }, [listingDetails.category, selectedCategory]);
@@ -54,7 +54,7 @@ const DropdownComponent = ({
   const handleChange = (item) => {
     setValue(item.value);
     updateListingDetails("title", item.value);
-    setFilteredData([]); // Hide the list after selection
+    setFilteredData([]);
   };
 
   const handlePress = () => {
@@ -68,11 +68,13 @@ const DropdownComponent = ({
       <Pressable onPress={handlePress}>
         <View pointerEvents={selectedCategory ? "auto" : "none"}>
           <TextInput
-            style={styles.input}
+            style={[styles.input, isFocused && styles.inputFocused]} // Apply focus style
             placeholder="Select item"
             value={value}
             onChangeText={handleSearch}
-            editable={!!selectedCategory} // Use editable prop to control input
+            editable={!!selectedCategory}
+            onFocus={() => setIsFocused(true)} // Set focus to true
+            onBlur={() => setIsFocused(false)} // Set focus to false
           />
         </View>
       </Pressable>
@@ -105,6 +107,10 @@ const styles = StyleSheet.create({
     fontSize: ms(14),
     color: "#2D2D2D",
     height: ys(40),
+  },
+  inputFocused: {
+    borderWidth: 1,
+    borderColor: "#4A9837",
   },
   dropdown: {
     backgroundColor: "white",

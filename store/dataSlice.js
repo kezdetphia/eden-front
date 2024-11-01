@@ -16,10 +16,12 @@ export const fetchProducts = createAsyncThunk(
         Authorization: `Bearer ${token}`,
       },
     });
+
     if (!response.ok) {
       throw new Error("Network response was not ok");
     }
     const data = await response.json();
+    console.log("data", data);
     if (!Array.isArray(data.products)) {
       throw new Error("Data is not an array");
     }

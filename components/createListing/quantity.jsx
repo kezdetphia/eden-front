@@ -12,6 +12,7 @@ const { paddingTop, paddingSides } = sizes;
 
 const Quantity = ({ listingDetails, updateListingDetails }) => {
   const [selectedUnit, setSelectedUnit] = useState("lb");
+  const [isFocused, setIsFocused] = useState(false); // Track focus
 
   useEffect(() => {
     if (listingDetails.availableQuantity) {
@@ -33,13 +34,12 @@ const Quantity = ({ listingDetails, updateListingDetails }) => {
   };
 
   const handleChangeText = (text) => {
-    // Remove any non-numeric characters
     const numericText = text.replace(/[^0-9]/g, "");
     updateListingDetails("availableQuantity", `${numericText} ${selectedUnit}`);
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, isFocused && styles.focusedContainer]}>
       <TextInput
         value={
           listingDetails.availableQuantity
@@ -51,6 +51,8 @@ const Quantity = ({ listingDetails, updateListingDetails }) => {
         placeholder="Quantity"
         placeholderTextColor="#9CA3AF"
         keyboardType="numeric"
+        onFocus={() => setIsFocused(true)} // Set focus to true
+        onBlur={() => setIsFocused(false)} // Set focus to false
       />
       <SelectDropDown
         units={["lb", "pc"]}
@@ -70,6 +72,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: xs(paddingSides),
     marginTop: ys(16),
     height: ys(40),
+  },
+  focusedContainer: {
+    borderWidth: 1,
+    borderColor: "#4A9837", // Focused border color
   },
   input: {
     flex: 1,
