@@ -21,7 +21,7 @@ import HomeCustomHeader from "../../components/homescreen/HomeCustomHeader";
 import * as SecureStore from "expo-secure-store";
 import Constants from "expo-constants";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchProducts } from "../../store/dataSlice";
+import { fetchProducts } from "../../store/productSlice";
 import CustomText from "../../components/customText";
 
 //TODO: -change back the headercomponent or find a solution to a sticky search bar
@@ -33,12 +33,10 @@ const HomeScreen = () => {
   const filterOptions = ["All", "Trade", "Free", "Buy"];
 
   const dispatch = useDispatch();
-  const data = useSelector((state) => state.data.data);
-  const dataStatus = useSelector((state) => state.data.status);
+  const data = useSelector((state) => state.products.data);
+  const dataStatus = useSelector((state) => state.products.status);
   const { isAuthenticated, user } = useAuth();
   const router = useRouter();
-
-  console.log("user in home, ", user);
 
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedFilter, setSelectedFilter] = useState("All");

@@ -29,7 +29,7 @@ export const fetchProducts = createAsyncThunk(
   }
 );
 
-const dataSlice = createSlice({
+const productsSlice = createSlice({
   name: "products",
   initialState: {
     data: [],
@@ -53,4 +53,4 @@ const dataSlice = createSlice({
   },
 });
 
-export default dataSlice.reducer;
+export default productsSlice.reducer;

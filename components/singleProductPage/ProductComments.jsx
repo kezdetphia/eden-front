@@ -20,7 +20,7 @@ const { md } = sizes;
 //TODO:       - Refresh comments when new comment added by the user
 
 const ProductComments = ({ product, productComments, setProductComments }) => {
-  const { xsm, xl, xxl, subtitle, paddingTop } = sizes;
+  const { xsm, xl, xxl, paddingTop } = sizes;
   const { user } = useAuth();
   const [newComment, setNewComment] = useState();
   const [showAllComments, setShowAllComments] = useState(false);
@@ -43,37 +43,59 @@ const ProductComments = ({ product, productComments, setProductComments }) => {
   };
 
   const submitComment = async () => {
+    const tempComment = {
+      text: newComment,
+      user,
+      _id: `temp-${Date.now()}`,
+      createdAt: new Date().toISOString(),
+    };
+
+    // Optimistically add the temporary comment
+    setProductComments((prevComments) => [...prevComments, tempComment]);
+    setNewComment(""); // Clear input after adding the comment
+
     try {
       const res = await fetch(
-        // `http://localhost:3000/addproductcomment/${product?._id}`,
         `${EXPO_API_URL}/addproductcomment/${product?._id}`,
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            // Authorization: `Bearer ${token}`,
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             comment: { text: newComment, user: user._id },
           }),
         }
       );
+
       if (!res.ok) throw new Error("Network response was not ok");
+
       const data = await res.json();
-      console.log("retuirn data comment", data);
 
-      // console.log("data.comment", data);
-      setProductComments([...productComments, data?.comment]);
-      setNewComment("");
+      // Log the full response for debugging purposes
+      console.log("Server response data:", data);
 
-      //TODO: not sure if directinh back to the page after submitting the commet
-      // will be a good user experience but keep it for now
-      // router.replace(`/productdetails/${product?._id}`);
+      // Check if the response contains the expected structure
+      if (data && data.product && Array.isArray(data.product.comments)) {
+        // Get the latest comment from the product's comments array
+        const newCommentFromServer =
+          data.product.comments[data.product.comments.length - 1];
+
+        // Replace the temporary comment with the actual one from the server response
+        setProductComments((prevComments) =>
+          prevComments.map((comment) =>
+            comment._id === tempComment._id ? newCommentFromServer : comment
+          )
+        );
+      } else {
+        console.error("Unexpected response structure:", data);
+        throw new Error("Unexpected response structure: 'comment' not found");
+      }
     } catch (error) {
       console.error("Failed to submit comment:", error);
-      setError(error);
-    } finally {
-      // Any cleanup code if needed
+
+      // Remove the temporary comment if the API call fails
+      setProductComments((prevComments) =>
+        prevComments.filter((comment) => comment._id !== tempComment._id)
+      );
     }
   };
 
@@ -130,7 +152,7 @@ const ProductComments = ({ product, productComments, setProductComments }) => {
             <View>
               {commentsToShow.map((comment) => (
                 <View
-                  key={comment?._id}
+                  key={comment?._id || `temp-${Date.now()}`}
                   className="flex-row"
                   style={{ paddingTop: ys(paddingTop) }}
                 >
