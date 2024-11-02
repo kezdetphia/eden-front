@@ -15,6 +15,7 @@ import "../global.css";
 
 import Toast from "react-native-toast-message";
 import { AuthContextProvider } from "../context/authContext";
+import { ListingProvider } from "../context/listingContext";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -56,9 +57,11 @@ export default function RootLayout() {
     <>
       <AuthContextProvider>
         <Provider store={store}>
-          <RootSiblingParent>
-            <MainLayout />
-          </RootSiblingParent>
+          <ListingProvider>
+            <RootSiblingParent>
+              <MainLayout />
+            </RootSiblingParent>
+          </ListingProvider>
         </Provider>
       </AuthContextProvider>
     </>

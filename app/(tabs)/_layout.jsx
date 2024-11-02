@@ -28,7 +28,6 @@ export default function TabLayout() {
             paddingTop: ys(5),
             paddingBottom: ys(20),
             // marginBottom: ys(10),
-
             height: ys(60),
           },
         }}
