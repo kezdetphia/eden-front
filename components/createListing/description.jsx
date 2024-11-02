@@ -6,8 +6,10 @@ import {
   verticalScale as ys,
   moderateScale as ms,
 } from "react-native-size-matters";
+import { useListing } from "../../context/listingContext";
 
-const Description = ({ listingDetails, updateListingDetails }) => {
+const Description = () => {
+  const { listingDetails, updateListingDetails } = useListing();
   const [text, setText] = useState(listingDetails.desc);
   const [isFocused, setIsFocused] = useState(false); // State to track focus
 

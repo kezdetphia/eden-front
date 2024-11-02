@@ -7,10 +7,12 @@ import {
   moderateScale as ms,
 } from "react-native-size-matters";
 import sizes from "../../constants/sizes";
+import { useListing } from "../../context/listingContext";
 
 const { paddingTop, paddingSides } = sizes;
 
-const Quantity = ({ listingDetails, updateListingDetails }) => {
+const Quantity = () => {
+  const { listingDetails, updateListingDetails } = useListing();
   const [selectedUnit, setSelectedUnit] = useState("lb");
   const [isFocused, setIsFocused] = useState(false); // Track focus
 

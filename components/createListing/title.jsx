@@ -14,29 +14,24 @@ import {
 } from "react-native-size-matters";
 import sizes from "../../constants/sizes";
 import { fruits, vegetable } from "../../utils/corpsStuff";
+import { useListing } from "../../context/listingContext";
 
 const { paddingTop, paddingSides } = sizes;
 
-const DropdownComponent = ({
-  listingDetails = {},
-  updateListingDetails = () => {},
-  selectedCategory,
-  handleToast,
-}) => {
-  const [value, setValue] = useState(listingDetails?.title);
+const DropdownComponent = ({ selectedCategory, handleToast }) => {
+  const { listingDetails, updateListingDetails } = useListing();
+  const [value, setValue] = useState(listingDetails?.title || "");
   const [filteredData, setFilteredData] = useState([]);
-  const [isFocused, setIsFocused] = useState(false); // New state for focus
+  const [isFocused, setIsFocused] = useState(false);
 
   useEffect(() => {
-    if (listingDetails.title) {
-      setValue(listingDetails.title);
-    }
+    setValue(listingDetails.title || "");
   }, [listingDetails.title]);
 
   useEffect(() => {
     setValue("");
     setFilteredData([]);
-  }, [listingDetails.category, selectedCategory]);
+  }, [selectedCategory]);
 
   const handleSearch = (text) => {
     setValue(text);
@@ -55,6 +50,7 @@ const DropdownComponent = ({
     setValue(item.value);
     updateListingDetails("title", item.value);
     setFilteredData([]);
+    setIsFocused(false);
   };
 
   const handlePress = () => {
@@ -68,17 +64,17 @@ const DropdownComponent = ({
       <Pressable onPress={handlePress}>
         <View pointerEvents={selectedCategory ? "auto" : "none"}>
           <TextInput
-            style={[styles.input, isFocused && styles.inputFocused]} // Apply focus style
+            style={[styles.input, isFocused && styles.inputFocused]}
             placeholder="Select item"
             value={value}
             onChangeText={handleSearch}
             editable={!!selectedCategory}
-            onFocus={() => setIsFocused(true)} // Set focus to true
-            onBlur={() => setIsFocused(false)} // Set focus to false
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
           />
         </View>
       </Pressable>
-      {filteredData.length > 0 && (
+      {isFocused && filteredData.length > 0 && (
         <View style={styles.dropdown}>
           {filteredData.map((item) => (
             <Pressable
@@ -116,7 +112,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: ms(7),
     marginTop: ys(5),
-    maxHeight: ms(280),
+    maxHeight: ms(200),
     overflow: "hidden",
   },
   item: {

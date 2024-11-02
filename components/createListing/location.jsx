@@ -6,10 +6,12 @@ import {
   moderateScale as ms,
 } from "react-native-size-matters";
 import sizes from "../../constants/sizes";
+import { useListing } from "../../context/listingContext";
 
 const { paddingTop, paddingSides } = sizes;
 
-const Location = ({ listingDetails, updateListingDetails, handleToast }) => {
+const Location = ({ handleToast }) => {
+  const { listingDetails, updateListingDetails } = useListing();
   const [isFocused, setIsFocused] = useState(false); // State to track focus
 
   const handleChangeText = (text) => {

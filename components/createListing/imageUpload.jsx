@@ -30,7 +30,7 @@ if (
   UIManager.setLayoutAnimationEnabledExperimental(true);
 }
 
-const ImageUpload = ({ user }) => {
+const ImageUpload = () => {
   const { listingDetails, updateListingDetails } = useListing();
   const [selectedImages, setSelectedImages] = useState([]);
 

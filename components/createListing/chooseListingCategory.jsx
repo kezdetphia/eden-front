@@ -7,8 +7,10 @@ import {
 import sizes from "../../constants/sizes";
 import { categories } from "../../utils/corpsStuff";
 import CustomText from "../customText";
+import { useListing } from "../../context/listingContext";
 
-const ChooseListingCategory = ({ listingDetails, updateListingDetails }) => {
+const ChooseListingCategory = () => {
+  const { listingDetails, updateListingDetails } = useListing();
   const { paddingTop, paddingSides } = sizes;
   const screenWidth = Dimensions.get("window").width;
   const itemWidth = screenWidth / 2 - xs(paddingSides * 1.7);

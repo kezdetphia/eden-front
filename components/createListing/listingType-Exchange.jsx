@@ -17,13 +17,12 @@ import {
 import sizes from "../../constants/sizes";
 import { fruits, vegetable } from "../../utils/corpsStuff";
 import CustomText from "../customText";
+import { useListing } from "../../context/listingContext";
 
 const { paddingTop, paddingSides } = sizes;
 
-const ListingTypeExchange = ({
-  listingDetails = {},
-  updateListingDetails = () => {},
-}) => {
+const ListingTypeExchange = () => {
+  const { listingDetails, updateListingDetails } = useListing();
   const combinedData = [...fruits, ...vegetable].map((item) => {
     return { label: item, value: item };
   });
