@@ -5,7 +5,7 @@ import useGeoDistanceCalculator from "../../hooks/useGeoDistanceCalculator";
 import MapView, { Marker } from "react-native-maps";
 
 const Search = () => {
-  const [location, setLocation] = useState(null);
+  const [location, setLocation] = useState(91722);
   const [errorMsg, setErrorMsg] = useState(null);
   const [zip1, setZip1] = useState("");
   const [zip2, setZip2] = useState("");
