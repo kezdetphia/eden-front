@@ -38,8 +38,8 @@ const { EXPO_API_URL } = Constants.expoConfig.extra;
 const { xsm, paddingSides, paddingTop } = sizes;
 
 const ProductDetail = () => {
+  console.log("ProductDetail render");
   const { id: productId } = useLocalSearchParams();
-  // console.log("ProductDetail iddsdsdsdsds", productId);
   const router = useRouter();
   const [product, setProduct] = useState(null);
   const scrollY = useRef(new Animated.Value(0)).current;
@@ -47,11 +47,10 @@ const ProductDetail = () => {
   const [error, setError] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0); // Track the current index
   const params = useLocalSearchParams();
-  // console.log("singlepage params", params);
-  const [productComments, setProductComments] = useState(product?.comments);
 
   useEffect(() => {
     const fetchProductDetails = async () => {
+      console.log("fetchProductDetails");
       const token = await SecureStore.getItemAsync("authToken");
       try {
         const response = await axios.get(
@@ -65,8 +64,6 @@ const ProductDetail = () => {
         );
 
         setProduct(response.data.product);
-        setProductComments(response.data.product.comments);
-        // console.log("SINGLEPRODUCT data", response.data);
       } catch (error) {
         console.error("Failed to fetch product details:", error);
         setError(error);
@@ -330,11 +327,7 @@ const ProductDetail = () => {
                   <SellerInfo owner={product?.owner} />
                 </View>
                 <View style={styles.sectionContainer}>
-                  <ProductComments
-                    product={product}
-                    productComments={productComments}
-                    setProductComments={setProductComments}
-                  />
+                  <ProductComments product={product} />
                 </View>
                 <View
                   style={{

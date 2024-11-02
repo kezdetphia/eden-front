@@ -17,24 +17,21 @@ import CustomText from "../customText";
 const { EXPO_API_URL } = Constants.expoConfig.extra;
 const { md } = sizes;
 
-//TODO:       - Refresh comments when new comment added by the user
-
-const ProductComments = ({ product, productComments, setProductComments }) => {
+const ProductComments = ({ product }) => {
   const { xsm, xl, xxl, paddingTop } = sizes;
   const { user } = useAuth();
-  const [newComment, setNewComment] = useState();
+  const [newComment, setNewComment] = useState("");
   const [showAllComments, setShowAllComments] = useState(false);
-  const [sortedComments, setSortedComments] = useState([]);
+  const [comments, setComments] = useState([]); // Local comments state
 
   const router = useRouter();
 
   useEffect(() => {
-    // Sort comments when component mounts or product prop changes
-    if (productComments) {
-      const sorted = sortComments(productComments);
-      setSortedComments(sorted);
+    // Sync comments when `product.comments` changes
+    if (product?.comments) {
+      setComments(sortComments(product.comments));
     }
-  }, [productComments]);
+  }, [product?.comments]);
 
   const sortComments = (comments) => {
     return comments
@@ -51,8 +48,8 @@ const ProductComments = ({ product, productComments, setProductComments }) => {
     };
 
     // Optimistically add the temporary comment
-    setProductComments((prevComments) => [...prevComments, tempComment]);
-    setNewComment(""); // Clear input after adding the comment
+    setComments((prevComments) => [tempComment, ...prevComments]);
+    setNewComment("");
 
     try {
       const res = await fetch(
@@ -70,17 +67,14 @@ const ProductComments = ({ product, productComments, setProductComments }) => {
 
       const data = await res.json();
 
-      // Log the full response for debugging purposes
       console.log("Server response data:", data);
 
-      // Check if the response contains the expected structure
       if (data && data.product && Array.isArray(data.product.comments)) {
-        // Get the latest comment from the product's comments array
         const newCommentFromServer =
           data.product.comments[data.product.comments.length - 1];
 
-        // Replace the temporary comment with the actual one from the server response
-        setProductComments((prevComments) =>
+        // Replace temporary comment with server response
+        setComments((prevComments) =>
           prevComments.map((comment) =>
             comment._id === tempComment._id ? newCommentFromServer : comment
           )
@@ -93,7 +87,7 @@ const ProductComments = ({ product, productComments, setProductComments }) => {
       console.error("Failed to submit comment:", error);
 
       // Remove the temporary comment if the API call fails
-      setProductComments((prevComments) =>
+      setComments((prevComments) =>
         prevComments.filter((comment) => comment._id !== tempComment._id)
       );
     }
@@ -103,34 +97,28 @@ const ProductComments = ({ product, productComments, setProductComments }) => {
     setShowAllComments(!showAllComments);
   };
 
-  const commentsToShow = showAllComments
-    ? sortedComments
-    : sortedComments.slice(0, 3);
+  const commentsToShow = showAllComments ? comments : comments.slice(0, 3);
+
   return (
     <View>
       <CustomText subtitle bold>
-        Comments ({productComments?.length})
+        Comments ({comments.length})
       </CustomText>
 
       <View style={{ paddingTop: ys(paddingTop) }}>
         <View className="bg-grayb rounded-lg" style={{ position: "relative" }}>
           <TextInput
-            multiline={true} // Enable multiline input
-            textAlignVertical="top" // Align text to the top
+            multiline={true}
+            textAlignVertical="top"
             placeholder="Add your comment here"
-            value={newComment} // Set the value to the comment
-            onChangeText={(text) => setNewComment(text)} // Update the comment state on text change
+            value={newComment}
+            onChangeText={(text) => setNewComment(text)}
             style={{
               fontFamily: "jakarta",
               fontSize: ms(14),
-              // color: "#F6F7F9",
               color: "#2D2D2D",
               padding: xs(10),
-              // borderWidth: 1,
-              // borderColor: "#E6E6E6",
-              letterSpacing: 0.3,
-
-              paddingRight: xs(40), // Add padding to the right to make space for the icon
+              paddingRight: xs(40),
             }}
           />
           <Feather
@@ -146,13 +134,13 @@ const ProductComments = ({ product, productComments, setProductComments }) => {
             }}
           />
         </View>
-        {/* //TODO: maybe change this a flatlist later, but then the parent comonent needs to be changed too to a flatlist */}
+
         <View>
-          {productComments?.length > 0 ? (
+          {comments.length > 0 ? (
             <View>
               {commentsToShow.map((comment) => (
                 <View
-                  key={comment?._id || `temp-${Date.now()}`}
+                  key={comment._id}
                   className="flex-row"
                   style={{ paddingTop: ys(paddingTop) }}
                 >
@@ -161,7 +149,7 @@ const ProductComments = ({ product, productComments, setProductComments }) => {
                       onPress={() =>
                         router.push({
                           pathname: `/sellerprofile/[id]`,
-                          params: { id: comment?.user?._id },
+                          params: { id: comment.user?._id },
                         })
                       }
                     >
@@ -172,7 +160,7 @@ const ProductComments = ({ product, productComments, setProductComments }) => {
                           borderRadius: ms(20),
                         }}
                         source={
-                          comment?.user?.avatar
+                          comment.user?.avatar
                             ? { uri: comment.user.avatar }
                             : require("../../assets/images/avatar.png")
                         }
@@ -187,16 +175,16 @@ const ProductComments = ({ product, productComments, setProductComments }) => {
                           onPress={() =>
                             router.push({
                               pathname: `/sellerprofile/[id]`,
-                              params: { id: comment?.user?._id },
+                              params: { id: comment.user?._id },
                             })
                           }
                         >
                           <CustomText b300 md bold>
-                            {comment?.user?.username}
+                            {comment.user?.username}
                           </CustomText>
                         </Pressable>
                         <CustomText b75 xxs>
-                          {comment?.createdAt
+                          {comment.createdAt
                             ? isValid(parseISO(comment.createdAt))
                               ? format(
                                   parseISO(comment.createdAt),
@@ -215,15 +203,14 @@ const ProductComments = ({ product, productComments, setProductComments }) => {
                           paddingRight: xs(xsm),
                         }}
                       >
-                        {comment?.text}
+                        {comment.text}
                       </CustomText>
                     </View>
                   </View>
                 </View>
               ))}
 
-              {productComments?.length > 3 && (
-                // <View>
+              {comments.length > 3 && (
                 <Pressable
                   style={{ paddingTop: ys(paddingTop * 1.5) }}
                   onPress={handleToggleComments}
@@ -238,7 +225,6 @@ const ProductComments = ({ product, productComments, setProductComments }) => {
                     {showAllComments ? "Show Less" : "Read More..."}
                   </CustomText>
                 </Pressable>
-                // </View>
               )}
             </View>
           ) : (
