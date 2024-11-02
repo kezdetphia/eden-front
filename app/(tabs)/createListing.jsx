@@ -35,11 +35,15 @@ import Toast from "react-native-root-toast";
 import Location from "../../components/createListing/location";
 import ListingTitle from "../../components/createListing/title";
 
+import { useListing } from "../../context/listingContext"; // Import useListing
+
 //TODO: make the keyboard avoid view work
 // https://docs.expo.dev/guides/keyboard-handling/
 
 const { paddingSides, paddingTop } = sizes;
 const CreateListing = () => {
+  const { listingDetails, updateListingDetails, resetListingDetails } =
+    useListing();
   const { EXPO_API_URL } = Constants.expoConfig.extra;
   const router = useRouter();
   const [dropdownData, setDropdownData] = useState([]);
@@ -61,7 +65,7 @@ const CreateListing = () => {
     location: "",
   };
 
-  const [listingDetails, setListingDetails] = useState(initialListingDetails);
+  // const [listingDetails, setListingDetails] = useState(initialListingDetails);
 
   const validateFields = () => {
     const requiredFields = [
@@ -125,42 +129,27 @@ const CreateListing = () => {
       handleToast("Failed to create listing", "error");
     } finally {
       setIsSubmitting(false);
-      setListingDetails(initialListingDetails);
+      resetListingDetails();
     }
   };
 
   console.log("Initial listingDetailssss        ", listingDetails);
 
-  // useEffect(() => {
-  //   setListingDetails((prevDetails) => ({
-  //     ...prevDetails,
-  //     availableQuantity: selectedAvailableAmount,
-  //   }));
-  // }, [selectedAvailableAmount]);
-
-  // useEffect(() => {
-  //   if (listingDetails.category === "fruit") {
-  //     setDropdownData(fruits);
-  //   } else if (listingDetails.category === "vegetable") {
-  //     setDropdownData(vegetable);
-  //   }
-  // }, [listingDetails.category]);
-
   //Function to update the listing details with key value pairs
-  const updateListingDetails = (key, value) => {
-    setListingDetails((prevDetails) => {
-      if (key === "image") {
-        return {
-          ...prevDetails,
-          [key]: [...prevDetails[key], value], // Append the new URL to the existing array
-        };
-      }
-      return {
-        ...prevDetails,
-        [key]: value,
-      };
-    });
-  };
+  // const updateListingDetails = (key, value) => {
+  //   setListingDetails((prevDetails) => {
+  //     if (key === "image") {
+  //       return {
+  //         ...prevDetails,
+  //         [key]: [...prevDetails[key], value], // Append the new URL to the existing array
+  //       };
+  //     }
+  //     return {
+  //       ...prevDetails,
+  //       [key]: value,
+  //     };
+  //   });
+  // };
 
   const handleBack = () => {
     Alert.alert(
@@ -170,7 +159,7 @@ const CreateListing = () => {
         {
           text: "Discard",
           onPress: () => {
-            setListingDetails(initialListingDetails);
+            resetListingDetails();
             router.back();
           },
         },
@@ -225,9 +214,9 @@ const CreateListing = () => {
                 Photos
               </CustomText>
               <ImageUpload
-                listingDetails={listingDetails}
+                // listingDetails={listingDetails}
                 user={user}
-                updateListingDetails={updateListingDetails}
+                // updateListingDetails={updateListingDetails}
               />
             </View>
             {/* Category */}
