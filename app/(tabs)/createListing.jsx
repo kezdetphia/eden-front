@@ -41,6 +41,7 @@ const CreateListing = () => {
     handleSubmit,
     handleToast,
     isSubmitting,
+    initializeListingDetails,
   } = useListing();
   const router = useRouter();
   const [dropdownData, setDropdownData] = useState([]);
@@ -83,7 +84,7 @@ const CreateListing = () => {
             <Feather name="arrow-left" size={ms(24)} color="black" />
           </Pressable>
           <CustomText semibold md>
-            Create listing
+            Add Listing
           </CustomText>
         </View>
 

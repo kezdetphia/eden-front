@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import * as SecureStore from "expo-secure-store";
 import Constants from "expo-constants";
 import Toast from "react-native-root-toast";
@@ -9,6 +9,9 @@ const ListingContext = createContext();
 export const ListingProvider = ({ children }) => {
   const { user } = useAuth();
   const { EXPO_API_URL } = Constants.expoConfig.extra;
+  const [listingDetails, setListingDetails] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   console.log("user", user?._id);
 
   const initialListingDetails = {
@@ -18,14 +21,29 @@ export const ListingProvider = ({ children }) => {
     image: [],
     category: "",
     tier: null,
-    owner: user?._id,
+    owner: null, // Now correctly uses user._id
     availableQuantity: "",
     exchangeFor: [],
     location: "",
   };
 
-  const [listingDetails, setListingDetails] = useState(initialListingDetails);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  useEffect(() => {
+    // Initialize listingDetails when user becomes available
+    if (user && !listingDetails) {
+      setListingDetails({
+        price: "",
+        title: "",
+        desc: "",
+        image: [],
+        category: "",
+        tier: null,
+        owner: user._id, // Now correctly uses user._id
+        availableQuantity: "",
+        exchangeFor: [],
+        location: "",
+      });
+    }
+  }, [user, listingDetails]);
 
   console.log("listingDetails", listingDetails);
 
