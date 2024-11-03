@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import * as Location from "expo-location";
 import useGeoDistanceCalculator from "../../hooks/useGeoDistanceCalculator";
 import MapView, { Marker } from "react-native-maps";
+import Slider from "@react-native-community/slider";
 
 const Search = () => {
   const [location, setLocation] = useState(91722);
@@ -10,6 +11,8 @@ const Search = () => {
   const [zip1, setZip1] = useState("");
   const [zip2, setZip2] = useState("");
   const [mapRegion, setMapRegion] = useState(null); // State to manage map region
+  const [value, setValue] = useState(0);
+
   const {
     distance,
     error,
@@ -50,7 +53,7 @@ const Search = () => {
       setMapRegion({
         latitude: markerLocation.latitude,
         longitude: markerLocation.longitude,
-        latitudeDelta: 0.0922,
+        latitudeDelta: 0.1022,
         longitudeDelta: 0.0421,
       });
     }
@@ -65,17 +68,17 @@ const Search = () => {
   }
 
   return (
-    <View className="flex-1">
+    <View className="flex-1 pt-10">
       <View
         style={{ padding: 20 }}
         className="flex-1 items-center justify-center"
       >
+        <Button title="Geocode Zip" onPress={handleGeocodeZip1} />
         <TextInput
           placeholder="Enter first zip code"
           value={zip1}
           onChangeText={setZip1}
         />
-        <Button title="Geocode Zip" onPress={handleGeocodeZip1} />
         <TextInput
           placeholder="Enter second zip code"
           value={zip2}
@@ -84,6 +87,20 @@ const Search = () => {
         <Button title="Calculate Distance" onPress={handleCalculateDistance} />
         {distance && <Text>Distance: {distance} miles</Text>}
         {error && <Text style={{ color: "red" }}>{error}</Text>}
+      </View>
+      <View style={{ padding: 20 }}>
+        <Text>Value: {value.toFixed(2)}</Text>
+        <Slider
+          style={{ width: 200, height: 40 }}
+          minimumValue={0}
+          maximumValue={100}
+          step={1}
+          minimumTrackTintColor="#1EB1FC"
+          maximumTrackTintColor="#d3d3d3"
+          thumbTintColor="#1EB1FC"
+          value={value}
+          onValueChange={(val) => setValue(val)}
+        />
       </View>
       <View style={styles.container}>
         <MapView

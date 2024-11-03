@@ -1,4 +1,4 @@
-import { View, SafeAreaView } from "react-native";
+import { View, SafeAreaView, Text } from "react-native";
 import { useRouter } from "expo-router";
 
 // import useGoogleAuth from "../../utils/auth/googleAuth";

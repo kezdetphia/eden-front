@@ -21,6 +21,12 @@ import sizes from "../../constants/sizes";
 import defaultAvatar from "../../assets/images/avatar.png";
 import CustomText from "../../components/customText";
 
+//TODO: need to update the screen to display when new message is received
+//withouth reloading the page
+//need to add delete function to delete the message
+//need to display the product name too not just the user name
+//need to be able to go to the productpage when the product name is clicked
+
 const { EXPO_API_URL } = Constants.expoConfig.extra;
 
 const Messages = () => {
