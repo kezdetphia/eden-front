@@ -16,6 +16,13 @@ const ProductCard = ({ product, cardWidth, user }) => {
     calculate(user?.location, product?.location);
   }, [user]);
 
+  const getLocationDisplay = () => {
+    if (user?.location && product?.location) {
+      return `${Math.round(distance)} miles`;
+    }
+    return product?.location; // Display ZIP code if either location is missing
+  };
+
   return (
     <View
       className=" bg-white shadow-sm  "
@@ -47,8 +54,7 @@ const ProductCard = ({ product, cardWidth, user }) => {
         </View>
       </View>
       <CustomText xxs b100 style={{ paddingTop: ys(3) }}>
-        {/* {product.location} */}
-        {Math.round(distance)} miles
+        {getLocationDisplay()}
       </CustomText>
       <View
         className="flex-row items-center justify-between"

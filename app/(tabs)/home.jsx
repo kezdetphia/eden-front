@@ -23,12 +23,18 @@ import Constants from "expo-constants";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts } from "../../store/productSlice";
 import CustomText from "../../components/customText";
+import useLocationPermission from "../../hooks/useLocalPermission";
 
 //TODO: -change back the headercomponent or find a solution to a sticky search bar
 // - Implement a pull down to refresh function
 // -DONT DISPLAY MY OWN ITEMS
 
 const HomeScreen = () => {
+  //this to request location permission
+  // const { location, errorMsg, requestLocationPermission } =
+  //   useLocationPermission();
+  // requestLocationPermission();
+
   const { paddingSides, marginxxs } = sizes;
   const categories = ["fruit", "vegetable"];
   const filterOptions = ["All", "Trade", "Free", "Buy"];
@@ -95,6 +101,7 @@ const HomeScreen = () => {
         searchBarValue={searchBarValue}
         setSearchBarValue={setSearchBarValue}
       />
+
       <FlatList
         showsVerticalScrollIndicator={false}
         style={{ marginTop: ys(marginxxs) }}
