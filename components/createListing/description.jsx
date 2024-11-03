@@ -6,16 +6,17 @@ import {
   verticalScale as ys,
   moderateScale as ms,
 } from "react-native-size-matters";
+import { useListing } from "../../context/listingContext";
 
-const Description = ({ listingDetails, updateListingDetails }) => {
+const Description = () => {
+  const { listingDetails, updateListingDetails } = useListing();
   const [text, setText] = useState(listingDetails.desc);
+  const [isFocused, setIsFocused] = useState(false); // State to track focus
 
-  // Update local state when listingDetails.desc changes
   useEffect(() => {
     setText(listingDetails.desc);
   }, [listingDetails.desc]);
 
-  // Debounce the updateListingDetails function
   const debouncedUpdateListingDetails = useCallback(
     _.debounce((text) => updateListingDetails("desc", text), 300),
     []
@@ -29,13 +30,15 @@ const Description = ({ listingDetails, updateListingDetails }) => {
   return (
     <View style={styles.container}>
       <TextInput
-        style={styles.textArea}
+        style={[styles.textArea, isFocused && styles.textAreaFocused]} // Apply focus style
         placeholder="Enter your text here"
         placeholderTextColor="#9CA3AF"
         multiline={true}
         numberOfLines={4}
         value={text}
         onChangeText={handleChangeText}
+        onFocus={() => setIsFocused(true)} // Set focus to true
+        onBlur={() => setIsFocused(false)} // Set focus to false
       />
     </View>
   );
@@ -51,10 +54,14 @@ const styles = StyleSheet.create({
     fontSize: ms(14),
     height: 150,
     justifyContent: "flex-start",
-    textAlignVertical: "top", // Ensures text starts at the top of the TextInput
+    textAlignVertical: "top",
     borderRadius: 8,
     padding: 10,
     color: "#2D2D2D",
     backgroundColor: "white",
+  },
+  textAreaFocused: {
+    borderWidth: 1,
+    borderColor: "#4A9837", // Focused border color
   },
 });

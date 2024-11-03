@@ -1,4 +1,4 @@
-import { View, Text, TextInput, Pressable } from "react-native";
+import { View, TextInput, Pressable } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Feather } from "@expo/vector-icons";
 import {
@@ -9,7 +9,7 @@ import {
 import sizes from "../../constants/sizes";
 import { useAuth } from "../../context/authContext";
 import { Image } from "expo-image";
-import { format, parseISO } from "date-fns";
+import { format, parseISO, isValid } from "date-fns";
 import { useRouter } from "expo-router";
 import Constants from "expo-constants";
 import CustomText from "../customText";
@@ -17,45 +17,21 @@ import CustomText from "../customText";
 const { EXPO_API_URL } = Constants.expoConfig.extra;
 const { md } = sizes;
 
-//TODO:       - Refresh comments when new comment added by the user
-
 const ProductComments = ({ product }) => {
-  const { xsm, xl, xxl, subtitle, paddingTop } = sizes;
+  const { xsm, xl, xxl, paddingTop } = sizes;
   const { user } = useAuth();
-  const [comment, setComment] = useState();
+  const [newComment, setNewComment] = useState("");
   const [showAllComments, setShowAllComments] = useState(false);
-  const [sortedComments, setSortedComments] = useState([]);
+  const [comments, setComments] = useState([]); // Local comments state
 
   const router = useRouter();
 
   useEffect(() => {
-    if (product && product.comments) {
-      const comments = product.comments.map((comment) => ({
-        text: comment.text,
-        userId: comment.user._id,
-        username: comment.user.username,
-      }));
-      // console.log("productcomments, ", comments);
-    } else {
-      console.log("Product or comments are undefined");
-    }
-  }, [product]);
-
-  useEffect(() => {
-    // Sort comments when component mounts or product prop changes
+    // Sync comments when `product.comments` changes
     if (product?.comments) {
-      const sorted = sortComments(product.comments);
-      setSortedComments(sorted);
+      setComments(sortComments(product.comments));
     }
   }, [product?.comments]);
-
-  const handleToggleComments = () => {
-    setShowAllComments(!showAllComments);
-  };
-
-  const commentsToShow = showAllComments
-    ? sortedComments
-    : sortedComments.slice(0, 3);
 
   const sortComments = (comments) => {
     return comments
@@ -64,58 +40,85 @@ const ProductComments = ({ product }) => {
   };
 
   const submitComment = async () => {
+    const tempComment = {
+      text: newComment,
+      user,
+      _id: `temp-${Date.now()}`,
+      createdAt: new Date().toISOString(),
+    };
+
+    // Optimistically add the temporary comment
+    setComments((prevComments) => [tempComment, ...prevComments]);
+    setNewComment("");
+
     try {
       const res = await fetch(
-        // `http://localhost:3000/addproductcomment/${product?._id}`,
         `${EXPO_API_URL}/addproductcomment/${product?._id}`,
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            // Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ comment: { text: comment, user: user._id } }),
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            comment: { text: newComment, user: user._id },
+          }),
         }
       );
+
       if (!res.ok) throw new Error("Network response was not ok");
+
       const data = await res.json();
-      console.log("retuirn data", data);
-      //TODO: not sure if directinh back to the page after submitting the commet
-      // will be a good user experience but keep it for now
-      router.replace(`/productdetails/${product?._id}`);
+
+      console.log("Server response data:", data);
+
+      if (data && data.product && Array.isArray(data.product.comments)) {
+        const newCommentFromServer =
+          data.product.comments[data.product.comments.length - 1];
+
+        // Replace temporary comment with server response
+        setComments((prevComments) =>
+          prevComments.map((comment) =>
+            comment._id === tempComment._id ? newCommentFromServer : comment
+          )
+        );
+      } else {
+        console.error("Unexpected response structure:", data);
+        throw new Error("Unexpected response structure: 'comment' not found");
+      }
     } catch (error) {
       console.error("Failed to submit comment:", error);
-      setError(error);
-    } finally {
-      // Any cleanup code if needed
+
+      // Remove the temporary comment if the API call fails
+      setComments((prevComments) =>
+        prevComments.filter((comment) => comment._id !== tempComment._id)
+      );
     }
   };
+
+  const handleToggleComments = () => {
+    setShowAllComments(!showAllComments);
+  };
+
+  const commentsToShow = showAllComments ? comments : comments.slice(0, 3);
 
   return (
     <View>
       <CustomText subtitle bold>
-        Comments ({product?.comments.length})
+        Comments ({comments.length})
       </CustomText>
 
       <View style={{ paddingTop: ys(paddingTop) }}>
         <View className="bg-grayb rounded-lg" style={{ position: "relative" }}>
           <TextInput
-            multiline={true} // Enable multiline input
-            textAlignVertical="top" // Align text to the top
+            multiline={true}
+            textAlignVertical="top"
             placeholder="Add your comment here"
-            value={comment} // Set the value to the comment
-            onChangeText={(text) => setComment(text)} // Update the comment state on text change
+            value={newComment}
+            onChangeText={(text) => setNewComment(text)}
             style={{
               fontFamily: "jakarta",
               fontSize: ms(14),
-              // color: "#F6F7F9",
               color: "#2D2D2D",
               padding: xs(10),
-              // borderWidth: 1,
-              // borderColor: "#E6E6E6",
-              letterSpacing: 0.3,
-
-              paddingRight: xs(40), // Add padding to the right to make space for the icon
+              paddingRight: xs(40),
             }}
           />
           <Feather
@@ -131,9 +134,9 @@ const ProductComments = ({ product }) => {
             }}
           />
         </View>
-        {/* //TODO: maybe change this a flatlist later, but then the parent comonent needs to be changed too to a flatlist */}
+
         <View>
-          {product?.comments.length > 0 ? (
+          {comments.length > 0 ? (
             <View>
               {commentsToShow.map((comment) => (
                 <View
@@ -146,7 +149,7 @@ const ProductComments = ({ product }) => {
                       onPress={() =>
                         router.push({
                           pathname: `/sellerprofile/[id]`,
-                          params: { id: comment?.user?._id },
+                          params: { id: comment.user?._id },
                         })
                       }
                     >
@@ -157,7 +160,7 @@ const ProductComments = ({ product }) => {
                           borderRadius: ms(20),
                         }}
                         source={
-                          comment?.user?.avatar
+                          comment.user?.avatar
                             ? { uri: comment.user.avatar }
                             : require("../../assets/images/avatar.png")
                         }
@@ -172,19 +175,23 @@ const ProductComments = ({ product }) => {
                           onPress={() =>
                             router.push({
                               pathname: `/sellerprofile/[id]`,
-                              params: { id: comment?.user?._id },
+                              params: { id: comment.user?._id },
                             })
                           }
                         >
                           <CustomText b300 md bold>
-                            {comment?.user?.username}
+                            {comment.user?.username}
                           </CustomText>
                         </Pressable>
                         <CustomText b75 xxs>
-                          {format(
-                            parseISO(comment?.createdAt),
-                            "h:mma  M/d/yy"
-                          )}
+                          {comment.createdAt
+                            ? isValid(parseISO(comment.createdAt))
+                              ? format(
+                                  parseISO(comment.createdAt),
+                                  "h:mma  M/d/yy"
+                                )
+                              : "Invalid Date"
+                            : "Unknown Date"}
                         </CustomText>
                       </View>
 
@@ -196,15 +203,14 @@ const ProductComments = ({ product }) => {
                           paddingRight: xs(xsm),
                         }}
                       >
-                        {comment?.text}
+                        {comment.text}
                       </CustomText>
                     </View>
                   </View>
                 </View>
               ))}
 
-              {product?.comments.length > 3 && (
-                // <View>
+              {comments.length > 3 && (
                 <Pressable
                   style={{ paddingTop: ys(paddingTop * 1.5) }}
                   onPress={handleToggleComments}
@@ -219,7 +225,6 @@ const ProductComments = ({ product }) => {
                     {showAllComments ? "Show Less" : "Read More..."}
                   </CustomText>
                 </Pressable>
-                // </View>
               )}
             </View>
           ) : (

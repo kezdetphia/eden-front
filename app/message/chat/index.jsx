@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import {
   View,
-  Text,
   TextInput,
   FlatList,
   StyleSheet,
@@ -10,6 +9,7 @@ import {
   Platform,
   KeyboardAvoidingView,
   Keyboard,
+  Image,
 } from "react-native";
 import io from "socket.io-client";
 import { useAuth } from "@context/authContext";
@@ -21,23 +21,20 @@ import {
   moderateScale as ms,
 } from "react-native-size-matters";
 import sizes from "@constants/sizes";
-import { Image } from "expo-image";
 import defaultAvatar from "@assets/images/avatar.png";
-import { format, isToday, isThisWeek, parseISO } from "date-fns";
+import { format, isToday, isThisWeek } from "date-fns";
 import Constants from "expo-constants";
 import CustomText from "../../../components/customText";
 
-//TODO: when messages are sent when the user is not in the chat screen, the message is not displayed. need to fix
-//Messages display in the right order when in the chat screen but when leave and come back the messages are grouped based on the sender
+const { EXPO_API_URL } = Constants.expoConfig.extra;
 
 const ChatScreen = () => {
-  const { EXPO_API_URL } = Constants.expoConfig.extra;
   const { paddingTop, xl, xxl } = sizes;
   const params = useLocalSearchParams();
   const { user } = useAuth();
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
-  const socket = useRef(null);
+  const socketRef = useRef(null);
   const router = useRouter();
   const flatListRef = useRef(null);
   const previousScreen = params.previousScreen || null;
@@ -63,42 +60,35 @@ const ChatScreen = () => {
   };
 
   useEffect(() => {
-    if (user && user._id && !socket.current) {
-      console.log("url", EXPO_API_URL);
-      socket.current = io(EXPO_API_URL, {
-        // socket.current = io("http://192.168.0.182:3000", {
+    if (user && user._id && !socketRef.current) {
+      socketRef.current = io(EXPO_API_URL, {
         query: { userId: user._id },
       });
 
-      socket.current.on("connect", () => {
+      socketRef.current.on("connect", () => {
         console.log("Connected to socket");
       });
 
-      socket.current.on("connect_error", (error) => {
-        console.error("Connection error:", error);
-      });
-
-      socket.current.on("private message", (msg) => {
-        if (!msg.from) {
-          msg.from = {
-            _id: productDetails?.ownerId,
-            username: productDetails?.ownerUsername,
-          };
+      socketRef.current.on("newMessage", (msg) => {
+        if (msg.conversationId === productDetails?.conversationId) {
+          // Check if the message is not from the current user
+          if (msg.from !== user?._id) {
+            setMessages((prevMessages) => [...prevMessages, msg]);
+          }
         }
-        setMessages((prevMessages) => [...prevMessages, msg]);
       });
 
-      socket.current.on("disconnect", (reason) => {
+      socketRef.current.on("disconnect", (reason) => {
         console.log(`Disconnected from socket: ${reason}`);
       });
     }
 
     return () => {
-      if (socket.current) {
-        socket.current.disconnect();
+      if (socketRef.current) {
+        socketRef.current.disconnect();
       }
     };
-  }, [user._id, productDetails?.ownerId]);
+  }, [user._id, productDetails?.conversationId]);
 
   const fetchMessagesBetweenTwoUsers = useCallback(async () => {
     try {
@@ -107,7 +97,16 @@ const ChatScreen = () => {
       );
 
       const data = await response.json();
-      setMessages(data.messages);
+      console.log(
+        "chatscreen  fetchMessagesBetweenTwoUsers data",
+        data.messages[data.messages.length - 1].message
+      );
+
+      if (data.messages) {
+        setMessages(data.messages);
+      } else {
+        setMessages([]);
+      }
     } catch (error) {
       console.error("Error fetching messages:", error);
     }
@@ -120,31 +119,33 @@ const ChatScreen = () => {
   }, [user._id, productDetails?.ownerId, fetchMessagesBetweenTwoUsers]);
 
   const sendMessage = useCallback(() => {
-    if (message && productDetails && socket.current) {
+    if (message && productDetails && socketRef.current) {
       const newMessage = {
-        from: { _id: user?._id, username: user?.username },
-        message,
-        timestamp: new Date().toISOString(),
-        productImageUrl: encodeURIComponent(productDetails?.productImage), // Encode the product image URL
-      };
-
-      setMessages((prevMessages) => [...prevMessages, newMessage]);
-
-      socket.current.emit("private message", {
         from: user?._id,
         to: productDetails?.ownerId,
         message,
-        productImageUrl: encodeURIComponent(productDetails?.productImage), // Encode the product image URL
-      });
+        productImageUrl: productDetails?.productImage,
+        // productImageUrl: encodeURIComponent(productDetails?.productImage),
+        conversationId: productDetails?.conversationId,
+      };
+
+      // Emit the message via Socket.IO
+      socketRef.current.emit("private message", newMessage);
+
+      // Update the local state to display the message immediately
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        {
+          from: { _id: user?._id, username: user?.username },
+          message,
+          timestamp: new Date().toISOString(), // Include timestamp
+        },
+      ]);
+
+      // Clear the input after sending
       setMessage("");
     }
-  }, [message, productDetails, user?._id, user?.username]);
-
-  useEffect(() => {
-    if (flatListRef.current && messages?.length > 0) {
-      flatListRef.current.scrollToEnd({ animated: true });
-    }
-  }, [messages]);
+  }, [message, productDetails, user?._id]);
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
@@ -163,7 +164,6 @@ const ChatScreen = () => {
 
   const formatDate = (timestamp) => {
     if (!timestamp) {
-      console.log("timestamp", typeof timestamp);
       return "";
     }
     const date = new Date(timestamp);
@@ -183,11 +183,11 @@ const ChatScreen = () => {
         style={[
           styles.message,
           isSentByCurrentUser ? styles.sentMessage : styles.receivedMessage,
-          { maxWidth: "60%" }, // Limit the width to 60%
+          { maxWidth: "60%" },
         ]}
       >
         <CustomText b200>{item.message}</CustomText>
-        <View className="items-end" style={{ paddingTop: ys(1) }}>
+        <View style={{ alignItems: "flex-end", paddingTop: ys(1) }}>
           <CustomText
             b100
             xxs
@@ -252,7 +252,7 @@ const ChatScreen = () => {
         ref={flatListRef}
         contentContainerStyle={{ paddingTop: ys(paddingTop / 2) }}
         data={messages}
-        keyExtractor={(item, index) => index.toString()}
+        keyExtractor={(item, index) => `${item.timestamp}-${index}`} // Ensure unique key
         renderItem={renderItem}
         onContentSizeChange={() => {
           if (flatListRef.current && messages.length > 0) {
@@ -265,7 +265,7 @@ const ChatScreen = () => {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flexDirection: "column", justifyContent: "flex-end" }}
       >
-        <View className="" style={{ position: "relative" }}>
+        <View style={{ position: "relative" }}>
           <TextInput
             value={message}
             onChangeText={setMessage}

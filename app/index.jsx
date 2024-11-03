@@ -25,49 +25,6 @@ const Index = () => {
     }
   }, [isAuthenticated, router]);
 
-  // const [userInfo, setUserInfo] = useState(null);
-  // const [request, response, promptAsync] = Google.useAuthRequest({
-  //   androidClientId:
-  //   iosClientId:
-  // });
-
-  // const handleSignInWithGoggle = async () => {
-  //   const user = await SecureStore.getItem("@user");
-  //   if (!user) {
-  //     if (response?.type === "success") {
-  //       await getUserInfo(response.authentication.accessToken);
-  //     }
-  //   } else {
-  //     setUserInfo(JSON.parse(user));
-  //   }
-  // };
-
-  // const getUserInfo = async (token) => {
-  //   if (!token) return;
-  //   try {
-  //     const response = await fetch(
-  //       `https://www.googleapis.com/userinfo/v2/me`,
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       }
-  //     );
-  //     const user = await response.json();
-  //     console.log(user);
-  //     await SecureStore.setItem("@user", JSON.stringify(user));
-  //     setUserInfo(user);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   handleSignInWithGoggle();
-  // }, [response]);
-
-  // console.log("user info", userInfo);
-
   return (
     <SafeAreaView className="flex-1 bg-grayb">
       <View

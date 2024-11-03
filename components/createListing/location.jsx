@@ -1,17 +1,20 @@
 import { View, StyleSheet, TextInput } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import {
   scale as xs,
   verticalScale as ys,
   moderateScale as ms,
 } from "react-native-size-matters";
 import sizes from "../../constants/sizes";
+import { useListing } from "../../context/listingContext";
 
 const { paddingTop, paddingSides } = sizes;
 
-const Location = ({ listingDetails, updateListingDetails, handleToast }) => {
+const Location = ({ handleToast }) => {
+  const { listingDetails, updateListingDetails } = useListing();
+  const [isFocused, setIsFocused] = useState(false); // State to track focus
+
   const handleChangeText = (text) => {
-    // Remove any non-numeric characters
     const numericText = text.replace(/[^0-9]/g, "");
     updateListingDetails("location", numericText);
   };
@@ -21,31 +24,18 @@ const Location = ({ listingDetails, updateListingDetails, handleToast }) => {
       <TextInput
         value={listingDetails?.location}
         onChangeText={handleChangeText}
-        style={styles.input}
+        style={[styles.input, isFocused && styles.inputFocused]} // Apply focus style
         placeholder="Where is this item located?"
         placeholderTextColor="#9CA3AF"
         keyboardType="numeric"
+        onFocus={() => setIsFocused(true)} // Set focus to true
+        onBlur={() => setIsFocused(false)} // Set focus to false
       />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  // container: {
-  //   flexDirection: "row",
-  //   alignItems: "center",
-  //   borderRadius: 8,
-  //   backgroundColor: "white",
-  //   paddingVertical: 10,
-  //   paddingHorizontal: 15,
-  //   marginTop: 20,
-  //   height: 50,
-  // },
-  // input: {
-  //   flex: 1,
-  //   height: "100%",
-  //   color: "#2D2D2D",
-  // },
   input: {
     backgroundColor: "white",
     borderRadius: ms(7),
@@ -55,6 +45,10 @@ const styles = StyleSheet.create({
     fontSize: ms(14),
     color: "#2D2D2D",
     height: ys(40),
+  },
+  inputFocused: {
+    borderWidth: 1,
+    borderColor: "#4A9837", // Focused border color
   },
 });
 

@@ -8,11 +8,14 @@ import { Provider } from "react-redux";
 import { store } from "../store/store";
 import { RootSiblingParent } from "react-native-root-siblings";
 
+// import "react-native-gesture-handler";
+
 // Import your global CSS file
 import "../global.css";
 
 import Toast from "react-native-toast-message";
 import { AuthContextProvider } from "../context/authContext";
+import { ListingProvider } from "../context/listingContext";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -54,9 +57,11 @@ export default function RootLayout() {
     <>
       <AuthContextProvider>
         <Provider store={store}>
-          <RootSiblingParent>
-            <MainLayout />
-          </RootSiblingParent>
+          <ListingProvider>
+            <RootSiblingParent>
+              <MainLayout />
+            </RootSiblingParent>
+          </ListingProvider>
         </Provider>
       </AuthContextProvider>
     </>

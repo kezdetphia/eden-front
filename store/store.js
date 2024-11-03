@@ -1,8 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
-import dataReducer from "./dataSlice";
+import productsReducer from "./productSlice";
 
 export const store = configureStore({
   reducer: {
-    data: dataReducer,
+    products: productsReducer,
   },
 });

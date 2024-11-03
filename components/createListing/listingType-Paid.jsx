@@ -9,10 +9,12 @@ import {
   moderateScale as ms,
 } from "react-native-size-matters";
 import sizes from "../../constants/sizes";
+import { useListing } from "../../context/listingContext";
 
 const { paddingTop, paddingSides } = sizes;
 
-const ListingTypePaid = ({ listingDetails, updateListingDetails }) => {
+const ListingTypePaid = () => {
+  const { listingDetails, updateListingDetails } = useListing();
   const [selectedUnit, setSelectedUnit] = useState("");
 
   useEffect(() => {

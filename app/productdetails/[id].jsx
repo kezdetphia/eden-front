@@ -33,15 +33,13 @@ import axios from "axios";
 
 const { EXPO_API_URL } = Constants.expoConfig.extra;
 
-//TODO: see why the screen jumps when its loading, like the image takes longer to load
-//therefore the content under the image goes to the top for half a second
 // might add a modal to open images in its true ratio size
 
 const { xsm, paddingSides, paddingTop } = sizes;
 
 const ProductDetail = () => {
+  console.log("ProductDetail render");
   const { id: productId } = useLocalSearchParams();
-  // console.log("ProductDetail iddsdsdsdsds", productId);
   const router = useRouter();
   const [product, setProduct] = useState(null);
   const scrollY = useRef(new Animated.Value(0)).current;
@@ -49,10 +47,10 @@ const ProductDetail = () => {
   const [error, setError] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0); // Track the current index
   const params = useLocalSearchParams();
-  // console.log("singlepage params", params);
 
   useEffect(() => {
     const fetchProductDetails = async () => {
+      console.log("fetchProductDetails");
       const token = await SecureStore.getItemAsync("authToken");
       try {
         const response = await axios.get(
@@ -66,7 +64,6 @@ const ProductDetail = () => {
         );
 
         setProduct(response.data.product);
-        console.log("SINGLEPRODUCT data", response.data);
       } catch (error) {
         console.error("Failed to fetch product details:", error);
         setError(error);
@@ -81,7 +78,7 @@ const ProductDetail = () => {
     fetchProductDetails();
   }, [productId]);
 
-  console.log("product", product);
+  // console.log("product", product);
 
   const backgroundColor = scrollY.interpolate({
     inputRange: [ys(100), imageHeight - ys(20)],

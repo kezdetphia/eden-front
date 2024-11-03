@@ -1,4 +1,4 @@
-import { View, StyleSheet, Pressable, Text } from "react-native";
+import { View, Pressable } from "react-native";
 import React, { useState, useEffect } from "react";
 import {
   scale as xs,
@@ -7,11 +7,13 @@ import {
 } from "react-native-size-matters";
 import sizes from "../../constants/sizes";
 import CustomText from "../customText";
+import { useListing } from "../../context/listingContext";
 
 //if they choose paid i still need to display exchange items they might want to exchange too not just sell
 
-const ListingType = ({ listingDetails, updateListingDetails }) => {
-  const { paddingSizes, paddingTop } = sizes;
+const ListingType = () => {
+  const { listingDetails, updateListingDetails } = useListing();
+  const { paddingTop } = sizes;
   const [selectedTier, setSelectedTier] = useState(listingDetails.tier);
 
   useEffect(() => {
