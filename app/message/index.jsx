@@ -252,7 +252,7 @@ const Messages = () => {
       >
         <View className="pt-5 ">
           <View
-            className="flex-row bg-white rounded-xl shadow-sm"
+            className="flex-row bg-white rounded-xl shadow-sm "
             style={{ padding: ms(15) }}
           >
             <Image
@@ -262,9 +262,11 @@ const Messages = () => {
                   : defaultAvatar
               }
               style={{
-                width: xs(30),
-                height: ys(30),
-                borderRadius: 25,
+                // width: xs(50),
+                width: 50,
+                // height: ys(50),
+                height: 50,
+                borderRadius: 99,
                 marginRight: xs(paddingSides),
               }}
             />
@@ -298,9 +300,11 @@ const Messages = () => {
       <SafeAreaView />
       <FlatList
         data={lastMessages}
-        contentContainerStyle={{
-          paddingHorizontal: xs(paddingSides),
-        }}
+        contentContainerStyle={
+          {
+            // paddingHorizontal: xs(paddingSides),
+          }
+        }
         keyExtractor={(item) =>
           `${item.conversationId}-${item.to}-${item.timestamp}`
         }
