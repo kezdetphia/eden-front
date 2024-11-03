@@ -211,10 +211,11 @@ const Messages = () => {
           >
             <Image
               source={
-                typeof item.productImageUrl === "string" &&
-                item.productImageUrl.trim() !== ""
-                  ? { uri: item.productImageUrl }
-                  : defaultAvatar
+                item.productImageUrl
+                // typeof item.productImageUrl === "string" &&
+                // item.productImageUrl.trim() !== ""
+                //   ? { uri: item.productImageUrl }
+                //   : defaultAvatar
               }
               style={{
                 width: xs(30),
@@ -228,7 +229,7 @@ const Messages = () => {
                 {item.toUsername}
               </CustomText>
 
-              <View className={`flex-row items-center  `}>
+              <View className={`flex-row items-center   `}>
                 <CustomText b200 style={{ paddingTop: ys(2) }}>
                   {item.message.length > 25
                     ? item.message.substring(0, 25) + "..."

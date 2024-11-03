@@ -97,6 +97,10 @@ const ChatScreen = () => {
       );
 
       const data = await response.json();
+      console.log(
+        "chatscreen  fetchMessagesBetweenTwoUsers data",
+        data.messages[data.messages.length - 1].message
+      );
 
       if (data.messages) {
         setMessages(data.messages);
@@ -120,7 +124,8 @@ const ChatScreen = () => {
         from: user?._id,
         to: productDetails?.ownerId,
         message,
-        productImageUrl: encodeURIComponent(productDetails?.productImage),
+        productImageUrl: productDetails?.productImage,
+        // productImageUrl: encodeURIComponent(productDetails?.productImage),
         conversationId: productDetails?.conversationId,
       };
 
