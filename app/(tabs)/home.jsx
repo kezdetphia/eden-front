@@ -26,6 +26,7 @@ import CustomText from "../../components/customText";
 
 //TODO: -change back the headercomponent or find a solution to a sticky search bar
 // - Implement a pull down to refresh function
+// -DONT DISPLAY MY OWN ITEMS
 
 const HomeScreen = () => {
   const { paddingSides, marginxxs } = sizes;
@@ -47,11 +48,6 @@ const HomeScreen = () => {
   const numColumns = screenWidth > 1200 ? 4 : screenWidth > 800 ? 3 : 2;
   const cardWidth = screenWidth / numColumns - 10; // Adjust for margin
 
-  // console.log("home filteredData", filteredData);
-  // console.log("home selectedCategory", selectedCategory);
-  // console.log("home selectedFilter", selectedFilter);
-  // console.log("home searchBarValue", searchBarValue);
-
   useEffect(() => {
     if (user === "undefined" || !isAuthenticated) {
       router.replace("/");
@@ -72,7 +68,7 @@ const HomeScreen = () => {
 
   const onRefresh = async () => {
     setRefreshing(true);
-    await dispatch(fetchProducts());
+    dispatch(fetchProducts());
     setRefreshing(false);
   };
 
@@ -154,7 +150,7 @@ const HomeScreen = () => {
                 })
               }
             >
-              <ProductCard product={item} cardWidth={cardWidth} />
+              <ProductCard product={item} cardWidth={cardWidth} user={user} />
             </Pressable>
           </View>
         )}

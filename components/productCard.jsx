@@ -1,5 +1,5 @@
 import { View, StyleSheet, Dimensions } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { Image } from "expo-image";
 import {
   scale as xs,
@@ -7,8 +7,15 @@ import {
   moderateScale as ms,
 } from "react-native-size-matters";
 import CustomText from "./customText";
+import useGeoDistanceCalculator from "../hooks/useGeoDistanceCalculator";
 
-const ProductCard = ({ product, cardWidth }) => {
+const ProductCard = ({ product, cardWidth, user }) => {
+  const { calculate, distance } = useGeoDistanceCalculator();
+
+  useEffect(() => {
+    calculate(user?.location, product?.location);
+  }, [user]);
+
   return (
     <View
       className=" bg-white shadow-sm  "
@@ -40,7 +47,8 @@ const ProductCard = ({ product, cardWidth }) => {
         </View>
       </View>
       <CustomText xxs b100 style={{ paddingTop: ys(3) }}>
-        {product.location}
+        {/* {product.location} */}
+        {Math.round(distance)} miles
       </CustomText>
       <View
         className="flex-row items-center justify-between"

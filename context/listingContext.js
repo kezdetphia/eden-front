@@ -12,21 +12,6 @@ export const ListingProvider = ({ children }) => {
   const [listingDetails, setListingDetails] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  console.log("user", user?._id);
-
-  const initialListingDetails = {
-    price: "",
-    title: "",
-    desc: "",
-    image: [],
-    category: "",
-    tier: null,
-    owner: null, // Now correctly uses user._id
-    availableQuantity: "",
-    exchangeFor: [],
-    location: "",
-  };
-
   useEffect(() => {
     // Initialize listingDetails when user becomes available
     if (user && !listingDetails) {
@@ -54,7 +39,7 @@ export const ListingProvider = ({ children }) => {
     }));
   };
 
-  const resetListingDetails = () => setListingDetails(initialListingDetails);
+  const resetListingDetails = () => setListingDetails(null);
 
   const handleToast = (message, type = "default") => {
     Toast.show(message, {
