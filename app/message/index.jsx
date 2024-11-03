@@ -123,17 +123,26 @@ const Messages = () => {
           const messages = convo.messages || [];
           const lastMessage = messages[messages.length - 1] || {};
 
+          // Find the other participant in the conversation
           const otherParticipant = convo.participants.find(
             (participant) => participant._id !== userId
           );
 
+          // Debugging logs
+          console.log("Conversations data (convos):", convos);
+          console.log("MESSAGESSS", messages);
+          console.log("Processing convo:", convo);
+          console.log("Other participant found:", otherParticipant);
+
           return {
             from: lastMessage.from || "",
-            to: otherParticipant?._id || "",
+            to: otherParticipant?._id || "", // Ensure recipientId is correctly set here
             message: lastMessage.message || "No messages yet.",
             timestamp: lastMessage.timestamp || "",
             productImageUrl: convo.productImageUrl || defaultAvatar,
             toUsername: otherParticipant?.username || "Unknown",
+            productId: convo.productId, // Add productId
+            conversationId: convo._id, // Add conversationId
           };
         });
         setLastMessages(lastMessages);
@@ -152,21 +161,50 @@ const Messages = () => {
   }, [convos, checkLastMessages]);
 
   // Handle clicking on a conversation
-  const onClickOnConversation = async (recipientId) => {
-    const recipientUser = convos
-      .flatMap((convo) => convo.participants)
-      .find((participant) => participant._id === recipientId);
-    const conversation = convos.find((convo) =>
-      convo.participants.some((participant) => participant._id === recipientId)
-    );
+  const onClickOnConversation = async (
+    recipientId,
+    productId,
+    conversationId
+  ) => {
+    // Log the received parameters to debug
+    console.log("onClickOnConversation params:", {
+      recipientId,
+      productId,
+      conversationId,
+    });
 
-    if (!conversation) {
-      console.error(`No conversation found for recipient ID: ${recipientId}`);
+    // Ensure recipientId and productId are defined
+    if (!recipientId || !productId) {
+      console.error("Recipient ID or Product ID is undefined. Cannot proceed.");
       return;
     }
 
-    console.log(`Navigating to chat with conversation ID: ${conversation._id}`);
+    // Find the recipient user in the conversations list
+    const recipientUser = convos
+      .flatMap((convo) => convo.participants)
+      .find((participant) => participant._id === recipientId);
 
+    // Find the conversation that matches both the recipient and the product ID
+    const conversation = convos.find(
+      (convo) =>
+        convo.participants.some(
+          (participant) => participant._id === recipientId
+        ) && convo.productId?.toString() === productId.toString()
+    );
+
+    // If the conversation doesn't exist, log an error and exit the function
+    if (!conversation) {
+      console.error(
+        `No conversation found for recipient ID: ${recipientId} and product ID: ${productId}`
+      );
+      return;
+    }
+
+    console.log(
+      `Navigating to chat with conversation ID: ${conversation._id} for product ${productId}`
+    );
+
+    // Navigate to ChatScreen, passing the required parameters
     router.navigate({
       pathname: `/message/chat`,
       params: {
@@ -175,6 +213,7 @@ const Messages = () => {
           ownerUsername: recipientUser?.username || "Unknown",
           productImage: encodeURIComponent(conversation.productImageUrl || ""),
           conversationId: conversation._id || "",
+          productId: productId, // Pass productId to identify specific product conversation
         }),
         previousScreen: "notification",
       },
@@ -198,12 +237,19 @@ const Messages = () => {
 
   // Render each conversation item
   const renderItem = ({ item }) => {
+    // Log to verify the data structure of item
+    console.log("Render item data:", item);
+
     if (!item) {
       console.error("Item is undefined", item);
       return null;
     }
     return (
-      <Pressable onPress={() => onClickOnConversation(item.to)}>
+      <Pressable
+        onPress={() =>
+          onClickOnConversation(item.to, item.productId, item.conversationId)
+        }
+      >
         <View className="pt-5 ">
           <View
             className="flex-row bg-white rounded-xl shadow-sm"
@@ -212,10 +258,8 @@ const Messages = () => {
             <Image
               source={
                 item.productImageUrl
-                // typeof item.productImageUrl === "string" &&
-                // item.productImageUrl.trim() !== ""
-                //   ? { uri: item.productImageUrl }
-                //   : defaultAvatar
+                  ? { uri: item.productImageUrl }
+                  : defaultAvatar
               }
               style={{
                 width: xs(30),
@@ -229,7 +273,7 @@ const Messages = () => {
                 {item.toUsername}
               </CustomText>
 
-              <View className={`flex-row items-center   `}>
+              <View className="flex-row items-center">
                 <CustomText b200 style={{ paddingTop: ys(2) }}>
                   {item.message.length > 25
                     ? item.message.substring(0, 25) + "..."
@@ -257,7 +301,9 @@ const Messages = () => {
         contentContainerStyle={{
           paddingHorizontal: xs(paddingSides),
         }}
-        keyExtractor={(item) => `${item.to}-${item.timestamp}`} // Ensure unique key
+        keyExtractor={(item) =>
+          `${item.conversationId}-${item.to}-${item.timestamp}`
+        }
         renderItem={renderItem}
       />
     </View>

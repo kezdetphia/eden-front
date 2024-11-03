@@ -90,16 +90,16 @@ const ChatScreen = () => {
     };
   }, [user._id, productDetails?.conversationId]);
 
-  const fetchMessagesBetweenTwoUsers = useCallback(async () => {
+  const fetchMessagesBetweenTwoUsersForProduct = useCallback(async () => {
     try {
       const response = await fetch(
-        `${EXPO_API_URL}/message/conversationbetween/${user?._id}/${productDetails?.ownerId}`
+        `${EXPO_API_URL}/message/conversationbetween/${user?._id}/${productDetails?.ownerId}/${productDetails?.productId}`
       );
 
       const data = await response.json();
       console.log(
-        "chatscreen  fetchMessagesBetweenTwoUsers data",
-        data.messages[data.messages.length - 1].message
+        "ChatScreen fetchMessagesBetweenTwoUsersForProduct data",
+        data.messages?.[data.messages.length - 1]?.message || "No messages yet"
       );
 
       if (data.messages) {
@@ -110,13 +110,17 @@ const ChatScreen = () => {
     } catch (error) {
       console.error("Error fetching messages:", error);
     }
-  }, [user._id, productDetails?.ownerId]);
+  }, [user._id, productDetails?.ownerId, productDetails?.productId]);
 
   useEffect(() => {
     if (user && user._id && productDetails && productDetails?.ownerId) {
-      fetchMessagesBetweenTwoUsers();
+      fetchMessagesBetweenTwoUsersForProduct();
     }
-  }, [user._id, productDetails?.ownerId, fetchMessagesBetweenTwoUsers]);
+  }, [
+    user._id,
+    productDetails?.ownerId,
+    fetchMessagesBetweenTwoUsersForProduct,
+  ]);
 
   const sendMessage = useCallback(() => {
     if (message && productDetails && socketRef.current) {
@@ -125,8 +129,8 @@ const ChatScreen = () => {
         to: productDetails?.ownerId,
         message,
         productImageUrl: productDetails?.productImage,
-        // productImageUrl: encodeURIComponent(productDetails?.productImage),
         conversationId: productDetails?.conversationId,
+        productId: productDetails?.productId, // Include productId here
       };
 
       // Emit the message via Socket.IO
