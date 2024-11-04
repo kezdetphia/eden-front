@@ -6,7 +6,6 @@ const useGeoDistanceCalculator = () => {
   const [error, setError] = useState(null);
   const [coordinates, setCoordinates] = useState(null);
 
-  //CALCULATING DISTANCE
   const calculate = async (zip1, zip2) => {
     try {
       const coords1 = await getCoordinatesFromZip(zip1);
@@ -17,24 +16,28 @@ const useGeoDistanceCalculator = () => {
         coords2.latitude,
         coords2.longitude
       );
-      setDistance(dist.toFixed(2)); // Distance in km
-      setError(null); // Reset error if successful
+      setDistance(dist.toFixed(2));
+      setError(null);
     } catch (err) {
-      setError("Error calculating distance. Please check the zip codes.");
+      setError("Error calculating distance. Please check the ZIP codes.");
       console.error(err);
     }
   };
 
-  //GEOCODING - GETTING COORDINATES FROM ZIP CODE
   const geocode = async (zip) => {
     try {
       const coords = await getCoordinatesFromZip(zip);
-      console.log("Geocoded coordinates:", coords); // Debugging log
-      setCoordinates(coords);
-      setError(null); // Reset error if successful
+      if (coords && coords.latitude && coords.longitude) {
+        setCoordinates(coords);
+        setError(null);
+        return coords; // Return coordinates to be used in handlePublish
+      } else {
+        throw new Error("Coordinates not found for the provided ZIP code.");
+      }
     } catch (err) {
-      setError("Error fetching location data. Please check the zip code.");
-      console.error(err);
+      console.error("Geocode Error:", err.message || err);
+      setError("Failed to fetch coordinates. Please check the ZIP code.");
+      throw err; // Rethrow error for handlePublish to catch
     }
   };
 

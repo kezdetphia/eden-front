@@ -1,7 +1,7 @@
 import { View, Text, Image } from "react-native";
 import React from "react";
 
-const Card = ({ name, location }) => {
+const Card = ({ name, zipcode }) => {
   return (
     <View className=" bg-slate-200 rounded-lg p-2 w-[180px] h-[240px] mx-auto mt-5  ">
       <View className="flex-1 w-170  mt-2 rounded-lg overflow-hidden">

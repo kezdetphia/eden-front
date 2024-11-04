@@ -1,280 +1,159 @@
-import { View, Text, TextInput, Button, StyleSheet } from "react-native";
 import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  StyleSheet,
+  SafeAreaView,
+} from "react-native";
+import Slider from "@react-native-community/slider";
 import * as Location from "expo-location";
 import useGeoDistanceCalculator from "../../hooks/useGeoDistanceCalculator";
 import MapView, { Marker } from "react-native-maps";
-import Slider from "@react-native-community/slider";
+import axios from "axios";
+import Constants from "expo-constants";
+
+// Replace this with your backend API URL
+const { EXPO_API_URL } = Constants.expoConfig.extra;
 
 const Search = () => {
-  const [location, setLocation] = useState(91722);
-  const [errorMsg, setErrorMsg] = useState(null);
-  const [zip1, setZip1] = useState("");
-  const [zip2, setZip2] = useState("");
-  const [mapRegion, setMapRegion] = useState(null); // State to manage map region
-  const [value, setValue] = useState(0);
+  const [userLocation, setUserLocation] = useState(null); // Set initial value to null
+  const [searchText, setSearchText] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [distance, setDistance] = useState(0); // Distance for radius search
+  const [products, setProducts] = useState([]); // Products fetched from the API
 
-  const {
-    distance,
-    error,
-    calculate,
-    coordinates: markerLocation,
-    geocode,
-  } = useGeoDistanceCalculator();
+  const { geocode, coordinates: markerLocation } = useGeoDistanceCalculator();
 
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
-        setErrorMsg("Permission to access location was denied");
+        console.log("Permission to access location was denied");
         return;
       }
-
       let loc = await Location.getCurrentPositionAsync({});
-      setLocation(loc.coords);
-      setMapRegion({
-        latitude: loc.coords.latitude,
-        longitude: loc.coords.longitude,
-        latitudeDelta: 0.005,
-        longitudeDelta: 0.005,
-        // latitudeDelta: 0.0922,
-        // longitudeDelta: 0.0421,
-      });
+      setUserLocation(loc.coords);
     })();
   }, []);
 
-  const handleCalculateDistance = () => {
-    calculate(zip1, zip2);
-  };
+  const handleFetchProducts = async () => {
+    try {
+      const params = {
+        ...(distance && userLocation
+          ? {
+              latitude: userLocation.latitude,
+              longitude: userLocation.longitude,
+              radius: distance,
+            }
+          : {}),
+        ...(selectedCategory && { category: selectedCategory }),
+        ...(searchText && { title: searchText }),
+      };
 
-  const handleGeocodeZip1 = async () => {
-    console.log("zip1", zip1);
-    await geocode(zip1);
-    if (markerLocation) {
-      setMapRegion({
-        latitude: markerLocation.latitude,
-        longitude: markerLocation.longitude,
-        latitudeDelta: 0.1022,
-        longitudeDelta: 0.0421,
+      console.log("Request params:", params); // Log to check the parameters
+
+      const response = await axios.get(`${EXPO_API_URL}/getfilteredproducts`, {
+        params,
       });
+
+      // Ensure response.data is accessed correctly
+      setProducts(response.data);
+      console.log("Filtered products:", response.data);
+    } catch (error) {
+      console.error("Error fetching filtered products:", error);
     }
   };
 
-  if (!location) {
-    return (
-      <View style={styles.container}>
-        <Text>Loading...</Text>
-      </View>
-    );
-  }
-
   return (
-    <View className="flex-1 pt-10">
-      <View
-        style={{ padding: 20 }}
-        className="flex-1 items-center justify-center"
-      >
-        <Button title="Geocode Zip" onPress={handleGeocodeZip1} />
+    <SafeAreaView style={{ flex: 1, padding: 20 }}>
+      <View style={styles.inputContainer}>
         <TextInput
-          placeholder="Enter first zip code"
-          value={zip1}
-          onChangeText={setZip1}
+          style={styles.input}
+          placeholder="Search products"
+          value={searchText}
+          onChangeText={setSearchText}
         />
         <TextInput
-          placeholder="Enter second zip code"
-          value={zip2}
-          onChangeText={setZip2}
+          style={styles.input}
+          placeholder="Category"
+          value={selectedCategory}
+          onChangeText={setSelectedCategory}
         />
-        <Button title="Calculate Distance" onPress={handleCalculateDistance} />
-        {distance && <Text>Distance: {distance} miles</Text>}
-        {error && <Text style={{ color: "red" }}>{error}</Text>}
       </View>
-      <View style={{ padding: 20 }}>
-        <Text>Value: {value.toFixed(2)}</Text>
+
+      <View style={styles.sliderContainer}>
+        <Text>Distance: {distance} miles</Text>
         <Slider
-          style={{ width: 200, height: 40 }}
+          style={{ width: 300, height: 40 }}
           minimumValue={0}
           maximumValue={100}
           step={1}
-          minimumTrackTintColor="#1EB1FC"
-          maximumTrackTintColor="#d3d3d3"
-          thumbTintColor="#1EB1FC"
-          value={value}
-          onValueChange={(val) => setValue(val)}
+          value={distance}
+          onValueChange={(val) => setDistance(val)}
         />
       </View>
-      <View style={styles.container}>
+
+      <Button title="Search Products" onPress={handleFetchProducts} />
+
+      <View style={styles.mapContainer}>
         <MapView
           style={styles.map}
-          region={mapRegion} // Use the mapRegion state
-          showsUserLocation={true}
-          followsUserLocation={true}
+          region={{
+            latitude: userLocation ? userLocation.latitude : 37.78825,
+            longitude: userLocation ? userLocation.longitude : -122.4324,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          }}
         >
           {markerLocation && (
             <Marker coordinate={markerLocation} title="Marker Location" />
           )}
         </MapView>
       </View>
-    </View>
+
+      <View style={styles.resultsContainer}>
+        <Text>Search Results:</Text>
+        {products.map((product) => (
+          <View key={product._id}>
+            <Text>{product.title}</Text>
+            <Text>{product.category}</Text>
+            <Text>{product.zipcode}</Text>
+          </View>
+        ))}
+      </View>
+    </SafeAreaView>
   );
 };
 
 export default Search;
 
 const styles = StyleSheet.create({
-  container: {
-    justifyContent: "center",
+  inputContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  input: {
+    flex: 1,
+    borderBottomWidth: 1,
+    marginRight: 10,
+  },
+  sliderContainer: {
     alignItems: "center",
+    marginVertical: 20,
+  },
+  mapContainer: {
+    flex: 1,
+    width: "100%",
+    height: 200,
+    marginVertical: 20,
   },
   map: {
     width: "100%",
-    height: "70%",
+    height: "100%",
+  },
+  resultsContainer: {
+    paddingVertical: 10,
   },
 });
-///SEARCH BAR
-
-// import { View, Text, SafeAreaView, TextInput, Image } from "react-native"; // Import Image from react-native
-// import { StatusBar } from "expo-status-bar";
-
-// import {
-//   scale as xs,
-//   verticalScale as ys,
-//   moderateScale as ms,
-// } from "react-native-size-matters";
-// import sizes from "../../constants/sizes";
-// import { Entypo, Feather } from "@expo/vector-icons";
-// import { EvilIcons } from "@expo/vector-icons";
-// import { useAuth } from "@/context/authContext";
-// import CustomText from "../../components/customText";
-// import { useEffect, useState } from "react";
-// import { useDispatch, useSelector } from "react-redux";
-
-// export default function HomeCustomHeader({}) {
-//   const { sm, paddingSides, paddingTop } = sizes;
-
-//   // const categories = ["fruit", "vegetable"];
-//   // const filterOptions = ["All", "Trade", "Free", "Buy"];
-//   const [searchBarValue, setSearchBarValue] = useState(null);
-//   const { isAuthenticated, user } = useAuth();
-//   const dispatch = useDispatch();
-//   const data = useSelector((state) => state.data.data);
-//   const dataStatus = useSelector((state) => state.data.status);
-//   const [selectedCategory, setSelectedCategory] = useState(null);
-//   const [selectedFilter, setSelectedFilter] = useState("All");
-
-//   useEffect(() => {
-//     if (dataStatus === "idle") {
-//       dispatch(fetchProducts());
-//     }
-//   }, [dataStatus, dispatch]);
-
-//   const onRefresh = async () => {
-//     setRefreshing(true);
-//     await dispatch(fetchProducts());
-//     setRefreshing(false);
-//   };
-
-//   const filteredData = data
-//     .filter((item) => {
-//       const categoryMatch = selectedCategory
-//         ? item.category === selectedCategory
-//         : true;
-//       const filterMatch = selectedFilter
-//         ? selectedFilter === "All"
-//           ? true
-//           : item.tier && item.tier === selectedFilter
-//         : true;
-//       const titleMatch = searchBarValue
-//         ? item.title.includes(searchBarValue)
-//         : true;
-//       return categoryMatch && filterMatch && titleMatch;
-//     })
-//     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // Sort by newest first
-
-//   return (
-//     <>
-//       {/* <StatusBar hidden={false} /> */}
-//       <SafeAreaView style={{ backgroundColor: "transparent" }}>
-//         <View
-//           className="flex flex-row justify-between "
-//           style={{
-//             // paddingHorizontal: xs(paddingSides),
-//             paddingTop: ys(paddingTop * 1.5),
-//             paddingHorizontal: xs(paddingSides),
-//           }}
-//         >
-//           {/* <View>
-//             <View className="flex flex-row ">
-//               <CustomText xl> Hi,</CustomText>
-
-//               <CustomText bold xl b200>
-//                 {" "}
-//                 {user?.username?.charAt(0).toUpperCase() +
-//                   user.username.slice(1)}
-//               </CustomText>
-//             </View>
-//             <View
-//               className="flex-row items-center   "
-//               style={{ paddingTop: ys(4) }}
-//             >
-//               <Entypo
-//                 className="pr-1 "
-//                 name="location-pin"
-//                 size={ms(16)}
-//                 color="#69D94E"
-//               />
-//               <CustomText b100>{user?.location}</CustomText>
-//             </View>
-//           </View> */}
-
-//           {/* <View>
-//             <Image
-//               className="rounded-xl"
-//               source={
-//                 user?.avatar
-//                   ? { uri: user.avatar }
-//                   : require("../../assets/images/avatar.png")
-//               }
-//               style={{ width: ms(40), height: ms(40) }}
-//             />
-//           </View> */}
-//         </View>
-
-//         <View style={{ paddingHorizontal: xs(paddingSides) }}>
-//           <View
-//             className="flex-row items-center bg-white rounded-xl border border-g200     "
-//             style={{
-//               // marginHorizontal: xs(paddingSides),
-//               height: ys(35),
-//               marginTop: ys(paddingSides + 2),
-//             }}
-//           >
-//             <EvilIcons
-//               name="search"
-//               size={ms(24)}
-//               color="#83DF6C"
-//               style={{ paddingLeft: xs(paddingSides) }}
-//             />
-//             <TextInput
-//               className=" flex-1 "
-//               placeholder="Search Apple"
-//               style={{
-//                 marginLeft: 10,
-//                 fontFamily: "jakarta",
-//                 fontSize: ms(14),
-//               }}
-//               value={searchBarValue}
-//               onChangeText={(text) => setSearchBarValue(text)}
-//             />
-//             <Feather
-//               style={{ paddingRight: xs(paddingSides) }}
-//               name="delete"
-//               size={ms(18)}
-//               color="#6C6C6C"
-//               onPress={() => setSearchBarValue(null)}
-//             />
-//           </View>
-//         </View>
-//       </SafeAreaView>
-//     </>
-//   );
-// }

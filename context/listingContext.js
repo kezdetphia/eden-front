@@ -13,7 +13,6 @@ export const ListingProvider = ({ children }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    // Initialize listingDetails when user becomes available
     if (user && !listingDetails) {
       setListingDetails({
         price: "",
@@ -22,10 +21,12 @@ export const ListingProvider = ({ children }) => {
         image: [],
         category: "",
         tier: null,
-        owner: user._id, // Now correctly uses user._id
+        owner: user._id,
         availableQuantity: "",
         exchangeFor: [],
         location: "",
+        zipcode: "",
+        geoLocation: { type: "Point", coordinates: [] }, // Add default for geoLocation
       });
     }
   }, [user, listingDetails]);
@@ -57,7 +58,8 @@ export const ListingProvider = ({ children }) => {
       "category",
       "tier",
       "availableQuantity",
-      "location",
+      // "location",
+      "zipcode",
     ];
     const emptyFields = requiredFields.filter(
       (field) =>
@@ -72,20 +74,22 @@ export const ListingProvider = ({ children }) => {
     return true;
   };
 
-  const handleSubmit = async (router) => {
+  const handleSubmit = async (router, updatedListingDetails) => {
     if (!validateFields()) return;
 
     setIsSubmitting(true);
     const token = await SecureStore.getItemAsync("authToken");
+
     try {
-      console.log("Submitting listing details:", listingDetails);
+      console.log("Submitting listing details:", updatedListingDetails);
+
       const res = await fetch(`${EXPO_API_URL}/createproduct`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(listingDetails),
+        body: JSON.stringify(updatedListingDetails), // Pass updatedListingDetails with geoLocation
       });
 
       if (!res.ok) {

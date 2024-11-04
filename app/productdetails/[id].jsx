@@ -289,7 +289,7 @@ const ProductDetail = () => {
                       paddingRight: ms(xsm),
                     }}
                   >
-                    {product?.location}
+                    {product?.zipcode}
                   </CustomText>
                 </View>
               </View>

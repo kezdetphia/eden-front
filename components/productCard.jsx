@@ -12,15 +12,17 @@ import useGeoDistanceCalculator from "../hooks/useGeoDistanceCalculator";
 const ProductCard = ({ product, cardWidth, user }) => {
   const { calculate, distance } = useGeoDistanceCalculator();
 
+  console.log("ProductCard ", product);
+
   useEffect(() => {
-    calculate(user?.location, product?.location);
+    calculate(user?.location, product?.zipcode);
   }, [user]);
 
   const getLocationDisplay = () => {
-    if (user?.location && product?.location) {
+    if (user?.location && product?.zipcode) {
       return `${Math.round(distance)} miles`;
     }
-    return product?.location; // Display ZIP code if either location is missing
+    return product?.zipcode; // Display ZIP code if either location is missing
   };
 
   return (
@@ -56,6 +58,7 @@ const ProductCard = ({ product, cardWidth, user }) => {
       <CustomText xxs b100 style={{ paddingTop: ys(3) }}>
         {getLocationDisplay()}
       </CustomText>
+
       <View
         className="flex-row items-center justify-between"
         style={{ paddingTop: ys(10) }}

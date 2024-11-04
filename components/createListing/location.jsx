@@ -16,13 +16,13 @@ const Location = ({ handleToast }) => {
 
   const handleChangeText = (text) => {
     const numericText = text.replace(/[^0-9]/g, "");
-    updateListingDetails("location", numericText);
+    updateListingDetails("zipcode", numericText);
   };
 
   return (
     <View>
       <TextInput
-        value={listingDetails?.location}
+        value={listingDetails?.zipcode}
         onChangeText={handleChangeText}
         style={[styles.input, isFocused && styles.inputFocused]} // Apply focus style
         placeholder="Where is this item located?"

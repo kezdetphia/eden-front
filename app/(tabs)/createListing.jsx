@@ -31,6 +31,7 @@ import ListingTitle from "../../components/createListing/title";
 
 import { useListing } from "../../context/listingContext";
 import CustomText from "../../components/customText";
+import useGeoDistanceCalculator from "../../hooks/useGeoDistanceCalculator";
 
 const { paddingSides, paddingTop } = sizes;
 
@@ -38,14 +39,17 @@ const CreateListing = () => {
   const {
     listingDetails,
     resetListingDetails,
+    updateListingDetails,
     handleSubmit,
     handleToast,
     isSubmitting,
-    initializeListingDetails,
   } = useListing();
   const router = useRouter();
   const [dropdownData, setDropdownData] = useState([]);
   const scrollViewRef = useRef(null);
+
+  // Import getCoordinates function from the custom hook
+  const { geocode } = useGeoDistanceCalculator();
 
   const handleBack = () => {
     Alert.alert(
@@ -62,6 +66,42 @@ const CreateListing = () => {
         { text: "Cancel", onPress: () => {} },
       ]
     );
+  };
+
+  const handlePublish = async () => {
+    if (!listingDetails.zipcode) {
+      handleToast("Please enter a valid ZIP code for location.", "error");
+      return;
+    }
+
+    try {
+      // Fetch coordinates for the ZIP code
+      const coordinates = await geocode(listingDetails.zipcode);
+
+      if (!coordinates || !coordinates.latitude || !coordinates.longitude) {
+        throw new Error("Invalid coordinates.");
+      }
+
+      // Update listingDetails with geoLocation coordinates
+      const updatedListingDetails = {
+        ...listingDetails,
+        geoLocation: {
+          type: "Point",
+          coordinates: [coordinates.longitude, coordinates.latitude],
+        },
+      };
+
+      console.log("Updated listing with coordinates:", updatedListingDetails); // Debugging log
+
+      // Submit the updated listing details with geoLocation included
+      handleSubmit(router, updatedListingDetails);
+    } catch (error) {
+      console.error("Publish Error:", error);
+      handleToast(
+        "Failed to fetch coordinates. Please check the ZIP code.",
+        "error"
+      );
+    }
   };
 
   return (
@@ -167,7 +207,7 @@ const CreateListing = () => {
 
             <View style={{ paddingVertical: ys(paddingTop) }}>
               <CustomButton
-                submit={() => handleSubmit(router)}
+                submit={handlePublish}
                 text={isSubmitting ? "Publishing..." : "Publish"}
               />
             </View>
