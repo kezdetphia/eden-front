@@ -29,7 +29,8 @@
       },
       "infoPlist": {
         "NSCameraUsageDescription": "This app uses the camera to upload images to their listings.",
-        "NSPhotoLibraryUsageDescription": "This app needs access to your photo library to upload images."
+        "NSPhotoLibraryUsageDescription": "This app needs access to your photo library to upload images.",
+        "NSLocationWhenInUseUsageDescription": "This app requires access to your location to show nearby products."
       },
       "bundleIdentifier": "com.kezdetphia.eden"
     },
@@ -42,7 +43,8 @@
         "android.permission.CAMERA",
         "android.permission.RECORD_AUDIO",
         "android.permission.READ_EXTERNAL_STORAGE",
-        "INTERNET"
+        "INTERNET",
+        "ACCESS_FINE_LOCATION"
       ],
       "package": "com.kezdetphia.eden"
     },

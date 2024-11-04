@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -8,37 +8,31 @@ import {
   SafeAreaView,
 } from "react-native";
 import Slider from "@react-native-community/slider";
-import * as Location from "expo-location";
-import useGeoDistanceCalculator from "../../hooks/useGeoDistanceCalculator";
 import MapView, { Marker } from "react-native-maps";
 import axios from "axios";
 import Constants from "expo-constants";
+import useLocationPermission from "../../hooks/useLocalPermission";
 
-// Replace this with your backend API URL
 const { EXPO_API_URL } = Constants.expoConfig.extra;
 
 const Search = () => {
-  const [userLocation, setUserLocation] = useState(null); // Set initial value to null
+  const { location: userLocation, permissionGranted } = useLocationPermission();
   const [searchText, setSearchText] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
-  const [distance, setDistance] = useState(0); // Distance for radius search
-  const [products, setProducts] = useState([]); // Products fetched from the API
-
-  const { geocode, coordinates: markerLocation } = useGeoDistanceCalculator();
-
-  useEffect(() => {
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        console.log("Permission to access location was denied");
-        return;
-      }
-      let loc = await Location.getCurrentPositionAsync({});
-      setUserLocation(loc.coords);
-    })();
-  }, []);
+  const [distance, setDistance] = useState(0);
+  const [products, setProducts] = useState([]);
 
   const handleFetchProducts = async () => {
+    if (!permissionGranted) {
+      console.log("Location permission is not granted.");
+      return;
+    }
+
+    if (!userLocation) {
+      console.log("User location is not available.");
+      return;
+    }
+
     try {
       const params = {
         ...(distance && userLocation
@@ -52,13 +46,12 @@ const Search = () => {
         ...(searchText && { title: searchText }),
       };
 
-      console.log("Request params:", params); // Log to check the parameters
+      console.log("Request params:", params);
 
       const response = await axios.get(`${EXPO_API_URL}/getfilteredproducts`, {
         params,
       });
 
-      // Ensure response.data is accessed correctly
       setProducts(response.data);
       console.log("Filtered products:", response.data);
     } catch (error) {
@@ -107,8 +100,8 @@ const Search = () => {
             longitudeDelta: 0.0421,
           }}
         >
-          {markerLocation && (
-            <Marker coordinate={markerLocation} title="Marker Location" />
+          {userLocation && (
+            <Marker coordinate={userLocation} title="Your Location" />
           )}
         </MapView>
       </View>
